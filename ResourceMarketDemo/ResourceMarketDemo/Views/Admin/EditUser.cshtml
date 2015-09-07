@@ -1,0 +1,129 @@
+﻿@model WebApplication1.Models.User
+
+@{
+    ViewBag.Title = "EditUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>EditUser</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>User</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-3" style="text-align:left;">@Model.UserName</label>
+            @Html.HiddenFor(model => model.UserName)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DragonPoints, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.DragonPoints, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DragonPoints, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.DragonPoints)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Gold, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Gold, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Gold, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.Gold)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HyperCoin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.HyperCoin, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HyperCoin, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.HyperCoin)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GoldPieceCoin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.GoldPieceCoin, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GoldPieceCoin, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.GoldPieceCoin)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HTML5Coin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.HTML5Coin, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HTML5Coin, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.HTML5Coin)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FLAPCoin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.FLAPCoin, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FLAPCoin, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.FLAPCoin)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Wood, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Wood, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Wood, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.Wood)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Iron, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Iron, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Iron, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.Iron)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Stone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Stone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Stone, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.Stone)</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Fish, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Fish, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Fish, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-2">(was: @Model.Fish)</div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-3">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

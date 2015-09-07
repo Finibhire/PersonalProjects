@@ -1,0 +1,43 @@
+﻿@using WebApplication1.Models
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Select User</h1>
+
+<table style="padding: 4px 7px 4px 7px">
+    <thead>
+        <tr style="border-bottom: 2px solid black;">
+            <td style="padding: 4px 4px 4px 4px;"><b>User Name</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>Gold</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>Dragon Points</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>HyperCoin</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>GoldPieces</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>HTML5</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>FLAP</b></td>
+            <td style="padding: 4px 4px 4px 4px;">&nbsp;</td>
+        </tr>
+    </thead>
+@foreach (KeyValuePair<string, WebApplication1.Models.User> pair in ViewBag.Users)
+{
+    <tr style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.UserName</td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.Gold</td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.DragonPoints</td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.HyperCoin</td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.GoldPieceCoin</td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.HTML5Coin</td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.FLAPCoin</td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+        @if ((string)Session["UserName"] == pair.Key)
+        {
+            <span style="color: darkgray">Logged in as @pair.Key</span>
+        }
+        else
+        {
+            @Html.ActionLink("Login as " + pair.Key, "SelectUser", new WebApplication1.Models.SelectUserSubmission() { LoginAs = pair.Key });
+        }
+        </td>
+    </tr>
+}
+</table>

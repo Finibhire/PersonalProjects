@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cpp The Paranoid Android", "Cpp The Paranoid Android.vcxproj", "{6BE95F9C-273A-4336-9CB5-9686AB2413BD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{161B1BAA-7338-40B7-B6C3-AAB020B82D40} = {161B1BAA-7338-40B7-B6C3-AAB020B82D40}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BinarySearchVariations", "..\BinarySearchVariations\BinarySearchVariations.vcxproj", "{161B1BAA-7338-40B7-B6C3-AAB020B82D40}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BE95F9C-273A-4336-9CB5-9686AB2413BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6BE95F9C-273A-4336-9CB5-9686AB2413BD}.Debug|Win32.Build.0 = Debug|Win32
+		{6BE95F9C-273A-4336-9CB5-9686AB2413BD}.Release|Win32.ActiveCfg = Release|Win32
+		{6BE95F9C-273A-4336-9CB5-9686AB2413BD}.Release|Win32.Build.0 = Release|Win32
+		{161B1BAA-7338-40B7-B6C3-AAB020B82D40}.Debug|Win32.ActiveCfg = Debug|Win32
+		{161B1BAA-7338-40B7-B6C3-AAB020B82D40}.Debug|Win32.Build.0 = Debug|Win32
+		{161B1BAA-7338-40B7-B6C3-AAB020B82D40}.Release|Win32.ActiveCfg = Release|Win32
+		{161B1BAA-7338-40B7-B6C3-AAB020B82D40}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

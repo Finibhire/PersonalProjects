@@ -1,0 +1,82 @@
+﻿@model WebApplication1.Models.AdminUserViewData
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Users</h2>
+
+@using (Html.BeginForm("CreateNewUser", "Admin", FormMethod.Post))
+{
+<table style="padding: 4px 7px 4px 7px">
+    <thead>
+        <tr style="border-bottom: 2px solid black;">
+            <td style="padding: 4px 4px 4px 4px;">&nbsp;</td>
+            <td style="padding: 4px 4px 4px 4px;">&nbsp;</td>
+            <td style="padding: 4px 4px 4px 4px;"><b>User Name</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>Gold</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>Dragon Points</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>HyperCoin</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>GoldPieces</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>HTML5</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>FLAP</b></td>
+        </tr>
+    </thead>
+    @foreach (KeyValuePair<string, WebApplication1.Models.User> pair in Model.Users)
+    {
+        <tr style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+                @if ((string)Session["UserName"] == pair.Key)
+                {
+                    <span style="color: darkgray">Logged in as @pair.Key</span>
+                }
+                else
+                {
+                    @Html.ActionLink("Login as " + pair.Key, "Users", new { LoginAs = pair.Key });
+                }
+            </td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.ActionLink("Edit", "EditUser", new { UserName = Html.Encode(pair.Key) })</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.UserName</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.Gold</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.DragonPoints</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.HyperCoin</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.GoldPieceCoin</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.HTML5Coin</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.FLAPCoin</td>
+        </tr>
+    }
+    <tr style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;"><input type="submit" class="btn btn-default" value="Create New User" /></td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">&nbsp;</td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+            @Html.EditorFor(model => model.SubData.NewUser.UserName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SubData.NewUser.UserName, "", new { @class = "text-danger" })
+        </td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+            @Html.EditorFor(model => model.SubData.NewUser.Gold, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SubData.NewUser.Gold, "", new { @class = "text-danger" })
+        </td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+            @Html.EditorFor(model => model.SubData.NewUser.DragonPoints, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SubData.NewUser.DragonPoints, "", new { @class = "text-danger" })
+        </td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+            @Html.EditorFor(model => model.SubData.NewUser.HyperCoin, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SubData.NewUser.HyperCoin, "", new { @class = "text-danger" })
+        </td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+            @Html.EditorFor(model => model.SubData.NewUser.GoldPieceCoin, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SubData.NewUser.GoldPieceCoin, "", new { @class = "text-danger" })
+        </td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+            @Html.EditorFor(model => model.SubData.NewUser.HTML5Coin, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SubData.NewUser.HTML5Coin, "", new { @class = "text-danger" })
+        </td>
+        <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
+            @Html.EditorFor(model => model.SubData.NewUser.FLAPCoin, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SubData.NewUser.FLAPCoin, "", new { @class = "text-danger" })
+        </td>
+    </tr>
+</table>
+}

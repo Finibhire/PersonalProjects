@@ -1,0 +1,86 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+
+
+table
+{
+    font-family: Verdana, 'Segoe UI', Tahoma, Geneva, sans-serif;
+    text-align: center;
+    font-size: 11px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+.table-label
+{
+    text-align: left;
+    font-size: 18px;
+    padding-bottom: 5px;
+}
+thead
+{
+    font-weight: bold;
+    border-bottom: solid;
+    border-width: 2px;
+}
+tfoot > tr > td
+{
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+tr
+{
+    border-bottom: solid;
+    border-width: 1px;
+}
+td, th
+{
+    text-align: center;
+}
+th
+{
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+input
+{
+    width: 80px;
+}
+
+input.button
+{
+    float: none;
+    display: inline;
+    padding: 2px 8px;
+    width: auto;
+    height: auto;
+}
