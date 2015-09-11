@@ -141,7 +141,7 @@ namespace DragonKnight2_Farmer
                 case ActionID.GoToTown01:
                     return "https://dknight2.com/index.php?do=gotown:1";
                 case ActionID.GoToTown13:
-                    return "https://dknight2.com/index.php?do=gotown:15";
+                    return "https://dknight2.com/index.php?do=gotown:16";
                 case ActionID.WithdrawGold:
                 case ActionID.DepositGold:
                     return "https://dknight2.com/index.php?do=bank";

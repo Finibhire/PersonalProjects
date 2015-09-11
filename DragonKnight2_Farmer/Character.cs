@@ -29,11 +29,11 @@ namespace DragonKnight2_Farmer
         private DateTime currentTurnsTimeStamp;
         private int turnsPerMin;
 
-        public const int MinChaosDamage = 3300;
-        public const int MinHitPoints = 2900;
+        public const int MinChaosDamage = 3800;
+        public const int MinHitPoints = 3000;
         public const int MinManaPoints = 250;
         public const int InnCost = 5;
-        public const int CityTravelPointCost = 350;
+        public const int CityTravelPointCost = 300;
 
         //public const int Heal1Cost = 5, Heal2Cost = 10, Heal3Cost = 25, Heal4Cost = 50, Heal5Cost = 75;
         //public const int Heal1Healing = 10, Heal2Healing = 25, Heal3Healing = 50, Heal4Healing = 100, Heal5Healing = 150;
@@ -188,7 +188,7 @@ namespace DragonKnight2_Farmer
 
         public Character()
         {
-            FightFromCity = new Point(-520, 27);
+            FightFromCity = new Point(120, -580);
             currentTurnsTimeStamp = DateTime.Now;
             turnsPerMin = 2;
         }
