@@ -49,7 +49,7 @@ BEGIN
 				select u2.Id as UserId, rt.Name as ResourceName, ur2.OnHand
 				from [Users] u2
 				CROSS JOIN [ResourceTypes] rt
-				LEFT JOIN [UserResources] ur2 ON u2.Id = ur2.UserId AND rt.Id = ur2.ResourceId
+				LEFT JOIN [UserResources] ur2 ON u2.Id = ur2.UserId AND rt.Id = ur2.ResourceTypeId
 			) as ur1
 			PIVOT
 			(
@@ -59,7 +59,7 @@ BEGIN
 			JOIN [Users] u1 ON u1.Id = pur.UserId'
 	
 	exec sp_executesql @query;
-	select * from UserResourcesPivoted
+	--select * from UserResourcesPivoted
 END
 ELSE
 BEGIN
@@ -99,7 +99,7 @@ BEGIN
 				select u2.Id as UserId, ct.Name as CurrencyName, uc2.OnHand
 				from [Users] u2
 				CROSS JOIN [CurrencyTypes] ct
-				LEFT JOIN [UserCurrencies] uc2 ON u2.Id = uc2.UserId AND ct.Id = uc2.CurrencyId
+				LEFT JOIN [UserCurrencies] uc2 ON u2.Id = uc2.UserId AND ct.Id = uc2.CurrencyTypeId
 			) as uc1
 			PIVOT
 			(
@@ -109,7 +109,7 @@ BEGIN
 			JOIN [Users] u1 ON u1.Id = puc.UserId'
 	
 	exec sp_executesql @query;
-	select * from UserCurrenciesPivoted
+	--select * from UserCurrenciesPivoted
 END
 ELSE
 BEGIN
@@ -140,7 +140,7 @@ BEGIN
 					select u2.Id as UserId, rt.Name as ResourceName, ur2.OnHand
 					from [Users] u2
 					CROSS JOIN [ResourceTypes] rt
-					LEFT JOIN [UserResources] ur2 ON u2.Id = ur2.UserId AND rt.Id = ur2.ResourceId
+					LEFT JOIN [UserResources] ur2 ON u2.Id = ur2.UserId AND rt.Id = ur2.ResourceTypeId
 				) as ur1
 				PIVOT (
 					SUM([OnHand])
@@ -151,7 +151,7 @@ BEGIN
 					select u3.Id as UserId, ct.Name as CurrencyName, uc2.OnHand
 					from [Users] u3
 					CROSS JOIN [CurrencyTypes] ct
-					LEFT JOIN [UserCurrencies] uc2 ON u3.Id = uc2.UserId AND ct.Id = uc2.CurrencyId
+					LEFT JOIN [UserCurrencies] uc2 ON u3.Id = uc2.UserId AND ct.Id = uc2.CurrencyTypeId
 				) as uc1
 				PIVOT
 				(
@@ -162,7 +162,7 @@ BEGIN
 
 
 	exec sp_executesql @query;
-	select * from UserAllPivoted
+	--select * from UserAllPivoted
 END
 ELSE
 BEGIN

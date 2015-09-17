@@ -6,7 +6,7 @@
 		select u.Id as UserId, ct.Id as CurrencyId, uc.OnHand
 		from [Users] u
 		CROSS JOIN [CurrencyTypes] ct
-		LEFT JOIN [UserCurrencies] uc ON u.Id = uc.UserId AND ct.Id = uc.CurrencyId
+		LEFT JOIN [UserCurrencies] uc ON u.Id = uc.UserId AND ct.Id = uc.CurrencyTypeId
 	) as t
 	PIVOT
 	(

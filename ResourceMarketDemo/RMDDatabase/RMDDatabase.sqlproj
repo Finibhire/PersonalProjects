@@ -68,8 +68,20 @@
     <None Include="TestingPivotQueries.sql" />
     <Build Include="UserResources.sql" />
     <Build Include="DynamicUpdateUserPivotViews.sql" />
+    <Build Include="CurrencyExchangeRates.sql" />
+    <Build Include="PurchaseOrders.sql" />
+    <Build Include="SellOrders.sql" />
+    <Build Include="AddPurchaseOrder.sql" />
+    <Build Include="AddSellOrder.sql" />
+    <Build Include="MarketSales.sql" />
+    <Build Include="CurrencyExchanges.sql" />
+    <Build Include="fRoundDecimalUp.sql" />
+    <None Include="Temp.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="RMDDatabase.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment1.sql" />
   </ItemGroup>
 </Project>

@@ -42,4 +42,46 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="UserId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="4b96eade-6eef-47f5-9238-b8c81570e2a4" ChangeDateTime="09/11/2015 17:42:58">
+    <Property Name="ElementName" Value="[dbo].[CurrencyExchangeRates].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CurrencyExchangeRates]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SourceCurrencyId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f3f3eb1e-b584-44e8-b76d-ece446dc950b" ChangeDateTime="09/11/2015 21:55:55">
+    <Property Name="ElementName" Value="[dbo].[PurchaseOrders].[Name]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PurchaseOrders]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1dcba224-9908-421c-8392-837b00fd7aca" ChangeDateTime="09/11/2015 22:06:02">
+    <Property Name="ElementName" Value="[dbo].[PurchaseOrders].[ResourceType]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PurchaseOrders]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ResourceTypeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1cad7afc-268f-4f06-a6db-385b59fa0c78" ChangeDateTime="09/11/2015 22:06:14">
+    <Property Name="ElementName" Value="[dbo].[PurchaseOrders].[CurrencyType]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PurchaseOrders]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CurrencyTypeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="52959c5b-2d44-4ddc-a3b2-b9e403450632" ChangeDateTime="09/13/2015 19:21:28">
+    <Property Name="ElementName" Value="[dbo].[UserCurrencies].[CurrencyId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserCurrencies]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CurrencyTypeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5631ef15-715e-46fb-8d66-f6da7eb7759c" ChangeDateTime="09/17/2015 00:02:54">
+    <Property Name="ElementName" Value="[dbo].[UserResources].[ResourceId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserResources]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ResourceTypeId" />
+  </Operation>
 </Operations>
