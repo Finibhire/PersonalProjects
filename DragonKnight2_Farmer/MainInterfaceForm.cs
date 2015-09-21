@@ -136,6 +136,12 @@ namespace DragonKnight2_Farmer
 
         }
 
+        private class FarmMonsterThreadStartData
+        {
+            public int TurnsPerMinute;
+            public bool BreakOnEnchanter;
+        }
+
         private void StartFarmingMonstersAsyc()
         {
             if (this.InvokeRequired)
@@ -151,7 +157,7 @@ namespace DragonKnight2_Farmer
                 btnGambling.Enabled = false;
                 btnFarmMonsters.Text = "Stop Farming!";
                 farmMonstersWorkerThread = new Thread(new ParameterizedThreadStart(FarmMonstersMain));
-                farmMonstersWorkerThread.Start(Convert.ToInt32(tbTurnsPerMinute.Text));
+                farmMonstersWorkerThread.Start(new FarmMonsterThreadStartData() { TurnsPerMinute = Convert.ToInt32(tbTurnsPerMinute.Text), BreakOnEnchanter = chbBreakOnEnchanter.Checked });
             }
         }
 
@@ -177,15 +183,8 @@ namespace DragonKnight2_Farmer
             }
         }
 
-        private void FarmMonstersMain(object TurnsPerMinute)
+        private Character LoadInitialCharacterData()
         {
-            int turnsPerMinute = (int)TurnsPerMinute;
-
-            PeriodsCompleted = 0;
-
-            //postCookies = new CookieContainer();
-            //postCookies.Add(new Cookie("dkgame", ddlCookie.Text, "/", "dknight2.com"));
-
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(@"https://dknight2.com/index.php");
 
             request.Host = "dknight2.com";
@@ -200,12 +199,22 @@ namespace DragonKnight2_Farmer
             //request.ContentType = "application/x-www-form-urlencoded";
             request.KeepAlive = false;
 
-            Character c = ParseResponse(request);
-            c.TurnsPerMin = turnsPerMinute;
+            return ParseResponse(request);
+        }
+
+        private void FarmMonstersMain(object ThreadData)
+        {
+            FarmMonsterThreadStartData threadData = (FarmMonsterThreadStartData)ThreadData;
+            PeriodsCompleted = 0;
+            HttpWebRequest request = null;
+
+            Character c = LoadInitialCharacterData();
+            c.TurnsPerMin = threadData.TurnsPerMinute;
+            c.BreakOnEnchanter = threadData.BreakOnEnchanter;
 
             do
             {
-                CharacterAction act = c.GetNextAction();
+                CharacterAction act = c.GetNextMonsterFarmAction();
 
                 request = (HttpWebRequest)WebRequest.Create(act.ActionURL);
 
@@ -213,7 +222,7 @@ namespace DragonKnight2_Farmer
                 request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
                 request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
                 request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
-                request.Referer = act.ActionURL;
+                request.Referer = act.ActionRefererURL;
                 request.CookieContainer = new CookieContainer();
                 foreach (Cookie cook in postCookies)
                     request.CookieContainer.Add(cook);
@@ -267,6 +276,8 @@ namespace DragonKnight2_Farmer
 
         private Character ParseResponse(HttpWebRequest request, Character c = null)
         {
+            string fullResponse = null;
+
             if (c == null)
                 c = new Character();
 
@@ -288,6 +299,8 @@ namespace DragonKnight2_Farmer
                 }
                 while (byteCount > 0);
 
+                fullResponse = responseString.ToString();
+
                 if (response.ResponseUri.ToString().Contains("fight"))
                 {
                     c.InCombat = true;
@@ -300,23 +313,6 @@ namespace DragonKnight2_Farmer
                         c.FightingBoss = false;
                     }
                 }
-                else if (response.ResponseUri.ToString().ToLower().Contains("check"))
-                {
-                    //if (!KillFarmMonstersThread || (farmMonstersWorkerThread != null && farmMonstersWorkerThread.IsAlive))
-                    //{
-                    //    StopFarmingMonstersAsyc();
-                    //}
-                    //if (!KillFarmResourcesThread || (farmResourcesWorkerThread != null && farmResourcesWorkerThread.IsAlive))
-                    //{
-                    //    StopFarmingResourcesAsyc();
-                    //}
-                    //if (!KillGamblingThread || (gamblingWorkerThread != null && gamblingWorkerThread.IsAlive))
-                    //{
-                    //    StopGamblingAsyc();
-                    //}
-                    MessageBox.Show("CHECK FOUND!", "reCAPTCHA", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    //throw new Exception("reCAPTC found!  Aborting Farming!");
-                }
                 else
                 {
                     if (c.InCombat)
@@ -325,6 +321,15 @@ namespace DragonKnight2_Farmer
                         c.FightingBoss = false;
                         c.TargetAsleep = false;
                     }
+                }
+
+                if (response.ResponseUri.ToString().ToLower().Contains("check"))
+                {
+                    MessageBox.Show("CHECK FOUND!", "reCAPTCHA", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else if (c.BreakOnEnchanter && response.ResponseUri.ToString().ToLower().Contains("move") && fullResponse.Contains("<form action = 'index.php?do=enchantitem' method='post'>"))
+                {
+                    MessageBox.Show("Enchanter Found!", "Enchanter Found!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
                 int len = response.Cookies.Count;
@@ -347,46 +352,71 @@ namespace DragonKnight2_Farmer
                         postCookies.Add(rc);
                     }
                 }
-                //responseString.AppendLine(Environment.NewLine + Environment.NewLine + Environment.NewLine);
             }
-
-            //string rawResponse = System.Text.Encoding.Default.GetString(content.ToArray());
-            string fullResponse = responseString.ToString();
 
             if (fullResponse.ToLower().Contains("captcha"))
             {
-                //if (!KillFarmMonstersThread || (farmMonstersWorkerThread != null && farmMonstersWorkerThread.IsAlive))
-                //{
-                //    StopFarmingMonstersAsyc();
-                //}
-                //if (!KillFarmResourcesThread || (farmResourcesWorkerThread != null && farmResourcesWorkerThread.IsAlive))
-                //{
-                //    StopFarmingResourcesAsyc();
-                //}
-                //if (!KillGamblingThread || (gamblingWorkerThread != null && gamblingWorkerThread.IsAlive))
-                //{
-                //    StopGamblingAsyc();
-                //}
                 MessageBox.Show("CHECK FOUND! - 2", "reCAPTCHA", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                //throw new Exception("reCAPTC found!  Aborting Farming!");
             }
 
             int parseStart = 0;
             int parseEnd = 0;
 
-            parseStart = fullResponse.IndexOf(">Location<", 00000) + 40;
-            parseStart = fullResponse.IndexOf("at ", parseStart) + 3;
-            parseEnd = fullResponse.IndexOf(',', parseStart) - 1;
+            parseEnd = fullResponse.IndexOf("<a href='index.php?do=buypotions'>") + 70;
+
+            parseStart = fullResponse.IndexOf("(", parseEnd) + 1;
+            parseEnd = fullResponse.IndexOf(")", parseStart);
+            c.CurrentPotionHPCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
+
+            parseStart = fullResponse.IndexOf("(", parseEnd) + 1;
+            parseEnd = fullResponse.IndexOf(")", parseStart);
+            c.CurrentPotionMPCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
+
+            parseStart = fullResponse.IndexOf("(", parseEnd) + 1;
+            parseEnd = fullResponse.IndexOf(")", parseStart);
+            c.CurrentPotionTPCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
+
+            parseStart = fullResponse.IndexOf("<center class='blackbg'>You own ", parseEnd) + 32;
+            parseEnd = fullResponse.IndexOf(" Wood", parseStart);
+            c.CurrentWoodCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
+
+            parseStart = fullResponse.IndexOf("<center class='blackbg'>You own ", parseEnd) + 32;
+            parseEnd = fullResponse.IndexOf(" Fish", parseStart);
+            c.CurrentFishCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
+
+            parseStart = fullResponse.IndexOf("<center class='blackbg'>You own ", parseEnd) + 32;
+            parseEnd = fullResponse.IndexOf(" Stone", parseStart);
+            c.CurrentStoneCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
+
+            parseStart = fullResponse.IndexOf("<center class='blackbg'>You own ", parseEnd) + 32;
+            parseEnd = fullResponse.IndexOf(" Iron", parseStart);
+            c.CurrentIronCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
+
+            parseEnd = fullResponse.IndexOf("Hello <a href='index.php?do=onlinechar:", parseEnd) + 350;
+            parseEnd = fullResponse.IndexOf("<img src=\"images/bars_", parseEnd);
+            parseStart = fullResponse.IndexOf("HP: ", parseEnd - 15) + 4;
+            c.CurrentHitPoints = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+            parseEnd = fullResponse.IndexOf("<img src=\"images/bars_", parseEnd + 40);
+            parseStart = fullResponse.IndexOf("MP: ", parseEnd - 15) + 4;
+            c.CurrentManaPoints = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+            parseEnd = fullResponse.IndexOf("<img src=\"images/bars_", parseEnd + 40);
+            parseStart = fullResponse.IndexOf("TP: ", parseEnd - 15) + 4;
+            c.CurrentTravelPoints = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
             Point loc = new Point();
+            parseEnd = fullResponse.IndexOf("<form name=\"navi\" action=\"index.php?do=move\" method=\"post\">", parseEnd + 40);
+            parseStart = fullResponse.IndexOf(" at ", parseEnd - 35) + 4;
+            parseEnd = fullResponse.IndexOfAny(new char[2] { 'N', 'S' }, parseStart);
             loc.Y = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
             loc.Y *= (fullResponse[parseEnd] == 'N') ? 1 : -1;
-            parseStart = parseEnd + 2;
-            parseEnd = fullResponse.IndexOf('<', parseEnd + 3) - 1;
+            parseStart = fullResponse.IndexOf(',', parseEnd + 1) + 1;
+            parseEnd = fullResponse.IndexOfAny(new char[2] { 'E', 'W' }, parseStart);
             loc.X = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
             loc.X *= (fullResponse[parseEnd] == 'E') ? 1 : -1;
             c.CurrentLocation = loc;
 
-            parseEnd += 1000;
             if (c.InCombat)
             {
                 int sleepStart = parseEnd;
@@ -416,6 +446,9 @@ namespace DragonKnight2_Farmer
                 }
             }
 
+            parseStart = fullResponse.IndexOf("<b>Level</b>: ", parseEnd) + 14;
+            parseEnd = fullResponse.IndexOf('<', parseStart);
+            c.CurrentLevel = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
             parseStart = fullResponse.IndexOf("<b>Turns</b>: ", parseEnd) + 14;
             parseEnd = fullResponse.IndexOf('<', parseStart);
             c.CurrentTurns = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
@@ -431,15 +464,6 @@ namespace DragonKnight2_Farmer
             parseStart = fullResponse.IndexOf("<b>DP Bank</b>: ", parseEnd) + 16;
             parseEnd = fullResponse.IndexOf('<', parseStart);
             c.CurrentDPBank = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
-            parseStart = fullResponse.IndexOf("HP: </b>", parseEnd) + 8;
-            parseEnd = fullResponse.IndexOf('/', parseStart) - 1;
-            c.CurrentHitPoints = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
-            parseStart = fullResponse.IndexOf("MP: </b>", parseEnd) + 8;
-            parseEnd = fullResponse.IndexOf('/', parseStart) - 1;
-            c.CurrentManaPoints = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
-            parseStart = fullResponse.IndexOf("TP: </b>", parseEnd) + 8;
-            parseEnd = fullResponse.IndexOf('/', parseStart) - 1;
-            c.CurrentTravelPoints = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
 
             return c;
         }
@@ -546,115 +570,77 @@ namespace DragonKnight2_Farmer
 
         private void FarmResourcesMain(object TurnsPerMinute)
         {
-            //const int TotalPeriodCount = 500000;
-            const int baseRequestPerPeriod = 4;
-            //const int basePeriods = 3;
-            //const int requestsPerPeriod = 2;
-            int turnsPerMinute = (int)TurnsPerMinute;
+            HttpWebRequest request = null;
 
-            string[] baseRequestURLs = new string[baseRequestPerPeriod];
-            byte[][] baseRequestPostDatas = new byte[baseRequestPerPeriod][];
-            //string[] requestURLs = new string[requestsPerPeriod];
-            //byte[][] requestPostDatas = new byte[requestsPerPeriod][];
+            Character c = LoadInitialCharacterData();
+            c.TurnsPerMin = (int)TurnsPerMinute;
 
-            baseRequestURLs[0] = stonePost.URL;
-            baseRequestURLs[1] = ironPost.URL;
-            baseRequestURLs[2] = fishPost.URL;
-            baseRequestURLs[3] = woodPost.URL;
-
-            baseRequestPostDatas[0] = stonePost.Buffer50TP;
-            baseRequestPostDatas[1] = ironPost.Buffer50TP;
-            baseRequestPostDatas[2] = fishPost.Buffer50TP;
-            baseRequestPostDatas[3] = woodPost.Buffer50TP;
-
-            //requestURLs[0] = ironPost.URL;
-            //requestURLs[1] = ironPost.URL;
-            //requestURLs[2] = fishPost.URL;
-            //requestURLs[1] = ironPost.URL;
-            //requestURLs[0] = "https://dknight2.com/index.php?do=bank";
-            //requestURLs[1] = innPost.URL;
-
-            //requestPostDatas[0] = ironPost.Buffer30TP;
-            //requestPostDatas[1] = ironPost.Buffer50TP;
-            //requestPostDatas[2] = fishPost.Buffer30TP;
-            //requestPostDatas[1] = ironPost.Buffer50TP;
-            //requestPostDatas[0] = ASCIIEncoding.ASCII.GetBytes("bank=Withdraw&withdraw=5");
-            //requestPostDatas[1] = innPost.Buffer50TP;
-
-            const string BankURL = "https://dknight2.com/index.php?do=bank";
-            const string InnURL = "https://dknight2.com/index.php?do=inn";
-
-            byte[] BankPOST = ASCIIEncoding.ASCII.GetBytes("bank=Withdraw&withdraw=5");
-            byte[] InnPOST = Encoding.ASCII.GetBytes("submit=Sleep+Comfortably");
-
-            //postCookies = new CookieContainer();
-            //postCookies.Add(new Cookie("dkgame", ddlCookie.Text, "/", "dknight2.com"));
-
-            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(@"https://dknight2.com/index.php");
-
-            //request.Host = "dknight2.com";
-            //request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
-            //request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-            //request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
-            //request.Referer = @"https://dknight2.com/index.php";
-            //request.CookieContainer = postCookies;
-            //request.Method = "GET";
-            ////request.ContentType = "application/x-www-form-urlencoded";
-            //request.KeepAlive = false;
-
-            //Character c = ParseResponse(request);
-            Character c = new Character();
-            PostRequest(BankURL, BankPOST, c);
-            PostRequest(InnURL, InnPOST, c);
-            c.TurnsPerMin = turnsPerMinute;
-
-            int fullRotationsPerInn = c.CurrentTravelPoints / 200;
-            int resourceIndex = 0;
-
-            try
+            while (!KillFarmResourcesThread)
             {
-                for (PeriodsCompleted = 0; !KillFarmResourcesThread && c.CurrentGoldBank >= Character.InnCost; PeriodsCompleted++)
-                {
-                    UpdateTextAsyc(c);
-                    if (fullRotationsPerInn > 0)
-                    {
-                        for (int i = 0; i < fullRotationsPerInn; i++)
-                        {
-                            for (resourceIndex = 0; resourceIndex < baseRequestPerPeriod; resourceIndex++)
-                            {
-                                PostRequest(baseRequestURLs[resourceIndex], baseRequestPostDatas[resourceIndex], c);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        PostRequest(baseRequestURLs[resourceIndex], baseRequestPostDatas[resourceIndex], c);
-                        resourceIndex = (resourceIndex + 1) % baseRequestPerPeriod;
-                    }
-                    PostRequest(BankURL, BankPOST, c);
-                    PostRequest(InnURL, InnPOST, c);
+                CharacterAction act = c.GetNextRangerFarmAction();
 
-                    if (c.CurrentTurns < MinAcceptableTurns)
+                request = (HttpWebRequest)WebRequest.Create(act.ActionURL);
+
+                request.Host = "dknight2.com";
+                request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
+                request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+                request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
+                request.Referer = act.ActionRefererURL;
+                request.CookieContainer = new CookieContainer();
+                foreach (Cookie cook in postCookies)
+                    request.CookieContainer.Add(cook);
+                request.KeepAlive = false;
+                if (act.ActionPOST == null)
+                {
+                    request.Method = "GET";
+                }
+                else
+                {
+                    request.Method = "POST";
+                    request.ContentType = "application/x-www-form-urlencoded";
+
+                    if (!string.IsNullOrWhiteSpace(act.ActionPOST))
                     {
-                        SleepingForTurns = true;
-                        UpdateTextAsyc(c);
-                        while (!KillFarmResourcesThread && c.CurrentTurns < MaxAcceptableTurns)
+                        byte[] postBuffer = Encoding.ASCII.GetBytes(act.ActionPOST);
+                        using (Stream postStream = request.GetRequestStream())
                         {
-                            Thread.Sleep(5000);
+                            postStream.Write(postBuffer, 0, postBuffer.Length);
+                            postStream.Close();
                         }
-                        SleepingForTurns = false;
                     }
                 }
-                StopFarmingResourcesAsyc();
+
+                PeriodsCompleted++;
                 UpdateTextAsyc(c);
+
+                try
+                {
+                    ParseResponse(request, c);
+                }
+                catch (Exception ex)
+                {
+                    ManageConnectionException(ex);
+                }
+                if (c.CurrentLocation.X != 0 || c.CurrentLocation.Y != 0)
+                {
+                    throw new Exception("Not in Town!");
+                }
+
+                if (c.CurrentTurns < MinAcceptableTurns)
+                {
+                    SleepingForTurns = true;
+                    UpdateTextAsyc(c);
+                    while (!KillFarmResourcesThread && c.CurrentTurns < MaxAcceptableTurns)
+                    {
+                        Thread.Sleep(5000);
+                    }
+                    SleepingForTurns = false;
+                }
+
             }
-            catch (Exception ex)
-            {
-                Exception ex2 = new Exception("Critical Exception!  Worker Thread Aborted!", ex);
-                ManageConnectionException(ex);
-                ManageConnectionException(ex2);
-                throw ex2;
-            }
+       
+            StopFarmingResourcesAsyc();
+            UpdateTextAsyc(c);
         }
 
         private void PostRequest(string requestURL, byte[] requestPostData, Character c)
@@ -690,6 +676,7 @@ namespace DragonKnight2_Farmer
             {
                 lastExceptions.Dequeue();
             }
+            UpdateTextAsyc();
             if (lastExceptions.Count > 10)
             {
                 Thread.Sleep(SleepDurationOnTooManyExceptions);
@@ -720,21 +707,44 @@ namespace DragonKnight2_Farmer
                 sb.AppendLine(exceptionCount.ToString());
                 if (c != null)
                 {
+                    sb.Append("Location: ");
+                    if (c.CurrentLocation.Y < 0)
+                    {
+                        sb.Append(c.CurrentLocation.Y * -1);
+                        sb.Append("S,");
+                    }
+                    else
+                    {
+                        sb.Append(c.CurrentLocation.Y);
+                        sb.Append("N,");
+                    }
+                    if (c.CurrentLocation.X < 0)
+                    {
+                        sb.Append(c.CurrentLocation.X * -1);
+                        sb.Append('W');
+                    }
+                    else
+                    {
+                        sb.Append(c.CurrentLocation.X);
+                        sb.Append('E');
+                    }
+                    sb.AppendLine();
+
                     sb.Append("Turns: ");
                     sb.Append(c.CurrentTurns);
                     sb.AppendLine();
                     sb.Append("Gold: ");
                     sb.Append(c.CurrentGold);
                     sb.AppendLine();
-                    sb.Append("Gold Bank: ");
-                    sb.Append(c.CurrentGoldBank);
-                    sb.AppendLine();
+                    //sb.Append("Gold Bank: ");
+                    //sb.Append(c.CurrentGoldBank);
+                    //sb.AppendLine();
                     sb.Append("Dragon Points: ");
                     sb.Append(c.CurrentDragonPoints);
                     sb.AppendLine();
-                    sb.Append("DP Bank: ");
-                    sb.Append(c.CurrentDPBank);
-                    sb.AppendLine();
+                    //sb.Append("DP Bank: ");
+                    //sb.Append(c.CurrentDPBank);
+                    //sb.AppendLine();
                 }
                 sb.AppendLine();
                 sb.AppendLine("Exception Queue:");

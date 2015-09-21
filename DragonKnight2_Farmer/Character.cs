@@ -16,7 +16,9 @@ namespace DragonKnight2_Farmer
         private bool inCombat;
         private bool targetAsleep;
         private bool fightingBoss;
+        private bool breakOnEnchanter;
         //private int manaPotionCount;
+        private int currentLevel;
         private int currentManaPoints;
         private int currentHitPoints;
         private int currentTravelPoints;
@@ -25,6 +27,9 @@ namespace DragonKnight2_Farmer
         private int currentDragonPoints;
         private int currentDPBank;
         private int currentGoldBank;
+        private int currentPotionHPCount;
+        private int currentPotionMPCount;
+        private int currentPotionTPCount;
         private int targetHitpoints;
         private DateTime currentTurnsTimeStamp;
         private int turnsPerMin;
@@ -32,8 +37,13 @@ namespace DragonKnight2_Farmer
         public const int MinChaosDamage = 3800;
         public const int MinHitPoints = 3000;
         public const int MinManaPoints = 250;
-        public const int InnCost = 5;
+        public const int MaxDragonPoints = 2000;
+        public const int MinDragonPoints = 1000;
+        public const int MaxGold = 200000;
+        //public const int InnCost = 5;
         public const int CityTravelPointCost = 300;
+        public const int EnchantDPCost = 500;
+        public const int MinPotionCount = 500;
 
         //public const int Heal1Cost = 5, Heal2Cost = 10, Heal3Cost = 25, Heal4Cost = 50, Heal5Cost = 75;
         //public const int Heal1Healing = 10, Heal2Healing = 25, Heal3Healing = 50, Heal4Healing = 100, Heal5Healing = 150;
@@ -69,6 +79,28 @@ namespace DragonKnight2_Farmer
             set
             {
                 fightingBoss = value;
+            }
+        }
+        public bool BreakOnEnchanter
+        {
+            get
+            {
+                return breakOnEnchanter;
+            }
+            set
+            {
+                breakOnEnchanter = value;
+            }
+        }
+        public int CurrentLevel
+        {
+            get
+            {
+                return currentLevel;
+            }
+            set
+            {
+                currentLevel = value;
             }
         }
         public int CurrentManaPoints
@@ -160,6 +192,43 @@ namespace DragonKnight2_Farmer
                 currentGoldBank = value;
             }
         }
+        public int CurrentPotionHPCount
+        {
+            get
+            {
+                return currentPotionHPCount;
+            }
+            set
+            {
+                currentPotionHPCount = value;
+            }
+        }
+        public int CurrentPotionMPCount
+        {
+            get
+            {
+                return currentPotionMPCount;
+            }
+            set
+            {
+                currentPotionMPCount = value;
+            }
+        }
+        public int CurrentPotionTPCount
+        {
+            get
+            {
+                return currentPotionTPCount;
+            }
+            set
+            {
+                currentPotionTPCount = value;
+            }
+        }
+        public int CurrentWoodCount { get; set; }
+        public int CurrentFishCount { get; set; }
+        public int CurrentStoneCount { get; set; }
+        public int CurrentIronCount { get; set; }
         public int TurnsPerMin
         {
             get
@@ -193,9 +262,80 @@ namespace DragonKnight2_Farmer
             turnsPerMin = 2;
         }
 
-        public CharacterAction GetNextAction()
+        public CharacterAction GetNextMonsterFarmAction()
         {
-            if (inCombat)
+            bool closeToFightCity = (CurrentLocation.X == FightFromCity.X && (CurrentLocation.Y >= FightFromCity.Y - 3) && CurrentLocation.Y <= FightFromCity.Y);
+            bool atInnCity = (CurrentLocation.X == 0 && CurrentLocation.Y == 0);
+            int workingMinDP = (breakOnEnchanter ? MinDragonPoints : 0);
+
+            if (!inCombat)
+            {
+                if (atInnCity)
+                {
+                    if (currentTravelPoints <= CityTravelPointCost)
+                    {
+                        if (currentGold < currentLevel * 10)
+                        {
+                            return new CharacterAction(ActionID.WithdrawGold, false, false, currentLevel * 10);
+                        }
+                        else
+                        {
+                            return new CharacterAction(ActionID.SleepAtInn, false, false, currentLevel * 10);
+                        }
+                    }
+                    else if (currentPotionHPCount < MinPotionCount || currentPotionMPCount < MinPotionCount)
+                    {
+                        if (currentGold < 100 * 20)
+                        {
+                            return new CharacterAction(ActionID.WithdrawGold, false, false, 100 * 20);
+                        }
+                        else if (currentPotionHPCount < MinPotionCount)
+                        {
+                            return new CharacterAction(ActionID.BuyPotionHP);
+                        }
+                        else
+                        {
+                            return new CharacterAction(ActionID.BuyPotionMP);
+                        }
+                    }
+                    else if (currentDragonPoints > workingMinDP)
+                    {
+                        return new CharacterAction(ActionID.DepositDragonPoints, false, false, currentDragonPoints - workingMinDP);
+                    }
+                    else if (currentGold > 0)
+                    {
+                        return new CharacterAction(ActionID.DepositGold, false, false, currentGold);
+                    }
+                    else
+                    {
+                        return new CharacterAction(ActionID.GoToTown16);
+                    }
+                }
+                else if (!closeToFightCity || currentDragonPoints > MaxDragonPoints || currentGold > MaxGold)
+                {
+                    return new CharacterAction(ActionID.GoToTown01);
+                }
+                else if (currentHitPoints < MinHitPoints)
+                {
+                    return new CharacterAction(ActionID.UsePotionHP);
+                }
+                else if (currentManaPoints < MinManaPoints)
+                {
+                    return new CharacterAction(ActionID.UsePotionMP);
+                }
+                else
+                {
+                    if (CurrentLocation.Y <= FightFromCity.Y - 2)
+                    {
+                        return new CharacterAction(ActionID.ExploreNorth, false, false);
+                    }
+                    else
+                    {
+                        return new CharacterAction(ActionID.ExploreSouth, false, false);
+                    }
+                }
+            }
+            else //if (inCombat)
             {
                 if (targetAsleep || targetHitpoints < MinChaosDamage || currentManaPoints < 50+60)
                 {
@@ -206,60 +346,51 @@ namespace DragonKnight2_Farmer
                     return new CharacterAction(ActionID.CastSleep60, true, fightingBoss);
                 }
             }
-            else //inCombat == false
+        }
+
+        public CharacterAction GetNextRangerFarmAction()
+        {
+            if (currentLevel > 250 && currentPotionTPCount < MinPotionCount)
             {
-                bool closeToFightCity = (CurrentLocation.X == FightFromCity.X && (CurrentLocation.Y >= FightFromCity.Y - 3) && CurrentLocation.Y <= FightFromCity.Y);
-                bool cityHealNeeded = (currentHitPoints < MinHitPoints || currentManaPoints < MinManaPoints);
-
-
-                if (closeToFightCity)
+                if (currentGold < 500 * 20)
                 {
-                    if (cityHealNeeded)
-                    {
-                        return new CharacterAction(ActionID.GoToTown01);
-                    }
-                    else if (CurrentLocation.Y <= FightFromCity.Y - 2)
-                    {
-                        return new CharacterAction(ActionID.ExploreNorth, false, false);
-                    }
-                    else
-                    {
-                        return new CharacterAction(ActionID.ExploreSouth, false, false);
-                    }
+                    return new CharacterAction(ActionID.WithdrawGold, false, false, 500 * 20);
                 }
-                else // !closeToFightCity
+                else
                 {
-                    if (CurrentLocation.X != 0 || CurrentLocation.Y != 0)
-                    {
-                        return new CharacterAction(ActionID.GoToTown01);
-                    }
-                    else if (cityHealNeeded || currentTravelPoints < CityTravelPointCost)
-                    {
-                        if (currentGold < InnCost)
-                        {
-                            return new CharacterAction(ActionID.WithdrawGold, false, false, InnCost);
-                        }
-                        else if (currentDragonPoints > 0)
-                        {
-                            return new CharacterAction(ActionID.DepositDragonPoints, false, false, currentDragonPoints);
-                        }
-                        else
-                        {
-                            return new CharacterAction(ActionID.SleepAtInn);
-                        }
-                    }
-                    else
-                    {
-                        if (currentGold > 0)
-                        {
-                            return new CharacterAction(ActionID.DepositGold, false, false, currentGold);
-                        }
-                        else
-                        {
-                            return new CharacterAction(ActionID.GoToTown13);
-                        }
-                    }
+                    return new CharacterAction(ActionID.BuyPotionTP);
                 }
+            }
+            else if (CurrentTravelPoints <= 0)
+            {
+                if (currentLevel > 250)
+                {
+                    return new CharacterAction(ActionID.UsePotionTP);
+                }
+                else if (currentGold < currentLevel * 10)
+                {
+                    return new CharacterAction(ActionID.WithdrawGold, false, false, currentLevel * 10);
+                }
+                else
+                {
+                    return new CharacterAction(ActionID.SleepAtInn, false, false, currentLevel * 10);
+                }
+            }
+            else
+            {
+                int lowestCount = CurrentWoodCount;
+                if (CurrentFishCount < lowestCount)
+                    lowestCount = CurrentFishCount;
+                if (CurrentStoneCount < lowestCount)
+                    lowestCount = CurrentStoneCount;
+                if (CurrentIronCount < lowestCount)
+                    return new CharacterAction(ActionID.RangerIron50);
+
+                if (CurrentWoodCount == lowestCount)
+                    return new CharacterAction(ActionID.RangerWood50);
+                if (CurrentFishCount == lowestCount)
+                    return new CharacterAction(ActionID.RangerFish50);
+                return new CharacterAction(ActionID.RangerStone50);
             }
         }
     }
