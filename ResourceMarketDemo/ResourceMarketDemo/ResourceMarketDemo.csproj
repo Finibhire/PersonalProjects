@@ -44,6 +44,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -52,6 +60,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -124,8 +134,20 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManualEntryController.cs" />
     <Compile Include="Controllers\ResourceMarketController.cs" />
+    <Compile Include="DBModels\CurrencyExchangeRate.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\CurrencyExchanx.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\CurrencyType.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\MarketSale.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AdminUser.cs" />
     <Compile Include="Models\DBSimulation.cs" />
@@ -133,8 +155,49 @@
     <Compile Include="Models\DBLineItems.cs" />
     <Compile Include="Models\ResourceMarketViewModels.cs" />
     <Compile Include="Models\ResourceMarketSubmission.cs" />
-    <Compile Include="Models\SelectUserSubmission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DBModels\PurchaseOrder.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\ResourceMarketDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourceMarketDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\ResourceMarketDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\ResourceMarketDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourceMarketDB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\ResourceType.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\SellOrder.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\User.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\UserAllPivoted.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\UserCurrenciesPivoted.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\UserCurrency.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\UserResource.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBModels\UserResourcesPivoted.cs">
+      <DependentUpon>ResourceMarketDB.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -143,8 +206,25 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="DBModels\ResourceMarketDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ResourceMarketDB.edmx</DependentUpon>
+      <LastGenOutput>ResourceMarketDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DBModels\ResourceMarketDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ResourceMarketDB.edmx</DependentUpon>
+      <LastGenOutput>ResourceMarketDB.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EntityDeploy Include="DBModels\ResourceMarketDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ResourceMarketDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="DBModels\ResourceMarketDB.edmx.diagram">
+      <DependentUpon>ResourceMarketDB.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -172,7 +252,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\ResourceMarketDemo.cshtml" />
-    <Content Include="Views\Home\SelectUser.cshtml" />
     <Content Include="Views\Admin\Users.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
     <Content Include="Views\ManualEntry\CreatePurchaseOrder.cshtml" />
@@ -188,6 +267,9 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

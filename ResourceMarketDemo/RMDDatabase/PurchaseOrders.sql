@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[PurchaseOrders]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [UserId] INT NOT NULL, 
     [ResourceTypeId] INT NOT NULL, 
     [ResourceRequestAmount] INT NOT NULL, 
@@ -24,7 +24,7 @@ CREATE TRIGGER [dbo].[Trigger_PurchaseOrders_INSERT]
     BEGIN
         SET NoCount ON
 
-		if @@ROWCOUNT = 0
+		if not exists(select * from inserted)
 			return
 
 		

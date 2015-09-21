@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace WebApplication1.Models
+namespace ResourceMarketDemo.Models
 {
     public static class DBSimulation
     {
-        static SortedDictionary<string, User> _Users = new SortedDictionary<string, User>();
+        //static SortedDictionary<string, User> _Users = new SortedDictionary<string, User>();
         static SortedDictionary<int, PurchaseOrder> _PurchaseOrders = new SortedDictionary<int, PurchaseOrder>();
         static SortedDictionary<int, SaleOrder> _SaleOrders = new SortedDictionary<int, SaleOrder>();
         static SortedDictionary<int, ResourceSale> _ResourceSales = new SortedDictionary<int, ResourceSale>();
@@ -22,13 +22,13 @@ namespace WebApplication1.Models
         public const decimal DPtoFLAPCoin = 6.37544000m;
         public const decimal ConvertTaxRate = 0.85m; //used when converting from DP to a crypto-currency
 
-        public static SortedDictionary<string, User> Users
-        {
-            get
-            {
-                return _Users;
-            }
-        }
+        //public static SortedDictionary<string, User> Users
+        //{
+        //    get
+        //    {
+        //        return _Users;
+        //    }
+        //}
         public static SortedDictionary<int, PurchaseOrder> PurchaseOrders
         {
             get
@@ -252,93 +252,93 @@ namespace WebApplication1.Models
             return saleOrders;
         }
 
-        /// <summary>
-        /// when currencyPerResource is less than zero it is ignored and the maximum is bought at any price
-        /// </summary>
-        /// <param name="po"></param>
-        public static void ProcAddPurchaseOrder(PurchaseOrder po)
-        {
-            po.ID = (new Random()).Next();
+        ///// <summary>
+        ///// when currencyPerResource is less than zero it is ignored and the maximum is bought at any price
+        ///// </summary>
+        ///// <param name="po"></param>
+        //public static void ProcAddPurchaseOrder(PurchaseOrder po)
+        //{
+        //    po.ID = (new Random()).Next();
 
-            if (po.UserName == null)
-                throw new ArgumentNullException("UserName");
-            if (!_Users.ContainsKey(po.UserName))
-                throw new ArgumentException("UserName does not exist in the database", "UserName");
-            User user = _Users[po.UserName];
+        //    if (po.UserName == null)
+        //        throw new ArgumentNullException("UserName");
+        //    //if (!_Users.ContainsKey(po.UserName))
+        //    //    throw new ArgumentException("UserName does not exist in the database", "UserName");
+        //    //User user = _Users[po.UserName];
 
-            var qualifyingSaleOrders = OrderedBestSaleOrders(po.ResourceType, po.CurrencyType);
-            if (po.CurrencyPerResource >= 0)
-                qualifyingSaleOrders = qualifyingSaleOrders.Where(x => x.CostEach >= po.CurrencyPerResource);
+        //    var qualifyingSaleOrders = OrderedBestSaleOrders(po.ResourceType, po.CurrencyType);
+        //    if (po.CurrencyPerResource >= 0)
+        //        qualifyingSaleOrders = qualifyingSaleOrders.Where(x => x.CostEach >= po.CurrencyPerResource);
 
-            List<CurrencyConversion> curConTrans = new List<CurrencyConversion>();
-            List<SaleOrder> saleOrderTrans = new List<SaleOrder>();
+        //    List<CurrencyConversion> curConTrans = new List<CurrencyConversion>();
+        //    List<SaleOrder> saleOrderTrans = new List<SaleOrder>();
 
 
-            bool filled = false;
-            po.ResourceFilledAmount = 0;
-            foreach (var order in qualifyingSaleOrders)
-            {
-                int resourceBuyAmount = order.RemainingResourceAmount;
-                if (po.ResourceRequestAmount - po.ResourceFilledAmount <= resourceBuyAmount)
-                {
-                    resourceBuyAmount = po.ResourceRequestAmount - po.ResourceFilledAmount;
-                    filled = true;
-                }
+        //    bool filled = false;
+        //    po.ResourceFilledAmount = 0;
+        //    foreach (var order in qualifyingSaleOrders)
+        //    {
+        //        int resourceBuyAmount = order.RemainingResourceAmount;
+        //        if (po.ResourceRequestAmount - po.ResourceFilledAmount <= resourceBuyAmount)
+        //        {
+        //            resourceBuyAmount = po.ResourceRequestAmount - po.ResourceFilledAmount;
+        //            filled = true;
+        //        }
 
-            }
+        //    }
             
 
-            decimal totalCost = po.CurrencyPerResource * (decimal)po.ResourceRequestAmount;
-            bool enoughCurrency = false;
-            switch (po.CurrencyType)
-            {
-                case CurrencyType.DragonPoints:
-                    if (user.DragonPoints > totalCost)
-                    {
-                        enoughCurrency = true;
-                        user.DragonPoints -= totalCost;
-                    }
-                    break;
-                case CurrencyType.FLAP:
-                    if (user.FLAPCoin > totalCost)
-                    {
-                        enoughCurrency = true;
-                        user.FLAPCoin -= totalCost;
-                    }
-                    break;
-                case CurrencyType.Gold:
-                    if (user.Gold > totalCost)
-                    {
-                        enoughCurrency = true;
-                        user.Gold -= totalCost;
-                    }
-                    break;
-                case CurrencyType.GoldPiecesCoin:
-                    if (user.GoldPieceCoin > totalCost)
-                    {
-                        enoughCurrency = true;
-                        user.GoldPieceCoin -= totalCost;
-                    }
-                    break;
-                case CurrencyType.HTML5Coin:
-                    if (user.HTML5Coin > totalCost)
-                    {
-                        enoughCurrency = true;
-                        user.HTML5Coin -= totalCost;
-                    }
-                    break;
-                case CurrencyType.HyperCoin:
-                    if (user.HyperCoin > totalCost)
-                    {
-                        enoughCurrency = true;
-                        user.HyperCoin -= totalCost;
-                    }
-                    break;
-            }
-            if (!enoughCurrency)
-                throw new ArgumentException(po.UserName + " does not have enough " + po.CurrencyType + " to create this Purchase Order.", "CurrencyPerResource");
+        //    decimal totalCost = po.CurrencyPerResource * (decimal)po.ResourceRequestAmount;
+        //    bool enoughCurrency = false;
+        //    switch (po.CurrencyType)
+        //    {
+        //        case CurrencyType.DragonPoints:
+        //            if (user.DragonPoints > totalCost)
+        //            {
+        //                enoughCurrency = true;
+        //                user.DragonPoints -= totalCost;
+        //            }
+        //            break;
+        //        case CurrencyType.FLAP:
+        //            if (user.FLAPCoin > totalCost)
+        //            {
+        //                enoughCurrency = true;
+        //                user.FLAPCoin -= totalCost;
+        //            }
+        //            break;
+        //        case CurrencyType.Gold:
+        //            if (user.Gold > totalCost)
+        //            {
+        //                enoughCurrency = true;
+        //                user.Gold -= totalCost;
+        //            }
+        //            break;
+        //        case CurrencyType.GoldPiecesCoin:
+        //            if (user.GoldPieceCoin > totalCost)
+        //            {
+        //                enoughCurrency = true;
+        //                user.GoldPieceCoin -= totalCost;
+        //            }
+        //            break;
+        //        case CurrencyType.HTML5Coin:
+        //            if (user.HTML5Coin > totalCost)
+        //            {
+        //                enoughCurrency = true;
+        //                user.HTML5Coin -= totalCost;
+        //            }
+        //            break;
+        //        case CurrencyType.HyperCoin:
+        //            if (user.HyperCoin > totalCost)
+        //            {
+        //                enoughCurrency = true;
+        //                user.HyperCoin -= totalCost;
+        //            }
+        //            break;
+        //    }
+        //    if (!enoughCurrency)
+        //        throw new ArgumentException(po.UserName + " does not have enough " + po.CurrencyType + " to create this Purchase Order.", "CurrencyPerResource");
 
-            _PurchaseOrders.Add(po.ID, po);
-        }
+        //    _PurchaseOrders.Add(po.ID, po);
+        //}
     }
 }

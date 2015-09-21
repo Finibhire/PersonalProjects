@@ -7,7 +7,11 @@
     [ResourcesSoldAmount] INT NOT NULL, 
     [CurrencyTypeId] TINYINT NOT NULL, 
     [TotalCurrencyCost] DECIMAL(38, 9) NOT NULL, 
-    [TimeStamp] DATETIME NOT NULL DEFAULT getdate()
+    [TimeStamp] DATETIME NOT NULL DEFAULT getdate(), 
+    CONSTRAINT [FK_MarketSales_Users_Seller] FOREIGN KEY ([SellerUserId]) REFERENCES [Users]([Id]),
+    CONSTRAINT [FK_MarketSales_Users_Buyer] FOREIGN KEY ([BuyerUserId]) REFERENCES [Users]([Id]),
+    CONSTRAINT [FK_MarketSales_ResourceTypes] FOREIGN KEY ([ResourceTypeId]) REFERENCES [ResourceTypes]([Id]),
+    CONSTRAINT [FK_MarketSales_CurrencyTypes] FOREIGN KEY ([CurrencyTypeId]) REFERENCES [CurrencyTypes]([Id])
 )
 
 GO
@@ -19,7 +23,7 @@ CREATE TRIGGER [dbo].[Trigger_MarketSales_INSERT]
     BEGIN
         SET NoCount ON
 
-		if @@ROWCOUNT = 0
+		if not exists(select * from inserted)
 			return
 
 		--insert 0's into rows that we need in UserCurrencies and UserResources

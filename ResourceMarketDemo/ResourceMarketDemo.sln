@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 14 for Web
+# Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceMarketDemo", "ResourceMarketDemo\ResourceMarketDemo.csproj", "{799E89C5-BDC9-4FD6-91F7-AC8C50747F48}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F4B025A7-7BA6-4F05-95B5-35A6F24506D6} = {F4B025A7-7BA6-4F05-95B5-35A6F24506D6}
+	EndProjectSection
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "RMDDatabase", "RMDDatabase\RMDDatabase.sqlproj", "{F4B025A7-7BA6-4F05-95B5-35A6F24506D6}"
 EndProject
@@ -18,8 +21,6 @@ Global
 		{799E89C5-BDC9-4FD6-91F7-AC8C50747F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{799E89C5-BDC9-4FD6-91F7-AC8C50747F48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4B025A7-7BA6-4F05-95B5-35A6F24506D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4B025A7-7BA6-4F05-95B5-35A6F24506D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4B025A7-7BA6-4F05-95B5-35A6F24506D6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{F4B025A7-7BA6-4F05-95B5-35A6F24506D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4B025A7-7BA6-4F05-95B5-35A6F24506D6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4B025A7-7BA6-4F05-95B5-35A6F24506D6}.Release|Any CPU.Deploy.0 = Release|Any CPU

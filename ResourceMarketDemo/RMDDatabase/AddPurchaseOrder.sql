@@ -114,7 +114,7 @@ AS
 			from #ConvertedOrders co3
 		) as co2 on co.OrderId = co2.OrderId
 
-	select * from #ConvertedOrders  --debug
+	--select * from #ConvertedOrders  --debug
 
 	begin tran
 
@@ -145,7 +145,7 @@ AS
 		where co.ResourceAmountToFill <= 0 
 			--or CurrencyPerResource <= @CurrencyPerResource
 		
-		select * from #ConvertedOrders  --debug
+		--select * from #ConvertedOrders  --debug
 
 		declare @runningCost decimal(38,9)
 
@@ -186,7 +186,7 @@ AS
 				inner join SellOrders so on co.OrderId = so.Id
 				inner join CurrencyTypes ct on so.CurrencyTypeId = ct.Id
 
-			select * from #newMarketSales  --debug
+			--select * from #newMarketSales  --debug
 
 			create table #newCurrencyExchanges
 			(
@@ -209,7 +209,7 @@ AS
 				inner join CurrencyExchangeRates cer on cer.SourceCurrencyId = @CurrencyTypeId and cer.DestinationCurrencyId = nms.CurrencyTypeId
 				inner join CurrencyTypes ct on cer.DestinationCurrencyId = ct.Id
 
-			select * from #newCurrencyExchanges --debug
+			--select * from #newCurrencyExchanges --debug
 
 			--update the database to reflect all the changes processed so far.
 			insert into CurrencyExchanges
@@ -228,7 +228,7 @@ AS
 				DestinationAmount
 			from #newCurrencyExchanges
 
-			select * from UserCurrencies where UserId = @UserId --debug
+			--select * from UserCurrencies where UserId = @UserId --debug
 
 			insert into MarketSales
 			(
@@ -248,7 +248,7 @@ AS
 				TotalCurrencyCost
 			from #newMarketSales
 			
-			select * from UserCurrencies where UserId = @UserId --debug
+			--select * from UserCurrencies where UserId = @UserId --debug
 
 			--remove the currency amounts that were added to the @UserId account by inserting into CurrencyExchanges
 			--because they are consumed by filling SellOrders
@@ -268,7 +268,7 @@ AS
 						nce2.UserId, nce2.DestinationCurrencyTypeId
 				) as nce on uc.UserId = nce.UserId and uc.CurrencyTypeId = nce.DestinationCurrencyTypeId
 				
-			select * from UserCurrencies where UserId = @UserId --debug
+			--select * from UserCurrencies where UserId = @UserId --debug
 
 			--remove the currency required to fill the SellOrders that were in the same currency as the PurchaseOrder
 			update uc
@@ -289,7 +289,7 @@ AS
 						nms2.BuyerUserId
 				) as nms on uc.UserId = nms.BuyerUserId
 				
-			select * from UserCurrencies where UserId = @UserId --debug
+			--select * from UserCurrencies where UserId = @UserId --debug
 
 			--Remove SellOrders that we completely filled from the database
 			delete so 

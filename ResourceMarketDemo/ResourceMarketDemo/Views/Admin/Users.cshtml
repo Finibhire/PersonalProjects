@@ -1,4 +1,6 @@
-﻿@model WebApplication1.Models.AdminUserViewData
+﻿@using ResourceMarketDemo.DBModels
+@using ResourceMarketDemo.Models
+@model AdminUserViewData
 
 @{
     ViewBag.Title = "Users";
@@ -23,27 +25,27 @@
             <td style="padding: 4px 4px 4px 4px;"><b>FLAP</b></td>
         </tr>
     </thead>
-    @foreach (KeyValuePair<string, WebApplication1.Models.User> pair in Model.Users)
+    @foreach (VFUser u in Model.Users)
     {
         <tr style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
             <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">
-                @if ((string)Session["UserName"] == pair.Key)
+                @if ((int)Session["UserId"] == u.Id)
                 {
-                    <span style="color: darkgray">Logged in as @pair.Key</span>
+                    <span style="color: darkgray">Logged in as @u.UserName</span>
                 }
                 else
                 {
-                    @Html.ActionLink("Login as " + pair.Key, "Users", new { LoginAs = pair.Key });
+                    @Html.ActionLink("Login as " + u.UserName, "Users", new { LoginAs = u.Id });
                 }
             </td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.ActionLink("Edit", "EditUser", new { UserName = Html.Encode(pair.Key) })</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.UserName</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.Gold</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.DragonPoints</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.HyperCoin</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.GoldPieceCoin</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.HTML5Coin</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@pair.Value.FLAPCoin</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.ActionLink("Edit", "EditUser", new { Id = u.Id })</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.UserName</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.Gold</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.DragonPoints</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.HyperCoin</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.GoldPieceCoin</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.HTML5Coin</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.FLAPCoin</td>
         </tr>
     }
     <tr style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">

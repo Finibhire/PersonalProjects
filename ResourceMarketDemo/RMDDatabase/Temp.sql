@@ -34,14 +34,15 @@ select 2, 2, 0.1, 1, 100, 0
 union all
 select 2, 3, 0.00001, 1, 100, 0
 
+begin tran
 select * from SellOrders
-
 exec AddPurchaseOrder 1, 1, 150, 2, 10
-
-select so.*, (cer.SourceMultiplier * so.CurrencyPerResource) as RealCurPerRes 
+select * from UserCurrencies
+select so.*, (cer.SourceMultiplier / so.CurrencyPerResource) as RealCurPerRes 
 from SellOrders so left join CurrencyExchangeRates cer on cer.SourceCurrencyId = so.CurrencyTypeId and cer.DestinationCurrencyId = 2
 select * from MarketSales
 
+rollback tran
 
 
 declare @CurrencyTypeId tinyint = 2
@@ -86,3 +87,24 @@ declare @CurrencyPerResource decimal(38,9) = 10
 				so.CurrencyPerResource / cer.SourceMultiplier <= @CurrencyPerResource  --dido
 			)
 		)
+
+
+merge UserCurrencies as t
+using 
+(
+	select 
+		cast(1 as int) as UserId, 
+		cast(1 as tinyint) as CurrencyTypeId, 
+		cast(5 as decimal(38,9)) as OnHand
+) as s
+on (t.UserId = s.UserId and t.CurrencyTypeId = s.CurrencyTypeId)
+when matched then
+	update set t.OnHand = s.OnHand
+when not matched then
+	insert (UserId, CurrencyTypeId, OnHand)
+	values (s.UserId, s.CurrencyTypeId, s.OnHand)
+output deleted.*, inserted.*;
+
+select * from UserCurrencies
+
+merge UserCurrencies as t using(select {0} as UserId, cast(1 as tinyint) as CurrencyTypeId, cast({} as decimal(38,9)) as OnHand) as s on (t.UserId = s.UserId and t.CurrencyTypeId = s.CurrencyTypeId) when matched then update set t.OnHand = s.OnHand when not matched then insert (UserId, CurrencyTypeId, OnHand) values (s.UserId, s.CurrencyTypeId, s.OnHand);

@@ -4,33 +4,39 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.Models
+namespace ResourceMarketDemo.Models
 {
-    public class User
+    /// <summary>
+    /// View Formated User
+    /// </summary>
+    public class VFUser
     {
+        [Required]
+        public int? Id { get; set; }
+        [Required]
         [DisplayFormat(ApplyFormatInEditMode = true, ConvertEmptyStringToNull = true)]
         public string UserName { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F0}")]
-        public decimal DragonPoints { get; set; }
+        public decimal? DragonPoints { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F0}")]
-        public decimal Gold { get; set; }
+        public decimal? Gold { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#############}")]
-        public decimal HyperCoin { get; set; }
+        public decimal? HyperCoin { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#############}")]
-        public decimal GoldPieceCoin { get; set; }
+        public decimal? GoldPieceCoin { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#############}")]
-        public decimal HTML5Coin { get; set; }
+        public decimal? HTML5Coin { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#############}")]
-        public decimal FLAPCoin { get; set; }
+        public decimal? FLAPCoin { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F}")]
-        public long Wood { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F}")]
-        public long Iron { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F}")]
-        public long Stone { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F}")]
-        public long Fish { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:D0}")]
+        public long? Wood { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:D0}")]
+        public long? Iron { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:D0}")]
+        public long? Stone { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:D0}")]
+        public long? Fish { get; set; }
     }
 
     public class PurchaseOrder
