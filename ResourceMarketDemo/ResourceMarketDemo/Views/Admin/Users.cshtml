@@ -23,6 +23,10 @@
             <td style="padding: 4px 4px 4px 4px;"><b>GoldPieces</b></td>
             <td style="padding: 4px 4px 4px 4px;"><b>HTML5</b></td>
             <td style="padding: 4px 4px 4px 4px;"><b>FLAP</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>Wood</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>Fish</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>Stone</b></td>
+            <td style="padding: 4px 4px 4px 4px;"><b>Iron</b></td>
         </tr>
     </thead>
     @foreach (VFUser u in Model.Users)
@@ -40,12 +44,16 @@
             </td>
             <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.ActionLink("Edit", "EditUser", new { Id = u.Id })</td>
             <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.UserName</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.Gold</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.DragonPoints</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.HyperCoin</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.GoldPieceCoin</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.HTML5Coin</td>
-            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@u.FLAPCoin</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.Gold)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.DragonPoints)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.HyperCoin)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.GoldPieceCoin)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.HTML5Coin)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.FLAPCoin)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.Wood)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.Fish)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.Stone)</td>
+            <td style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">@Html.DisplayFor(m => u.Iron)</td>
         </tr>
     }
     <tr style="border-bottom: 1px solid gray; padding: 4px 4px 4px 4px;">

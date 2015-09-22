@@ -6,52 +6,75 @@ using System.Web;
 using System.Web.Mvc;
 using ResourceMarketDemo.Models;
 using ResourceMarketDemo.DBModels;
+using System.Web.Security;
 
 namespace ResourceMarketDemo.Controllers
 {
     public class AdminController : Controller
     {
         private RMDDatabaseEntities db = new RMDDatabaseEntities();
-        // GET: Admin
+
+
+        [AllowAnonymous]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult Index()
         {
-            return View();
+            return RedirectToActionPermanent("Users");
         }
 
+        [AllowAnonymous]
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult Users(int? LoginAs)
         {
             DBModels.User loginUser = null;
 
+
+            if (LoginAs != null)
+            {
+                loginUser = db.Users.Where(x => x.Id == LoginAs).FirstOrDefault();
+                if (loginUser == null)
+                {
+                    LoginAs = null;
+                }
+            }
+
             if (LoginAs == null)
             {
-                if (Session["UserId"] == null)
+                if (User.Identity.IsAuthenticated)
                 {
-                    LoginAs = 1;
+                    loginUser = db.Users.Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+                    if (loginUser == null)
+                    {
+                        FormsAuthentication.SignOut();
+                    }
                 }
-                else
-                {
-                    LoginAs = (int)Session["UserId"];
-                }
-            }
-            loginUser = db.Users.Include("UserCurrencies.UserResources").Where(x => x.Id == LoginAs).FirstOrDefault();
 
-            if (loginUser == null)
-            {
-                loginUser = new DBModels.User();
-                loginUser.UserName = "Finibhire";
-                loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 1, OnHand = 1000 });
-                loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 2, OnHand = 2000 });
-                loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 3, OnHand = 3000 });
-                loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 4, OnHand = 4000 });
-                loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 5, OnHand = 5000 });
-                loginUser.UserResources.Add(new UserResource() { ResourceTypeId = 1, OnHand = 10000 });
-                loginUser.UserResources.Add(new UserResource() { ResourceTypeId = 2, OnHand = 10000 });
-                loginUser.UserResources.Add(new UserResource() { ResourceTypeId = 3, OnHand = 10000 });
-                loginUser.UserResources.Add(new UserResource() { ResourceTypeId = 4, OnHand = 10000 });
-                db.Users.Add(loginUser);
-                db.SaveChanges();
+                if (!User.Identity.IsAuthenticated)
+                {
+                    if (db.Users.Take(1).Count() == 0)
+                    {
+                        loginUser = new DBModels.User();
+                        loginUser.UserName = "Finibhire";
+                        loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 1, OnHand = 1000 });
+                        loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 2, OnHand = 2000 });
+                        loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 3, OnHand = 3000 });
+                        loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 4, OnHand = 4000 });
+                        loginUser.UserCurrencies.Add(new UserCurrency() { CurrencyTypeId = 5, OnHand = 5000 });
+                        loginUser.UserResources.Add(new UserResource() { ResourceTypeId = 1, OnHand = 10000 });
+                        loginUser.UserResources.Add(new UserResource() { ResourceTypeId = 2, OnHand = 20000 });
+                        loginUser.UserResources.Add(new UserResource() { ResourceTypeId = 3, OnHand = 30000 });
+                        loginUser.UserResources.Add(new UserResource() { ResourceTypeId = 4, OnHand = 40000 });
+                        db.Users.Add(loginUser);
+                        db.SaveChanges();
+                    }
+                    loginUser = db.Users.First();
+                }
             }
+
+            //loginUser = db.Users.Include("UserCurrencies").Where(x => x.Id == LoginAs).FirstOrDefault();
+
+            FormsAuthentication.SetAuthCookie(loginUser.UserName, true);
+
             Session["UserId"] = loginUser.Id;
             Session["UserName"] = loginUser.UserName;
 
@@ -82,6 +105,7 @@ namespace ResourceMarketDemo.Controllers
             return View("Users", viewData);
         }
 
+        [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateNewUser(AdminUserSubmitData subData)
         {
@@ -115,6 +139,7 @@ namespace ResourceMarketDemo.Controllers
             return Users(null);
         }
 
+        [Authorize]
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult EditUser(VFUser subData)
         {
@@ -132,13 +157,8 @@ namespace ResourceMarketDemo.Controllers
                 throw new HttpException("UserId does not exist!");
             }
 
-            if (Request.HttpMethod == "POST")
+            if (Request.HttpMethod == "POST" && ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return View("EditUser", subData);
-                }
-
                 StringBuilder sb = new StringBuilder();
                 EditUserUpdateCurrenciesSQL(sb, editUser.Id, 1, subData.Gold);
                 EditUserUpdateCurrenciesSQL(sb, editUser.Id, 2, subData.DragonPoints);
@@ -147,9 +167,9 @@ namespace ResourceMarketDemo.Controllers
                 EditUserUpdateCurrenciesSQL(sb, editUser.Id, 5, subData.HTML5Coin);
                 EditUserUpdateCurrenciesSQL(sb, editUser.Id, 6, subData.FLAPCoin);
                 EditUserUpdateResourcesSQL(sb, editUser.Id, 1, subData.Wood);
-                EditUserUpdateResourcesSQL(sb, editUser.Id, 1, subData.Fish);
-                EditUserUpdateResourcesSQL(sb, editUser.Id, 1, subData.Stone);
-                EditUserUpdateResourcesSQL(sb, editUser.Id, 1, subData.Iron);
+                EditUserUpdateResourcesSQL(sb, editUser.Id, 2, subData.Fish);
+                EditUserUpdateResourcesSQL(sb, editUser.Id, 3, subData.Stone);
+                EditUserUpdateResourcesSQL(sb, editUser.Id, 4, subData.Iron);
                 db.Database.ExecuteSqlCommand(sb.ToString());
                 
                 //editUser.UserName = subData.UserName;
