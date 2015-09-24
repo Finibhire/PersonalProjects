@@ -387,6 +387,14 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <Parameter Name="input" Type="decimal" Mode="In" />
           <Parameter Name="MaxScale" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetConvertedPurchaseOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="workingCurrency" Type="tinyint" Mode="In" />
+          <Parameter Name="workingResource" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetConvertedSellOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="workingCurrency" Type="tinyint" Mode="In" />
+          <Parameter Name="workingResource" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="RMDDatabaseModelStoreContainer">
           <EntitySet Name="CurrencyExchangeRates" EntityType="Self.CurrencyExchangeRates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CurrencyExchanges" EntityType="Self.CurrencyExchanges" Schema="dbo" store:Type="Tables" />
@@ -521,8 +529,8 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <Property Name="SourceCurrencyId" Type="Byte" Nullable="false" />
           <Property Name="DestinationCurrencyId" Type="Byte" Nullable="false" />
           <Property Name="SourceMultiplier" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
-          <NavigationProperty Name="CurrencyType" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" FromRole="CurrencyExchangeRates" ToRole="CurrencyTypes" />
-          <NavigationProperty Name="CurrencyType1" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId" FromRole="CurrencyExchangeRates" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="CurrencyType_Destination" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" FromRole="CurrencyExchangeRates" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="CurrencyType_Source" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId" FromRole="CurrencyExchangeRates" ToRole="CurrencyTypes" />
         </EntityType>
         <EntityType Name="CurrencyExchanx">
           <Key>
@@ -535,8 +543,8 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <Property Name="SourceAmount" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
           <Property Name="DestinationAmount" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
           <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="CurrencyType" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Destination" FromRole="CurrencyExchanges" ToRole="CurrencyTypes" />
-          <NavigationProperty Name="CurrencyType1" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Source" FromRole="CurrencyExchanges" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="CurrencyType_Destination" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Destination" FromRole="CurrencyExchanges" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="CurrencyType_Source" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Source" FromRole="CurrencyExchanges" ToRole="CurrencyTypes" />
         </EntityType>
         <EntityType Name="CurrencyType">
           <Key>
@@ -545,10 +553,10 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <Property Name="Id" Type="Byte" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="MaxScale" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="CurrencyExchangeRates" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" FromRole="CurrencyTypes" ToRole="CurrencyExchangeRates" />
-          <NavigationProperty Name="CurrencyExchangeRates1" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId" FromRole="CurrencyTypes" ToRole="CurrencyExchangeRates" />
-          <NavigationProperty Name="CurrencyExchanges" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Destination" FromRole="CurrencyTypes" ToRole="CurrencyExchanges" />
-          <NavigationProperty Name="CurrencyExchanges1" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Source" FromRole="CurrencyTypes" ToRole="CurrencyExchanges" />
+          <NavigationProperty Name="CurrencyExchangeRates_Destination" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" FromRole="CurrencyTypes" ToRole="CurrencyExchangeRates" />
+          <NavigationProperty Name="CurrencyExchangeRates_Source" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId" FromRole="CurrencyTypes" ToRole="CurrencyExchangeRates" />
+          <NavigationProperty Name="CurrencyExchanges_Destination" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Destination" FromRole="CurrencyTypes" ToRole="CurrencyExchanges" />
+          <NavigationProperty Name="CurrencyExchanges_Source" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Source" FromRole="CurrencyTypes" ToRole="CurrencyExchanges" />
           <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK_PurchaseOrders_CurrencyTypes" FromRole="CurrencyTypes" ToRole="PurchaseOrders" />
           <NavigationProperty Name="SellOrders" Relationship="Self.FK_SellOrders_CurrencyTypes" FromRole="CurrencyTypes" ToRole="SellOrders" />
           <NavigationProperty Name="UserCurrencies" Relationship="Self.FK_UserCurrencies_CurrencyTypes" FromRole="CurrencyTypes" ToRole="UserCurrencies" />
@@ -568,8 +576,8 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="CurrencyType" Relationship="RMDDatabaseModel.FK_MarketSales_CurrencyTypes" FromRole="MarketSale" ToRole="CurrencyType" />
           <NavigationProperty Name="ResourceType" Relationship="RMDDatabaseModel.FK_MarketSales_ResourceTypes" FromRole="MarketSale" ToRole="ResourceType" />
-          <NavigationProperty Name="User" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Buyer" FromRole="MarketSale" ToRole="User" />
-          <NavigationProperty Name="User1" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Seller" FromRole="MarketSale" ToRole="User" />
+          <NavigationProperty Name="User_Buyer" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Buyer" FromRole="MarketSale" ToRole="User" />
+          <NavigationProperty Name="User_Seller" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Seller" FromRole="MarketSale" ToRole="User" />
         </EntityType>
         <EntityType Name="PurchaseOrder">
           <Key>
@@ -644,8 +652,8 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <NavigationProperty Name="SellOrders" Relationship="Self.FK_SellOrders_Users" FromRole="Users" ToRole="SellOrders" />
           <NavigationProperty Name="UserCurrencies" Relationship="Self.FK_UserCurrencies_Users" FromRole="Users" ToRole="UserCurrencies" />
           <NavigationProperty Name="UserResources" Relationship="Self.FK_UserResources_Users" FromRole="Users" ToRole="UserResources" />
-          <NavigationProperty Name="MarketSales" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Buyer" FromRole="User" ToRole="MarketSale" />
-          <NavigationProperty Name="MarketSales1" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Seller" FromRole="User" ToRole="MarketSale" />
+          <NavigationProperty Name="MarketSales_Buyer" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Buyer" FromRole="User" ToRole="MarketSale" />
+          <NavigationProperty Name="MarketSales_Seller" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Seller" FromRole="User" ToRole="MarketSale" />
         </EntityType>
         <EntityType Name="UserAllPivoted">
           <Key>
@@ -959,6 +967,14 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
             <End Role="User" EntitySet="Users" />
             <End Role="MarketSale" EntitySet="MarketSales" />
           </AssociationSet>
+          <FunctionImport Name="GetConvertedPurchaseOrders" ReturnType="Collection(RMDDatabaseModel.GetConvertedPurchaseOrders_Result)">
+            <Parameter Name="workingCurrency" Mode="In" Type="Byte" />
+            <Parameter Name="workingResource" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetConvertedSellOrders" ReturnType="Collection(RMDDatabaseModel.GetConvertedSellOrders_Result)">
+            <Parameter Name="workingCurrency" Mode="In" Type="Byte" />
+            <Parameter Name="workingResource" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <Association Name="FK_MarketSales_CurrencyTypes">
           <End Type="RMDDatabaseModel.CurrencyType" Role="CurrencyType" Multiplicity="1" />
@@ -1008,6 +1024,26 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetConvertedPurchaseOrders_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="Int32" Name="ResourceTypeId" Nullable="false" />
+          <Property Type="Int32" Name="ToBeFilledAmount" Nullable="false" />
+          <Property Type="Byte" Name="OriginalCurrencyTypeId" Nullable="false" />
+          <Property Type="String" Name="OriginalCurrencyName" Nullable="true" MaxLength="20" />
+          <Property Type="Decimal" Name="SourceMultiplier" Nullable="false" Precision="38" Scale="9" />
+          <Property Type="Double" Name="ConvertedCurrencyPerResource" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetConvertedSellOrders_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="Int32" Name="ResourceTypeId" Nullable="false" />
+          <Property Type="Int32" Name="ToBeFilledAmount" Nullable="false" />
+          <Property Type="Byte" Name="OriginalCurrencyTypeId" Nullable="false" />
+          <Property Type="String" Name="OriginalCurrencyName" Nullable="true" MaxLength="20" />
+          <Property Type="Decimal" Name="SourceMultiplier" Nullable="false" Precision="38" Scale="9" />
+          <Property Type="Double" Name="ConvertedCurrencyPerResource" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1165,6 +1201,34 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="AddPurchaseOrder" FunctionName="RMDDatabaseModel.Store.AddPurchaseOrder" />
           <FunctionImportMapping FunctionImportName="AddSellOrder" FunctionName="RMDDatabaseModel.Store.AddSellOrder" />
+          <FunctionImportMapping FunctionImportName="GetConvertedPurchaseOrders" FunctionName="RMDDatabaseModel.Store.GetConvertedPurchaseOrders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMDDatabaseModel.GetConvertedPurchaseOrders_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ResourceTypeId" ColumnName="ResourceTypeId" />
+                <ScalarProperty Name="ToBeFilledAmount" ColumnName="ToBeFilledAmount" />
+                <ScalarProperty Name="OriginalCurrencyTypeId" ColumnName="OriginalCurrencyTypeId" />
+                <ScalarProperty Name="OriginalCurrencyName" ColumnName="OriginalCurrencyName" />
+                <ScalarProperty Name="SourceMultiplier" ColumnName="SourceMultiplier" />
+                <ScalarProperty Name="ConvertedCurrencyPerResource" ColumnName="ConvertedCurrencyPerResource" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetConvertedSellOrders" FunctionName="RMDDatabaseModel.Store.GetConvertedSellOrders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMDDatabaseModel.GetConvertedSellOrders_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ResourceTypeId" ColumnName="ResourceTypeId" />
+                <ScalarProperty Name="ToBeFilledAmount" ColumnName="ToBeFilledAmount" />
+                <ScalarProperty Name="OriginalCurrencyTypeId" ColumnName="OriginalCurrencyTypeId" />
+                <ScalarProperty Name="OriginalCurrencyName" ColumnName="OriginalCurrencyName" />
+                <ScalarProperty Name="SourceMultiplier" ColumnName="SourceMultiplier" />
+                <ScalarProperty Name="ConvertedCurrencyPerResource" ColumnName="ConvertedCurrencyPerResource" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

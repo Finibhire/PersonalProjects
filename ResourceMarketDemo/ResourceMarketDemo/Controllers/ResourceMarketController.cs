@@ -4,97 +4,151 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ResourceMarketDemo.Models;
+using ResourceMarketDemo.DBModels;
 
 namespace ResourceMarketDemo.Controllers
 {
+    [Authorize]
     public class ResourceMarketController : Controller
     {
+        RMDDatabaseEntities db = new RMDDatabaseEntities();
+
         // GET: ResourceMarket
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult Index(CurrencyType? WorkingCurrency, ResourceType? WorkingResource)
+        public ActionResult Index(int? WorkingCurrencyTypeId, int? WorkingResourceTypeId)
         {
-            string userName = (string)Session["UserName"];
             ResourceMarketIndexView model = new ResourceMarketIndexView();
-            model.WorkingCurrency = WorkingCurrency ?? CurrencyType.Gold;
-            model.WorkingResource = WorkingResource ?? ResourceType.Wood;
-            model.RecentResourceSales =
-                DBSimulation.ResourceSales.Values.OrderByDescending(x => x.SaleTime).Take(10).ToArray();
-            model.MyRecentTransactions =
-                DBSimulation.ResourceSales.Values
-                .Where(x => x.BuyerUserName == userName || x.SellerUserName == userName)
-                .Take(10)
-                .ToArray();
-
-            model.CurrentPurchaseOrders = (
-                from po in DBSimulation.PurchaseOrders.Values
-                where po.ResourceRequestAmount - po.ResourceFilledAmount > 0
-                where po.ResourceType == model.WorkingResource
-                join cer in DBSimulation.CurrencyExchangeRates
-                    on new { SourceCurrencyType = po.CurrencyType, DestinationCurrencyType = model.WorkingCurrency }
-                    equals new { cer.SourceCurrencyType, cer.DestinationCurrencyType }
-                    into intoCer
-                from leftCer in intoCer.DefaultIfEmpty()
-                where leftCer != null || po.CurrencyType == model.WorkingCurrency
-                orderby po.CurrencyPerResource * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier) descending
-                select new ResourceMarketIndexView.ConvertedOrder
-                {
-                    ID = po.ID,
-                    OriginalCurrency = po.CurrencyType,
-                    CostEach = po.CurrencyPerResource * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier),
-                    ExchangeRate = leftCer == null ? 1m : leftCer.ConversionSourceMultiplier,
-                    RemainingResourceAmount = po.ResourceRequestAmount - po.ResourceFilledAmount,
-                    TotalCost = (po.ResourceRequestAmount - po.ResourceFilledAmount) * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier),
-                    UserIsOwner = po.UserName == userName
-                }
-                ).ToArray();
-
-            model.CurrentSaleOrders = (
-                from so in DBSimulation.SaleOrders.Values
-                where so.ResourceSellAmount - so.ResourceFilledAmount > 0
-                where so.ResourceType == model.WorkingResource
-                join cer in DBSimulation.CurrencyExchangeRates
-                    on new { SourceCurrencyType = so.CurrencyType, DestinationCurrencyType = model.WorkingCurrency }
-                    equals new { cer.SourceCurrencyType, cer.DestinationCurrencyType }
-                    into intoCer
-                from leftCer in intoCer.DefaultIfEmpty()
-                where leftCer != null || so.CurrencyType == model.WorkingCurrency
-                orderby so.CurrencyPerResource * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier) ascending
-                select new ResourceMarketIndexView.ConvertedOrder
-                {
-                    ID = so.ID,
-                    OriginalCurrency = so.CurrencyType,
-                    CostEach = so.CurrencyPerResource * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier),
-                    ExchangeRate = leftCer == null ? 1m : leftCer.ConversionSourceMultiplier,
-                    RemainingResourceAmount = so.ResourceSellAmount - so.ResourceFilledAmount,
-                    TotalCost = (so.ResourceSellAmount - so.ResourceFilledAmount) * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier),
-                    UserIsOwner = so.UserName == userName
-                }
-                ).ToArray();
+            PopulateModelDisplayData(model, WorkingCurrencyTypeId, WorkingResourceTypeId);
 
             return View("Index", model);
         }
 
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreatePurchaseOrder([Bind(Exclude = "ID,UserName,ResourceFilledAmount")] PurchaseOrder po)
+        public ActionResult AddPurchaseOrder(NewOrderPostData data)
         {
             string userName = (string)Session["UserName"];
-            po.UserName = userName;
-            //po.ResourceFilledAmount = 0;
+            int userId = (int)Session["UserId"];
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    //DBSimulation.ProcAddPurchaseOrder(po);
+                    db.AddPurchaseOrder(userId, data.ResourceTypeId, data.ResourceAmount, (byte)data.CurrencyTypeId, data.CurrencyPerResource);
                 }
-                catch (ArgumentException ex)
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError(ex.ParamName, ex.Message);
+                    ModelState.AddModelError("DatabaseError", ex);
                 }
             }
 
-            return Index(po.CurrencyType, po.ResourceType);
+            ResourceMarketIndexView model = new ResourceMarketIndexView();
+            PopulateModelDisplayData(model, data.CurrencyTypeId, data.ResourceTypeId);
+            model.AddPurchaseOrderData = data;
+
+            return View("Index", model);
+        }
+
+        private void PopulateModelDisplayData(ResourceMarketIndexView model, int? WorkingCurrencyTypeId, int? WorkingResourceTypeId)
+        {
+            string workingCurrencyName, workingResourceName;
+            int workingResourceTypeId;
+            byte workingCurrencyTypeId;
+
+            string userName = (string)Session["UserName"];
+            int userId = (int)Session["UserId"];
+
+            //get the requested working currencies and working resources or provide the defaults
+            model.WorkingCurrencyName =
+                db.CurrencyTypes
+                .Where(x => x.Id == WorkingCurrencyTypeId)
+                .Select(x => x.Name)
+                .FirstOrDefault();
+            if (model.WorkingCurrencyName == null)
+            {
+                var workingCurrencyInfo =
+                    db.CurrencyTypes
+                    .Select(x => new { x.Name, x.Id })
+                    .OrderBy(x => x.Id)
+                    .First();
+                model.WorkingCurrencyName = workingCurrencyInfo.Name;
+                model.WorkingCurrencyTypeId = workingCurrencyInfo.Id;
+            }
+            workingCurrencyTypeId = (byte)model.WorkingCurrencyTypeId;
+            workingCurrencyName = model.WorkingCurrencyName;
+
+            model.WorkingResourceName =
+                db.ResourceTypes
+                .Where(x => x.Id == WorkingResourceTypeId)
+                .Select(x => x.Name)
+                .FirstOrDefault();
+            if (model.WorkingResourceName == null)
+            {
+                var workingResourceInfo =
+                    db.ResourceTypes
+                    .Select(x => new { x.Name, x.Id })
+                    .OrderBy(x => x.Id)
+                    .First();
+                model.WorkingResourceName = workingResourceInfo.Name;
+                model.WorkingResourceTypeId = workingResourceInfo.Id;
+            }
+            workingResourceTypeId = model.WorkingResourceTypeId;
+            workingResourceName = model.WorkingResourceName;
+
+            //populate what's needed for the html view tables
+            model.RecentResourceSales =
+                db.MarketSales
+                .Where(x => x.ResourceTypeId == workingResourceTypeId)
+                .OrderBy(x => x.TimeStamp)
+                .Select(x => new ResourceSaleView()
+                {
+                    SaleTime = x.TimeStamp,
+                    CurrencyName = x.CurrencyType.Name,
+                    AmountSold = x.ResourcesSoldAmount,
+                    CurrencyPerResource = x.TotalCurrencyCost / (decimal)x.ResourcesSoldAmount,
+                    TotalCostAmount = x.TotalCurrencyCost
+                });
+
+            model.ClientRecentTransactions =
+                db.MarketSales
+                .Where(x => x.BuyerUserId == userId || x.SellerUserId == userId)
+                .OrderBy(x => x.TimeStamp)
+                .Select(x => new ClientResourceSaleView()
+                {
+                    SaleTime = x.TimeStamp,
+                    CurrencyName = x.CurrencyType.Name,
+                    AmountSold = x.ResourcesSoldAmount,
+                    CurrencyPerResource = x.TotalCurrencyCost / (decimal)x.ResourcesSoldAmount,
+                    TotalCostAmount = x.TotalCurrencyCost,
+                    ResourceName = x.ResourceType.Name,
+                    ClientIsBuyingResources = (x.BuyerUserId == userId)
+                });
+
+            model.CurrentPurchaseOrders =
+                db.GetConvertedPurchaseOrders(workingCurrencyTypeId, workingResourceTypeId)
+                .Select(x => new ConvertedOrderView()
+                {
+                    Id = x.Id,
+                    ClientIsOwner = x.UserId == userId,
+                    RemainingResourceAmount = x.ToBeFilledAmount,
+                    OriginalCurrencyName = x.OriginalCurrencyName,
+                    ExchangeRate = x.SourceMultiplier,
+                    CurrencyPerResource = (decimal)x.ConvertedCurrencyPerResource,
+                    TotalCost = (decimal)(x.ConvertedCurrencyPerResource * x.ToBeFilledAmount)
+                });
+
+            model.CurrentSellOrders =
+                db.GetConvertedSellOrders(workingCurrencyTypeId, workingResourceTypeId)
+                .Select(x => new ConvertedOrderView()
+                {
+                    Id = x.Id,
+                    ClientIsOwner = x.UserId == userId,
+                    RemainingResourceAmount = x.ToBeFilledAmount,
+                    OriginalCurrencyName = x.OriginalCurrencyName,
+                    ExchangeRate = x.SourceMultiplier,
+                    CurrencyPerResource = (decimal)x.ConvertedCurrencyPerResource,
+                    TotalCost = (decimal)x.ConvertedCurrencyPerResource * (decimal)x.ToBeFilledAmount
+                });
         }
     }
 }

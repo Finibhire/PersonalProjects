@@ -107,4 +107,14 @@ output deleted.*, inserted.*;
 
 select * from UserCurrencies
 
-merge UserCurrencies as t using(select {0} as UserId, cast(1 as tinyint) as CurrencyTypeId, cast({} as decimal(38,9)) as OnHand) as s on (t.UserId = s.UserId and t.CurrencyTypeId = s.CurrencyTypeId) when matched then update set t.OnHand = s.OnHand when not matched then insert (UserId, CurrencyTypeId, OnHand) values (s.UserId, s.CurrencyTypeId, s.OnHand);
+
+
+
+declare @maxVal decimal(38,9) = 99999999999999999999999999999.999999999
+
+select 
+	@maxVal as [all],
+	floor(@maxVal) as whole,
+	cast(@maxVal - cast(floor(@maxVal) as decimal(29,0)) as decimal(9,9)) as fraction,
+	cast(cast(@maxVal - cast(floor(@maxVal) as decimal(29,0)) as decimal(9,9)) * cast(1000000000 as decimal(10,0)) as decimal(9,0)) as wholeFraction,
+

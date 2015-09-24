@@ -17,10 +17,10 @@ namespace ResourceMarketDemo.DBModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CurrencyType()
         {
-            this.CurrencyExchangeRates = new HashSet<CurrencyExchangeRate>();
-            this.CurrencyExchangeRates1 = new HashSet<CurrencyExchangeRate>();
-            this.CurrencyExchanges = new HashSet<CurrencyExchanx>();
-            this.CurrencyExchanges1 = new HashSet<CurrencyExchanx>();
+            this.CurrencyExchangeRates_Destination = new HashSet<CurrencyExchangeRate>();
+            this.CurrencyExchangeRates_Source = new HashSet<CurrencyExchangeRate>();
+            this.CurrencyExchanges_Destination = new HashSet<CurrencyExchanx>();
+            this.CurrencyExchanges_Source = new HashSet<CurrencyExchanx>();
             this.PurchaseOrders = new HashSet<PurchaseOrder>();
             this.SellOrders = new HashSet<SellOrder>();
             this.UserCurrencies = new HashSet<UserCurrency>();
@@ -32,13 +32,13 @@ namespace ResourceMarketDemo.DBModels
         public byte MaxScale { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurrencyExchangeRate> CurrencyExchangeRates { get; set; }
+        public virtual ICollection<CurrencyExchangeRate> CurrencyExchangeRates_Destination { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurrencyExchangeRate> CurrencyExchangeRates1 { get; set; }
+        public virtual ICollection<CurrencyExchangeRate> CurrencyExchangeRates_Source { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurrencyExchanx> CurrencyExchanges { get; set; }
+        public virtual ICollection<CurrencyExchanx> CurrencyExchanges_Destination { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurrencyExchanx> CurrencyExchanges1 { get; set; }
+        public virtual ICollection<CurrencyExchanx> CurrencyExchanges_Source { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

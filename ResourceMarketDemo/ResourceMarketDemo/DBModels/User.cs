@@ -21,8 +21,8 @@ namespace ResourceMarketDemo.DBModels
             this.SellOrders = new HashSet<SellOrder>();
             this.UserCurrencies = new HashSet<UserCurrency>();
             this.UserResources = new HashSet<UserResource>();
-            this.MarketSales = new HashSet<MarketSale>();
-            this.MarketSales1 = new HashSet<MarketSale>();
+            this.MarketSales_Buyer = new HashSet<MarketSale>();
+            this.MarketSales_Seller = new HashSet<MarketSale>();
         }
     
         public int Id { get; set; }
@@ -37,8 +37,8 @@ namespace ResourceMarketDemo.DBModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserResource> UserResources { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MarketSale> MarketSales { get; set; }
+        public virtual ICollection<MarketSale> MarketSales_Buyer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MarketSale> MarketSales1 { get; set; }
+        public virtual ICollection<MarketSale> MarketSales_Seller { get; set; }
     }
 }

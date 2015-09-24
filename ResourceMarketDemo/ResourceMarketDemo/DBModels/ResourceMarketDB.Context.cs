@@ -90,5 +90,31 @@ namespace ResourceMarketDemo.DBModels
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddSellOrder", userIdParameter, resourceTypeIdParameter, resourceSellAmountParameter, currencyTypeIdParameter, currencyPerResourceParameter);
         }
+    
+        public virtual ObjectResult<GetConvertedPurchaseOrders_Result> GetConvertedPurchaseOrders(Nullable<byte> workingCurrency, Nullable<int> workingResource)
+        {
+            var workingCurrencyParameter = workingCurrency.HasValue ?
+                new ObjectParameter("workingCurrency", workingCurrency) :
+                new ObjectParameter("workingCurrency", typeof(byte));
+    
+            var workingResourceParameter = workingResource.HasValue ?
+                new ObjectParameter("workingResource", workingResource) :
+                new ObjectParameter("workingResource", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetConvertedPurchaseOrders_Result>("GetConvertedPurchaseOrders", workingCurrencyParameter, workingResourceParameter);
+        }
+    
+        public virtual ObjectResult<GetConvertedSellOrders_Result> GetConvertedSellOrders(Nullable<byte> workingCurrency, Nullable<int> workingResource)
+        {
+            var workingCurrencyParameter = workingCurrency.HasValue ?
+                new ObjectParameter("workingCurrency", workingCurrency) :
+                new ObjectParameter("workingCurrency", typeof(byte));
+    
+            var workingResourceParameter = workingResource.HasValue ?
+                new ObjectParameter("workingResource", workingResource) :
+                new ObjectParameter("workingResource", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetConvertedSellOrders_Result>("GetConvertedSellOrders", workingCurrencyParameter, workingResourceParameter);
+        }
     }
 }

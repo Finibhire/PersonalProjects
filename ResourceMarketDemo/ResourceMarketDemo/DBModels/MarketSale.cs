@@ -25,7 +25,7 @@ namespace ResourceMarketDemo.DBModels
     
         public virtual CurrencyType CurrencyType { get; set; }
         public virtual ResourceType ResourceType { get; set; }
-        public virtual User User { get; set; }
-        public virtual User User1 { get; set; }
+        public virtual User User_Buyer { get; set; }
+        public virtual User User_Seller { get; set; }
     }
 }

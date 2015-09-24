@@ -10,19 +10,16 @@
 namespace ResourceMarketDemo.DBModels
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class CurrencyExchanx
+    public partial class GetConvertedSellOrders_Result
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public byte SourceCurrencyTypeId { get; set; }
-        public byte DestinationCurrencyTypeId { get; set; }
-        public decimal SourceAmount { get; set; }
-        public decimal DestinationAmount { get; set; }
-        public System.DateTime TimeStamp { get; set; }
-    
-        public virtual CurrencyType CurrencyType_Destination { get; set; }
-        public virtual CurrencyType CurrencyType_Source { get; set; }
+        public int ResourceTypeId { get; set; }
+        public int ToBeFilledAmount { get; set; }
+        public byte OriginalCurrencyTypeId { get; set; }
+        public string OriginalCurrencyName { get; set; }
+        public decimal SourceMultiplier { get; set; }
+        public double ConvertedCurrencyPerResource { get; set; }
     }
 }

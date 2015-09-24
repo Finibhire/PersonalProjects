@@ -6,6 +6,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    td {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+</style>
+
 <h2>Resource Market</h2>
 
 <div class="form-horizontal" style="margin-bottom:20px">
@@ -14,13 +21,13 @@
         <h4>Change Market</h4>
         <div class="form-group">
             <label class="control-label col-md-2">Working Currency:</label>
-            <label style="text-align:left; padding-top:7px" class="col-md-1">@Model.WorkingCurrency.ToString()</label>
+            <label style="text-align:left; padding-top:7px" class="col-md-1">@Model.WorkingCurrencyName</label>
             <div style="padding-top:7px" class="col-md-1">
-                @Html.DropDownList("WorkingCurrency", Enum.GetValues(typeof(CurrencyType)).Cast<CurrencyType>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString(), Selected = Model.WorkingCurrency == x }))
+                @Html.DropDownList("WorkingCurrency", Enum.GetValues(typeof(CurrencyType)).Cast<CurrencyType>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString(), Selected = Model.WorkingCurrencyTypeId == (int)x }))
             </div>
             <label class="control-label col-md-2" style="display:block; clear:left">Working Resource:</label>
-            <label style="text-align:left; padding-top:7px" class="col-md-1">@Model.WorkingResource.ToString()</label>
-            @Html.HiddenFor(m => m.WorkingResource)
+            <label style="text-align:left; padding-top:7px" class="col-md-1">@Model.WorkingResourceName</label>
+            @Html.HiddenFor(m => m.WorkingResourceTypeId)
         </div>
         <div class="form-group">
             <div class="col-md-offset-2" style="float:left; height:10px"></div>
@@ -46,30 +53,29 @@
     <table>
         <thead>
             <tr>
-                <th>Transaction Time</th>
-                <th>@Model.WorkingResource.ToString()</th>
+                <th>Transaction<br />Time</th>
+                <th>@Model.WorkingResourceName<br />Sold<br />Amount</th>
                 <th>Sale<br />Currency</th>
-                <th>Cost/@Model.WorkingResource.ToString()</th>
+                <th>Currency<br />per<br />@Model.WorkingResourceName</th>
                 <th>Total<br />Cost</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <!--<tr>
                 <td>@DateTime.Now</td>
                 <td>900</td>
-                <td>@CurrencyType.Gold.ToString()</td>
+                <td>Example</td>
                 <td>9.9</td>
                 <td>8,910</td>
-            </tr>
-            @for (int i = 0; i < Model.RecentResourceSales.Length; i++)
+            </tr>-->
+            @foreach (ResourceSaleView rs in Model.RecentResourceSales)
             {
-                ResourceSale rs = Model.RecentResourceSales[i];
             <tr>
-                <td>@rs.SaleTime.ToString()</td>
-                <td>@rs.ResourceAmount.ToString()</td>
-                <td>@rs.CurrencyType.ToString()</td>
-                <td>@((rs.TotalCostAmount / rs.ResourceAmount).ToString())</td>
-                <td>@rs.TotalCostAmount.ToString()</td>
+                <td>@Html.DisplayFor(m => rs.SaleTime)</td>
+                <td>@Html.DisplayFor(m => rs.AmountSold)</td>
+                <td>@Html.DisplayFor(m => rs.CurrencyName)</td>
+                <td>@rs.CurrencyPerResource.GetRMDReadableFormat()</td>
+                <td>@rs.TotalCostAmount.GetRMDReadableFormat()</td>
             </tr>
             }
         </tbody>
@@ -82,33 +88,35 @@
     <table>
         <thead>
             <tr>
-                <th>Transaction Time</th>
-                <th>Res.<br />Type</th>
-                <th>Resources</th>
-                <th>Currency<br />Type</th>
-                <th>Cost/res.</th>
+                <th>Transaction<br />Time</th>
+                <th>Buy<br />or<br />Sell</th>
+                <th>Resource<br />Type</th>
+                <th>Resources<br />Sold</th>
+                <th>Sale<br />Currency</th>
+                <th>Currency<br />per<br />Resource</th>
                 <th>Total<br />Cost</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <!--<tr>
                 <td>@DateTime.Now</td>
-                <td>@ResourceType.Fish.ToString()</td>
+                <td>Buy</td>
+                <td>Fish</td>
                 <td>50</td>
-                <td>@CurrencyType.DragonPoints.ToString()</td>
+                <td>Example</td>
                 <td>9.9</td>
                 <td>495</td>
-            </tr>
-            @for (int i = 0; i < Model.MyRecentTransactions.Length; i++)
+            </tr>-->
+            @foreach (ClientResourceSaleView rs in Model.ClientRecentTransactions)
             {
-                ResourceSale rs = Model.MyRecentTransactions[i];
             <tr>
-                <td>@rs.SaleTime.ToString()</td>
-                <td>@rs.ResourceType.ToString()</td>
-                <td>@rs.ResourceAmount.ToString()</td>
-                <td>@rs.CurrencyType.ToString()</td>
-                <td>@((rs.TotalCostAmount / rs.ResourceAmount).ToString())</td>
-                <td>@rs.TotalCostAmount.ToString()</td>
+                <td>@Html.DisplayFor(m => rs.SaleTime)</td>
+                <td>@((rs.ClientIsBuyingResources) ? "Buy" : "Sell")</td>
+                <td>@Html.DisplayFor(m => rs.ResourceName)</td>
+                <td>@Html.DisplayFor(m => rs.AmountSold)</td>
+                <td>@Html.DisplayFor(m => rs.CurrencyName)</td>
+                <td>@rs.CurrencyPerResource.GetRMDReadableFormat()</td>
+                <td>@rs.TotalCostAmount.GetRMDReadableFormat()</td>
             </tr>
             }
         </tbody>
@@ -122,76 +130,84 @@
         <thead>
             <tr>
                 <th>Resources</th>
-                <th>PO<br />Currency</th>
+                <th>P.O.<br />Currency</th>
                 <th>Exchange<br />Rate*</th>
-                <th>@Model.WorkingCurrency.ToString()/res.</th>
+                <th>@Model.WorkingCurrencyName<br />per<br />@Model.WorkingResourceName</th>
                 <th>Total<br />Cost</th>
-                <th />
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>875</td>
-                <td>Dragon Points</td>
+                <td>EXAMPLE</td>
                 <td>0.00091</td>
                 <td>1.2</td>
                 <td>900</td>
-                <td>@Html.ActionLink("delete", "DeletePurchaseOrder", new { PurchaseOrderNumber = 10 })</td>
+                <td>@Html.ActionLink("delete", "DeletePurchaseOrder", new { PurchaseOrderId = 10 })</td>
             </tr>
-            @for (int i = 0; i < Model.CurrentPurchaseOrders.Length; i++)
+            @foreach (ConvertedOrderView co in Model.CurrentPurchaseOrders)
             {
-                ResourceMarketIndexView.ConvertedOrder co = Model.CurrentPurchaseOrders[i];
             <tr>
-                <td>@co.RemainingResourceAmount.ToString()</td>
-                <td>@co.OriginalCurrency.ToString()</td>
-                <td>@co.ExchangeRate</td>
-                <td>@co.CostEach</td>
-                <td>@co.TotalCost.ToString()</td>
-                <td>@(co.UserIsOwner ? Html.ActionLink("delete", "DeletePurchaseOrder", new { PurchaseOrderNumber = co.ID }) : null)</td>
+                <td>@Html.DisplayFor(x => co.RemainingResourceAmount)</td>
+                <td>@Html.DisplayFor(x => co.OriginalCurrencyName)</td>
+                <td>@co.ExchangeRate.GetRMDReadableFormat()</td>
+                <td>@co.CurrencyPerResource.GetRMDReadableFormat()</td>
+                <td>@co.TotalCost.GetRMDReadableFormat()</td>
+                <td>@(co.ClientIsOwner ? Html.ActionLink("delete", "DeletePurchaseOrder", new { PurchaseOrderId = co.Id }) : null)</td>
             </tr>
             }
         </tbody>
         <tfoot>
-            <tr>
-                <td colspan="5" style="text-align:right">
-                    <form action="InstantSell" method="POST">
-                        <input type="hidden" name="ResourceType" value="@Model.WorkingResource.ToString()" />
-                        <input type="hidden" name="CurrencyType" value="@Model.WorkingCurrency.ToString()" />
-                        Instant Sell:
-                        <input type="number" name="ResourceAmount" class="" />
-                        <input type="submit" value="Sell Now" class="form-control button" />
-                    </form>
+            <tr style="border-bottom-style: none; border-bottom-width: 0px">
+                <td colspan="6">&nbsp;</td>
+            </tr>
+            <tr style="border-bottom-style: solid; border-bottom-width: 2px">
+                <td colspan="6">
+                    <div style="font-weight:700;float:left">Create Purchase Order:</div>
                 </td>
             </tr>
             <tr>
-                <td colspan="5">
-                    @using (Html.BeginForm("CreatePurchaseOrder", "ResourceMarket", FormMethod.Post))
+                <td colspan="6">
+                    @using (Html.BeginForm("AddPurchaseOrder", "ResourceMarket", FormMethod.Post))
                     {
-                        <input type="hidden" name="ResourceType" value="@Model.WorkingResource.ToString()" />
-                        <input type="hidden" name="CurrencyType" value="@Model.WorkingCurrency.ToString()" />
-                        <div style="font-weight:700">Create Purchase Order</div>
+                        @Html.HiddenFor(m => m.AddPurchaseOrderData.ResourceTypeId)
+                        @Html.HiddenFor(m => m.AddPurchaseOrderData.CurrencyTypeId)
                         <input type="submit" value="Create PO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             Total<br />
-                            <input type="text" value="*JavaScript Calculated*" />
+                            <input type="text" value="*java-calc*" />
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            @Model.WorkingCurrency.ToString()/@Model.WorkingResource.ToString()<br />
-                            <input type="text" name="CurrencyPerResource" class="" />
+                            @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
+                            @Html.EditorFor(m => m.AddPurchaseOrderData.CurrencyPerResource)
+                            <!--<input type="text" name="CurrencyPerResource" class="" />-->
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            @Model.WorkingResource.ToString()<br />
-                            <input type="number" name="ResourceRequestAmount" class="" />
+                            @Model.WorkingResourceName<br />
+                            @Html.EditorFor(m => m.AddPurchaseOrderData.ResourceAmount)
+                            <!--<input type="number" name="ResourceRequestAmount" class="" />-->
                         </div>
                     }
                 </td>
             </tr>
-            <tr style="border-bottom:none">
-                <td colspan="5" style="text-align:left; border-bottom:none">
-                    *The Currency Exchange Rate to convert a PO into <br />
-                    &nbsp;&nbsp;your working currency includes the 15% fee for <br />
-                    &nbsp;&nbsp;exchanging currency directly in game.
-                    
+            <tr style="border-bottom-style: none; border-bottom-width: 0px">
+                <td colspan="6">&nbsp;</td>
+            </tr>
+            <tr style="border-bottom-style: solid; border-bottom-width: 2px">
+                <td colspan="6">
+                    <div style="font-weight:700;float:left">Instant @Model.WorkingResourceName Buy:</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="text-align:right">
+                    <form action="InstantBuy" method="POST">
+                        <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
+                        <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
+                        Amount of @Model.WorkingResourceName to buy:
+                        <input type="number" name="ResourceAmount" class="" />
+                        <input type="submit" value="Buy Now" class="form-control button" />
+                    </form>
                 </td>
             </tr>
         </tfoot>
@@ -199,14 +215,14 @@
 </div>
 
 <div style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
-    <div class="table-label">Current Sale Orders</div>
+    <div class="table-label">Current Sell Orders</div>
     <table>
         <thead>
             <tr>
                 <th>Resources</th>
-                <th>SO<br />Currency</th>
+                <th>S.O.<br />Currency</th>
                 <th>Exchange<br />Rate*</th>
-                <th>@Model.WorkingCurrency.ToString()/res.</th>
+                <th>@Model.WorkingCurrencyName<br />per<br />@Model.WorkingResourceName</th>
                 <th>Total<br />Cost</th>
                 <th />
             </tr>
@@ -218,64 +234,75 @@
                 <td>0.00091</td>
                 <td>1.2</td>
                 <td>900</td>
-                <td>@Html.ActionLink("delete", "DeleteSaleOrder", new { SaleOrderNumber = 10 })</td>
+                <td>@Html.ActionLink("delete", "DeleteSaleOrder", new { SaleOrderId = 10 })</td>
             </tr>
-            @for (int i = 0; i < Model.CurrentSaleOrders.Length; i++)
+            @foreach (ConvertedOrderView co in Model.CurrentSellOrders)
             {
-                ResourceMarketIndexView.ConvertedOrder co = Model.CurrentSaleOrders[i];
                 <tr>
                     <td>@co.RemainingResourceAmount.ToString()</td>
-                    <td>@co.OriginalCurrency.ToString()</td>
+                    <td>@co.OriginalCurrencyName</td>
                     <td>@co.ExchangeRate</td>
-                    <td>@co.CostEach</td>
-                    <td>@co.TotalCost.ToString()</td>
-                    <td>@(co.UserIsOwner ? Html.ActionLink("delete", "DeleteSaleOrder", new { SaleOrderNumber = co.ID }) : null)</td>
+                    <td>@co.CurrencyPerResource</td>
+                    <td>@co.TotalCost</td>
+                    <td>@(co.ClientIsOwner ? Html.ActionLink("delete", "DeleteSaleOrder", new { SaleOrderId = co.Id }) : null)</td>
                 </tr>
             }
         </tbody>
         <tfoot>
-            <tr>
-                <td colspan="5" style="text-align:right">
-                    <form action="InstantBuy" method="POST">
-                        <input type="hidden" name="ResourceType" value="@Model.WorkingResource.ToString()" />
-                        <input type="hidden" name="CurrencyType" value="@Model.WorkingCurrency.ToString()" />
-                        Instant Buy:
-                        <input type="number" name="ResourceAmount" class="" />
-                        <input type="submit" value="Buy Now" class="form-control button" />
-                    </form>
+            <tr style="border-bottom-style: none; border-bottom-width: 0px">
+                <td colspan="6">&nbsp;</td>
+            </tr>
+            <tr style="border-bottom-style: solid; border-bottom-width: 2px">
+                <td colspan="6">
+                    <div style="font-weight:700;float:left">Create Sell Order</div>
                 </td>
             </tr>
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     <form action="CreateSaleOrder" method="post">
-                        <input type="hidden" name="ResourceType" value="@Model.WorkingResource.ToString()" />
-                        <input type="hidden" name="CurrencyType" value="@Model.WorkingCurrency.ToString()" />
-                        <div style="font-weight:700">Create Sale Order</div>
+                        <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
+                        <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
+                        
                         <input type="submit" value="Create SO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             Total<br />
                             <input type="text" value="*java-calc*" />
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            @Model.WorkingCurrency.ToString()/@Model.WorkingResource.ToString()<br />
+                            @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
                             <input type="text" name="CurrencyPerResource" class="" />
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            @Model.WorkingResource.ToString()<br />
+                            @Model.WorkingResourceName<br />
                             <input type="number" name="ResourceSellAmount" class="" />
                         </div>
                     </form>
                 </td>
             </tr>
-            <tr style="border-bottom:none">
-                <td colspan="5" style="text-align:left; border-bottom:none">
-                    *The Currency Exchange Rate to convert a PO into <br />
-                    &nbsp;&nbsp;your working currency includes the 15% fee for <br />
-                    &nbsp;&nbsp;exchanging currency directly in game.
-
+            <tr style="border-bottom-style: none; border-bottom-width: 0px">
+                <td colspan="6">&nbsp;</td>
+            </tr>
+            <tr style="border-bottom-style: solid; border-bottom-width: 2px">
+                <td colspan="6">
+                    <div style="font-weight:700;float:left">Instant @Model.WorkingResourceName Sell:</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="text-align:right">
+                    <form action="InstantSell" method="POST">
+                        <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
+                        <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
+                        Amount of @Model.WorkingResourceName to sell:
+                        <input type="number" name="ResourceAmount" class="" />
+                        <input type="submit" value="Sell Now" class="form-control button" />
+                    </form>
                 </td>
             </tr>
         </tfoot>
     </table>
 </div>
-<div style="clear:both; display:block; height:1px;" />
+<div style="clear:both; display:block; height:10px;" />
+
+<div>
+    *The Currency Exchange Rate to convert a PO into your working currency is based on the current live market exchange rate at (Bitrex.com) and includes an additional 15% deduction as a fee for exchanging in game.
+</div>

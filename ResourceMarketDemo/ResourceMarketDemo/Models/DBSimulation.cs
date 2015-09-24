@@ -226,31 +226,31 @@ namespace ResourceMarketDemo.Models
         /// considering the currency conversion rate.
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<ResourceMarketIndexView.ConvertedOrder> OrderedBestSaleOrders(ResourceType WorkingResource, CurrencyType WorkingCurrency)
-        {
-            IEnumerable<ResourceMarketIndexView.ConvertedOrder> saleOrders =
-                from so in DBSimulation.SaleOrders.Values
-                where so.ResourceSellAmount - so.ResourceFilledAmount > 0
-                where so.ResourceType == WorkingResource
-                join cer in DBSimulation.CurrencyExchangeRates
-                    on new { SourceCurrencyType = so.CurrencyType, DestinationCurrencyType = WorkingCurrency }
-                    equals new { cer.SourceCurrencyType, cer.DestinationCurrencyType }
-                    into intoCer
-                from leftCer in intoCer.DefaultIfEmpty()
-                where leftCer != null || so.CurrencyType == WorkingCurrency
-                orderby so.CurrencyPerResource * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier) ascending
-                select new ResourceMarketIndexView.ConvertedOrder
-                {
-                    ID = so.ID,
-                    OriginalCurrency = so.CurrencyType,
-                    CostEach = so.CurrencyPerResource * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier),
-                    ExchangeRate = leftCer == null ? 1m : leftCer.ConversionSourceMultiplier,
-                    RemainingResourceAmount = so.ResourceSellAmount - so.ResourceFilledAmount,
-                    TotalCost = (so.ResourceSellAmount - so.ResourceFilledAmount) * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier)
-                };
+        //public static IEnumerable<ResourceMarketIndexView.ConvertedOrder> OrderedBestSaleOrders(ResourceType WorkingResource, CurrencyType WorkingCurrency)
+        //{
+        //    IEnumerable<ResourceMarketIndexView.ConvertedOrder> saleOrders =
+        //        from so in DBSimulation.SaleOrders.Values
+        //        where so.ResourceSellAmount - so.ResourceFilledAmount > 0
+        //        where so.ResourceType == WorkingResource
+        //        join cer in DBSimulation.CurrencyExchangeRates
+        //            on new { SourceCurrencyType = so.CurrencyType, DestinationCurrencyType = WorkingCurrency }
+        //            equals new { cer.SourceCurrencyType, cer.DestinationCurrencyType }
+        //            into intoCer
+        //        from leftCer in intoCer.DefaultIfEmpty()
+        //        where leftCer != null || so.CurrencyType == WorkingCurrency
+        //        orderby so.CurrencyPerResource * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier) ascending
+        //        select new ResourceMarketIndexView.ConvertedOrder
+        //        {
+        //            ID = so.ID,
+        //            OriginalCurrency = so.CurrencyType,
+        //            CostEach = so.CurrencyPerResource * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier),
+        //            ExchangeRate = leftCer == null ? 1m : leftCer.ConversionSourceMultiplier,
+        //            RemainingResourceAmount = so.ResourceSellAmount - so.ResourceFilledAmount,
+        //            TotalCost = (so.ResourceSellAmount - so.ResourceFilledAmount) * (leftCer == null ? 1m : leftCer.ConversionSourceMultiplier)
+        //        };
 
-            return saleOrders;
-        }
+        //    return saleOrders;
+        //}
 
         ///// <summary>
         ///// when currencyPerResource is less than zero it is ignored and the maximum is bought at any price
