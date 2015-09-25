@@ -35,6 +35,7 @@
             this.btnGambling = new System.Windows.Forms.Button();
             this.tbTurnsPerMinute = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.chbBreakOnEnchanter = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnFarmMonsters
@@ -81,7 +82,7 @@
             "784+Fini+74bc8b1ee53eb9d0323337582309e1ff+1"});
             this.ddlCookie.Location = new System.Drawing.Point(12, 230);
             this.ddlCookie.Name = "ddlCookie";
-            this.ddlCookie.Size = new System.Drawing.Size(443, 21);
+            this.ddlCookie.Size = new System.Drawing.Size(325, 21);
             this.ddlCookie.TabIndex = 5;
             this.ddlCookie.SelectedIndexChanged += new System.EventHandler(this.ddlCookie_SelectedIndexChanged);
             // 
@@ -112,11 +113,25 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Turns/min";
             // 
-            // Form1
+            // chbBreakOnEnchanter
+            // 
+            this.chbBreakOnEnchanter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.chbBreakOnEnchanter.AutoSize = true;
+            this.chbBreakOnEnchanter.Location = new System.Drawing.Point(343, 234);
+            this.chbBreakOnEnchanter.Name = "chbBreakOnEnchanter";
+            this.chbBreakOnEnchanter.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.chbBreakOnEnchanter.Size = new System.Drawing.Size(112, 17);
+            this.chbBreakOnEnchanter.TabIndex = 9;
+            this.chbBreakOnEnchanter.Text = "Break on Enchant";
+            this.chbBreakOnEnchanter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chbBreakOnEnchanter.UseVisualStyleBackColor = true;
+            // 
+            // MainInterfaceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(467, 262);
+            this.Controls.Add(this.chbBreakOnEnchanter);
             this.Controls.Add(this.tbTurnsPerMinute);
             this.Controls.Add(this.btnGambling);
             this.Controls.Add(this.label1);
@@ -124,7 +139,7 @@
             this.Controls.Add(this.btnFarmResources);
             this.Controls.Add(this.tbOut);
             this.Controls.Add(this.btnFarmMonsters);
-            this.Name = "Form1";
+            this.Name = "MainInterfaceForm";
             this.Text = "Dragon Knight 2 Farming";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -142,6 +157,7 @@
         private System.Windows.Forms.Button btnGambling;
         private System.Windows.Forms.TextBox tbTurnsPerMinute;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox chbBreakOnEnchanter;
     }
 }
 
