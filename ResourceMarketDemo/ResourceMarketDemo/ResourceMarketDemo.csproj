@@ -155,6 +155,7 @@
     <Compile Include="DBModels\MarketSale.cs">
       <DependentUpon>ResourceMarketDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="GlobalExtensions.cs" />
     <Compile Include="Models\AdminUser.cs" />
     <Compile Include="Models\DBSimulation.cs" />
     <Compile Include="Models\Enums.cs" />

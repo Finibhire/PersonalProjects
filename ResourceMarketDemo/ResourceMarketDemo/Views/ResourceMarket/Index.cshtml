@@ -171,8 +171,8 @@
                 <td colspan="6">
                     @using (Html.BeginForm("AddPurchaseOrder", "ResourceMarket", FormMethod.Post))
                     {
-                        @Html.HiddenFor(m => m.AddPurchaseOrderData.ResourceTypeId)
-                        @Html.HiddenFor(m => m.AddPurchaseOrderData.CurrencyTypeId)
+                        @Html.HiddenFor(m => m.WorkingCurrencyTypeId)
+                        @Html.HiddenFor(m => m.WorkingResourceTypeId)
                         <input type="submit" value="Create PO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             Total<br />
@@ -180,19 +180,22 @@
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddPurchaseOrderData.CurrencyPerResource)
+                            @Html.EditorFor(m => m.AddPOCurrencyPerResource)
                             <!--<input type="text" name="CurrencyPerResource" class="" />-->
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             @Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddPurchaseOrderData.ResourceAmount)
+                            @Html.EditorFor(m => m.AddPOResourceAmount)
                             <!--<input type="number" name="ResourceRequestAmount" class="" />-->
                         </div>
                     }
                 </td>
             </tr>
             <tr style="border-bottom-style: none; border-bottom-width: 0px">
-                <td colspan="6">&nbsp;</td>
+                <td colspan="6" style="color:red">
+                    @Html.ValidationMessageFor(m => m.AddPOCurrencyPerResource)
+                    @Html.ValidationMessageFor(m => m.AddPOResourceAmount)
+                </td>
             </tr>
             <tr style="border-bottom-style: solid; border-bottom-width: 2px">
                 <td colspan="6">

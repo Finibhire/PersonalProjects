@@ -17,24 +17,43 @@ namespace ResourceMarketDemo.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult Index(int? WorkingCurrencyTypeId, int? WorkingResourceTypeId)
         {
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
+
             ResourceMarketIndexView model = new ResourceMarketIndexView();
-            PopulateModelDisplayData(model, WorkingCurrencyTypeId, WorkingResourceTypeId);
+            PopulateModelDisplayData(
+                model,
+                model.WorkingCurrencyTypeId,
+                model.WorkingResourceTypeId,
+                userName,
+                userId);
 
             return View("Index", model);
         }
 
-
+        private const string apoWhiteList =
+            "WorkingCurrencyTypeId," +
+            "WorkingResourceTypeId," +
+            "AddPOResourceAmount," +
+            "AddPOCurrencyPerResource";
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddPurchaseOrder(NewOrderPostData data)
+        public ActionResult AddPurchaseOrder([Bind(Include = apoWhiteList)] ResourceMarketIndexView model)
         {
-            string userName = (string)Session["UserName"];
-            int userId = (int)Session["UserId"];
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    db.AddPurchaseOrder(userId, data.ResourceTypeId, data.ResourceAmount, (byte)data.CurrencyTypeId, data.CurrencyPerResource);
+                    db.AddPurchaseOrder(
+                        userId, 
+                        model.WorkingResourceTypeId, 
+                        model.AddPOResourceAmount, 
+                        (byte)model.WorkingCurrencyTypeId, 
+                        model.AddPOCurrencyPerResource);
                 }
                 catch (Exception ex)
                 {
@@ -42,21 +61,65 @@ namespace ResourceMarketDemo.Controllers
                 }
             }
 
-            ResourceMarketIndexView model = new ResourceMarketIndexView();
-            PopulateModelDisplayData(model, data.CurrencyTypeId, data.ResourceTypeId);
-            model.AddPurchaseOrderData = data;
+            PopulateModelDisplayData(
+                model,
+                model.WorkingCurrencyTypeId,
+                model.WorkingResourceTypeId,
+                userName,
+                userId);
 
             return View("Index", model);
         }
 
-        private void PopulateModelDisplayData(ResourceMarketIndexView model, int? WorkingCurrencyTypeId, int? WorkingResourceTypeId)
+        private const string asoWhiteList =
+            "WorkingCurrencyTypeId," +
+            "WorkingResourceTypeId," +
+            "AddSellOrderData.ResourceAmount," +
+            "AddSellOrderData.CurrencyPerResource";
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddSellOrder([Bind(Include = asoWhiteList)] ResourceMarketIndexView model)
+        {
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.AddSellOrder(
+                        userId,
+                        model.WorkingResourceTypeId,
+                        model.AddSOResourceAmount,
+                        (byte)model.WorkingCurrencyTypeId,
+                        model.AddSOCurrencyPerResource);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("DatabaseError", ex);
+                }
+            }
+
+            PopulateModelDisplayData(
+                model, 
+                model.WorkingCurrencyTypeId, 
+                model.WorkingResourceTypeId,
+                userName,
+                userId);
+
+            return View("Index", model);
+        }
+
+        private void PopulateModelDisplayData(
+                        ResourceMarketIndexView model, 
+                        int? WorkingCurrencyTypeId, 
+                        int? WorkingResourceTypeId,
+                        string userName,
+                        int userId)
         {
             string workingCurrencyName, workingResourceName;
             int workingResourceTypeId;
             byte workingCurrencyTypeId;
-
-            string userName = (string)Session["UserName"];
-            int userId = (int)Session["UserId"];
 
             //get the requested working currencies and working resources or provide the defaults
             model.WorkingCurrencyName =

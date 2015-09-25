@@ -11,7 +11,9 @@ namespace ResourceMarketDemo.Models
     {
         public string WorkingCurrencyName { get; set; }
         public string WorkingResourceName { get; set; }
+        [Required]
         public int WorkingCurrencyTypeId { get; set; }
+        [Required]
         public int WorkingResourceTypeId { get; set; }
         //public CurrencyType WorkingCurrency { get; set; }
         //public ResourceType WorkingResource { get; set; }
@@ -20,8 +22,21 @@ namespace ResourceMarketDemo.Models
         public IEnumerable<ConvertedOrderView> CurrentPurchaseOrders { get; set; }
         public IEnumerable<ConvertedOrderView> CurrentSellOrders { get; set; }
 
-        public NewOrderPostData AddPurchaseOrderData { get; set; }
-        public NewOrderPostData AddSellOrderData { get; set; }
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int AddPOResourceAmount { get; set; }
+
+        [Required]
+        [Range(0, (double)decimal.MaxValue)]
+        public decimal AddPOCurrencyPerResource { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int AddSOResourceAmount { get; set; }
+
+        [Required]
+        [Range(0, (double)decimal.MaxValue)]
+        public decimal AddSOCurrencyPerResource { get; set; }
     }
 
     public class ConvertedOrderView
@@ -60,22 +75,16 @@ namespace ResourceMarketDemo.Models
         public bool ClientIsBuyingResources { get; set; }
     }
 
-    public class NewOrderPostData
-    {
-        [Required]
-        public int ResourceTypeId { get; set; }
+    //public class NewOrderPostData
+    //{
+    //    [Required]
+    //    [Range(0, int.MaxValue)]
+    //    public int ResourceAmount { get; set; }
 
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int ResourceAmount { get; set; }
-
-        [Required]
-        public int CurrencyTypeId { get; set; }
-
-        [Required]
-        [Range(0, (double)decimal.MaxValue)]
-        public decimal CurrencyPerResource { get; set; }
-    }
+    //    [Required]
+    //    [Range(0, (double)decimal.MaxValue)]
+    //    public decimal CurrencyPerResource { get; set; }
+    //}
 
     public static class FormatingExtensionMethods
     {

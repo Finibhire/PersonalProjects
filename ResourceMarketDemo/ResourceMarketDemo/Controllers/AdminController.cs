@@ -109,6 +109,10 @@ namespace ResourceMarketDemo.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateNewUser(AdminUserSubmitData subData)
         {
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
+
             //if (subData.NewUser.UserName != null && !DBSimulation.Users.ContainsKey(subData.NewUser.UserName))
             //{
             //    DBSimulation.Users.Add(subData.NewUser.UserName, subData.NewUser);
@@ -143,6 +147,10 @@ namespace ResourceMarketDemo.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult EditUser(VFUser subData)
         {
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
+
             if (subData.Id == null)
             {
                 throw new HttpException("UserId not supplied!");
