@@ -361,7 +361,7 @@ namespace DragonKnight2_Farmer
                     return new CharacterAction(ActionID.BuyPotionTP);
                 }
             }
-            else if (CurrentTravelPoints <= 0)
+            else if (CurrentTravelPoints < 5)
             {
                 if (currentLevel > 250)
                 {
