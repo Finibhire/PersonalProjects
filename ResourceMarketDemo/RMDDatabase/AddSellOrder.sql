@@ -3,7 +3,7 @@
 	@ResourceTypeId int,
 	@ResourceSellAmount int,
 	@CurrencyTypeId tinyint,
-	@CurrencyPerResource decimal(38,9)
+	@CurrencyPerResource float(53)
 AS
 	--Make sure the client has at least a record for the resource that he is selling
 	if not exists(select UserId from UserResources where UserId = @UserId and ResourceTypeId = @ResourceTypeId and OnHand >= @ResourceSellAmount)
@@ -21,6 +21,7 @@ AS
 	(
 		OrderId int not null,
 		ConvertedCurrencyPerResource float(53) not null,
+		--SigFigCCPR float(53) not null,
 		ResourceAmountLeftToFill int not null,
 		ResourceAmountToFill int not null,
 		RunningTotalResourceAmount int not null,
@@ -30,7 +31,8 @@ AS
 	insert into #ConvertedOrders
 	select 
 		OrderId,
-		ConvertedCurrencyPerResource as ConvertedCurrencyPerResource,
+		ConvertedCurrencyPerResource,
+		--dbo.g_OrderSigFigs(ConvertedCurrencyPerResource) as SigFigCCPR,
 		ResourceAmountLeftToFill,
 		cast(0 as int) as ResourceAmountToFill,
 		cast(0 as int) as RunningTotalResourceAmount
@@ -39,12 +41,14 @@ AS
 			select 
 				po.Id as OrderId,
 				po.ResourceRequestAmount - ResourceFilledAmount as ResourceAmountLeftToFill,
-				cast(po.CurrencyPerResource as float(53)) / isnull(cast(cer.SourceMultiplier as float(53)), 1) as ConvertedCurrencyPerResource
+				po.CurrencyPerResource / isnull(cer.SourceMultiplier, 1) as ConvertedCurrencyPerResource
 			from
 				PurchaseOrders po
 				left join CurrencyExchangeRates cer
 					on cer.DestinationCurrencyId = po.CurrencyTypeId and cer.SourceCurrencyId = @CurrencyTypeId
 			where
+				po.UserId != @UserId
+				and
 				po.ResourceTypeId = @ResourceTypeId
 				and
 				(
@@ -57,6 +61,8 @@ AS
 			sub.ConvertedCurrencyPerResource >= @CurrencyPerResource
 		--order by
 		--	ConvertedCurrencyPerResource desc
+
+	--select * from #ConvertedOrders  --debug
 
 	--Update to include running totals
 	update co
@@ -72,7 +78,7 @@ AS
 			select 
 				co3.OrderId,
 				sum(co3.ResourceAmountLeftToFill) over (
-						order by co3.CurrencyPerResource desc, co3.OrderId 
+						order by co3.ConvertedCurrencyPerResource desc, co3.OrderId 
 						rows between unbounded preceding and current row
 					) as RunningTotalResourceAmount
 			from #ConvertedOrders co3
@@ -98,13 +104,13 @@ AS
 		select 
 			po.UserId,
 			@ResourceTypeId as ResourceTypeId,
-			cast(0 as decimal(38,9)) as OnHand
+			cast(0 as bigint) as OnHand
 		from
 			#ConvertedOrders co
 			inner join PurchaseOrders po on co.OrderId = po.Id
 			left join UserResources ur on po.ResourceTypeId = @ResourceTypeId and ur.UserId = po.UserId
 		where
-			uc.OnHand is null
+			ur.OnHand is null
 		group by
 			po.UserId
 		
@@ -114,16 +120,14 @@ AS
 		declare @newOnHand decimal(38,9)
 		declare @runningCost decimal(38,9)
 
-		select 
-			@ResourceFilledAmount = sum(ResourceAmountToFill)
-		from #ConvertedOrders
+		set	@ResourceFilledAmount = (select sum(ResourceAmountToFill) from #ConvertedOrders)
 
 		--check to see if we have any PurchaseOrders to fill, if we don't make sure the variables are set to 0
 		--and short-circuit past all the statements to update the database when filling PurchaseOrders
 		if @ResourceFilledAmount is null or @ResourceFilledAmount = 0
 		begin
 			set @ResourceFilledAmount = 0
-			set @runningCost = 0
+			set @runningCost = cast(0 as decimal(38,9))
 		end
 		else
 		begin
@@ -141,13 +145,20 @@ AS
 			)
 		
 			insert into #newMarketSales
+			(
+				SellerUserId,
+				BuyerUserId,
+				ResourcesSoldAmount,
+				CurrencyTypeId,
+				TotalCurrencyCost
+			)
 			select 
-				po.UserId as BuyerUserId,
 				@UserId as SellerUserId,
+				po.UserId as BuyerUserId,
 				--@ResourceTypeId as ResourceTypeId,
 				co.ResourceAmountToFill as ResourcesSoldAmount,
 				po.CurrencyTypeId,
-				dbo.fRoundDecimalUp(cast(co.ResourceAmountToFill as decimal(19,0)) * po.CurrencyPerResource, ct.MaxScale) as TotalCurrencyCost
+				dbo.fRoundDecimalUp(cast(cast(co.ResourceAmountToFill as float(53)) * po.CurrencyPerResource as decimal(38,9)), ct.MaxScale) as TotalCurrencyCost
 			from #ConvertedOrders co
 				inner join PurchaseOrders po on co.OrderId = po.Id
 				inner join CurrencyTypes ct on po.CurrencyTypeId = ct.Id
@@ -167,12 +178,18 @@ AS
 			select @currencyMaxScale = MaxScale from CurrencyTypes where Id = @CurrencyTypeId
 
 			insert into #newCurrencyExchanges
+			(
+				UserId,
+				SourceCurrencyTypeId,
+				SourceAmount,
+				DestinationAmount
+			)
 			select 
 				nms.BuyerUserId as UserId,
 				nms.CurrencyTypeId as SourceCurrencyTypeId,
 				--@CurrencyTypeId as DestinationCurrencyTypeId,
 				nms.TotalCurrencyCost as SourceAmount,
-				dbo.fRoundDecimalUp(cast(nms.TotalCurrencyCost as float(53)) * cast(cer.SourceMultiplier as float(53)), @currencyMaxScale) as DestinationAmount  --should be round down
+				dbo.fRoundDecimalDown(cast(cast(nms.TotalCurrencyCost as float(53)) * cer.SourceMultiplier as decimal(38,9)), @currencyMaxScale) as DestinationAmount
 			from
 				#newMarketSales nms
 				inner join CurrencyExchangeRates cer on cer.SourceCurrencyId = nms.CurrencyTypeId and cer.DestinationCurrencyId = @CurrencyTypeId
@@ -198,7 +215,7 @@ AS
 				TotalCurrencyCost
 			from #newMarketSales
 			
-			--select * from UserCurrencies where UserId = @UserId --debug
+			select * from UserCurrencies where UserId = @UserId --debug
 
 			insert into CurrencyExchanges
 			(
@@ -266,7 +283,7 @@ AS
 				PurchaseOrders po
 				inner join #ConvertedOrders co on po.Id = co.OrderId
 			where
-				co.ResourceAmountLeftToFill > po.ResourceAmountToFill
+				co.ResourceAmountLeftToFill > co.ResourceAmountToFill
 
 		end --Filling any PurchaseOrders in the db that have equal or better CurrencyPerResource
 

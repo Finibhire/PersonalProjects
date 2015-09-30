@@ -12,7 +12,7 @@
           </Key>
           <Property Name="SourceCurrencyId" Type="tinyint" Nullable="false" />
           <Property Name="DestinationCurrencyId" Type="tinyint" Nullable="false" />
-          <Property Name="SourceMultiplier" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="SourceMultiplier" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="CurrencyExchanges">
           <Key>
@@ -57,7 +57,7 @@
           <Property Name="ResourceRequestAmount" Type="int" Nullable="false" />
           <Property Name="ResourceFilledAmount" Type="int" Nullable="false" />
           <Property Name="CurrencyTypeId" Type="tinyint" Nullable="false" />
-          <Property Name="CurrencyPerResource" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="CurrencyPerResource" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="ResourceTypes">
           <Key>
@@ -76,7 +76,7 @@
           <Property Name="ResourceSellAmount" Type="int" Nullable="false" />
           <Property Name="ResourceFilledAmount" Type="int" Nullable="false" />
           <Property Name="CurrencyTypeId" Type="tinyint" Nullable="false" />
-          <Property Name="CurrencyPerResource" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="CurrencyPerResource" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="UserCurrencies">
           <Key>
@@ -103,8 +103,6 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'RMDDatabase.dbo.UserAllPivoted' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserAllPivoted">
           <Key>
             <PropertyRef Name="Id" />
@@ -123,8 +121,6 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserAllPivoted' does not have a pr
           <Property Name="Stone" Type="bigint" />
           <Property Name="Wood" Type="bigint" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'RMDDatabase.dbo.UserCurrenciesPivoted' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserCurrenciesPivoted">
           <Key>
             <PropertyRef Name="Id" />
@@ -139,8 +135,6 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserCurrenciesPivoted' does not ha
           <Property Name="HTML5" Type="decimal" Precision="38" Scale="9" />
           <Property Name="HyperCoin" Type="decimal" Precision="38" Scale="9" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserResourcesPivoted">
           <Key>
             <PropertyRef Name="Id" />
@@ -374,18 +368,14 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <Parameter Name="ResourceTypeId" Type="int" Mode="In" />
           <Parameter Name="ResourceRequestAmount" Type="int" Mode="In" />
           <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
-          <Parameter Name="CurrencyPerResource" Type="decimal" Mode="In" />
+          <Parameter Name="CurrencyPerResource" Type="float" Mode="In" />
         </Function>
         <Function Name="AddSellOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserId" Type="int" Mode="In" />
           <Parameter Name="ResourceTypeId" Type="int" Mode="In" />
           <Parameter Name="ResourceSellAmount" Type="int" Mode="In" />
           <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
-          <Parameter Name="CurrencyPerResource" Type="decimal" Mode="In" />
-        </Function>
-        <Function Name="fRoundDecimalUp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="decimal">
-          <Parameter Name="input" Type="decimal" Mode="In" />
-          <Parameter Name="MaxScale" Type="int" Mode="In" />
+          <Parameter Name="CurrencyPerResource" Type="float" Mode="In" />
         </Function>
         <Function Name="GetConvertedPurchaseOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="workingCurrency" Type="tinyint" Mode="In" />
@@ -528,7 +518,7 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           </Key>
           <Property Name="SourceCurrencyId" Type="Byte" Nullable="false" />
           <Property Name="DestinationCurrencyId" Type="Byte" Nullable="false" />
-          <Property Name="SourceMultiplier" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="SourceMultiplier" Type="Double" Nullable="false" />
           <NavigationProperty Name="CurrencyType_Destination" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" FromRole="CurrencyExchangeRates" ToRole="CurrencyTypes" />
           <NavigationProperty Name="CurrencyType_Source" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId" FromRole="CurrencyExchangeRates" ToRole="CurrencyTypes" />
         </EntityType>
@@ -589,7 +579,7 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <Property Name="ResourceRequestAmount" Type="Int32" Nullable="false" />
           <Property Name="ResourceFilledAmount" Type="Int32" Nullable="false" />
           <Property Name="CurrencyTypeId" Type="Byte" Nullable="false" />
-          <Property Name="CurrencyPerResource" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="CurrencyPerResource" Type="Double" Nullable="false" />
           <NavigationProperty Name="CurrencyType" Relationship="Self.FK_PurchaseOrders_CurrencyTypes" FromRole="PurchaseOrders" ToRole="CurrencyTypes" />
           <NavigationProperty Name="ResourceType" Relationship="Self.FK_PurchaseOrders_ResourceTypes" FromRole="PurchaseOrders" ToRole="ResourceTypes" />
           <NavigationProperty Name="User" Relationship="Self.FK_PurchaseOrders_Users" FromRole="PurchaseOrders" ToRole="Users" />
@@ -615,7 +605,7 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
           <Property Name="ResourceSellAmount" Type="Int32" Nullable="false" />
           <Property Name="ResourceFilledAmount" Type="Int32" Nullable="false" />
           <Property Name="CurrencyTypeId" Type="Byte" Nullable="false" />
-          <Property Name="CurrencyPerResource" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="CurrencyPerResource" Type="Double" Nullable="false" />
           <NavigationProperty Name="CurrencyType" Relationship="Self.FK_SellOrders_CurrencyTypes" FromRole="SellOrders" ToRole="CurrencyTypes" />
           <NavigationProperty Name="ResourceType" Relationship="Self.FK_SellOrders_ResourceTypes" FromRole="SellOrders" ToRole="ResourceTypes" />
           <NavigationProperty Name="User" Relationship="Self.FK_SellOrders_Users" FromRole="SellOrders" ToRole="Users" />
@@ -937,20 +927,6 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
             <End Role="Users" EntitySet="Users" />
             <End Role="UserResources" EntitySet="UserResources" />
           </AssociationSet>
-          <FunctionImport Name="AddPurchaseOrder">
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
-            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
-            <Parameter Name="ResourceRequestAmount" Mode="In" Type="Int32" />
-            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
-            <Parameter Name="CurrencyPerResource" Mode="In" Type="Decimal" />
-          </FunctionImport>
-          <FunctionImport Name="AddSellOrder">
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
-            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
-            <Parameter Name="ResourceSellAmount" Mode="In" Type="Int32" />
-            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
-            <Parameter Name="CurrencyPerResource" Mode="In" Type="Decimal" />
-          </FunctionImport>
           <AssociationSet Name="FK_MarketSales_CurrencyTypes" Association="RMDDatabaseModel.FK_MarketSales_CurrencyTypes">
             <End Role="CurrencyType" EntitySet="CurrencyTypes" />
             <End Role="MarketSale" EntitySet="MarketSales" />
@@ -967,6 +943,20 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
             <End Role="User" EntitySet="Users" />
             <End Role="MarketSale" EntitySet="MarketSales" />
           </AssociationSet>
+          <FunctionImport Name="AddPurchaseOrder">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceRequestAmount" Mode="In" Type="Int32" />
+            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
+            <Parameter Name="CurrencyPerResource" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="AddSellOrder">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceSellAmount" Mode="In" Type="Int32" />
+            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
+            <Parameter Name="CurrencyPerResource" Mode="In" Type="Double" />
+          </FunctionImport>
           <FunctionImport Name="GetConvertedPurchaseOrders" ReturnType="Collection(RMDDatabaseModel.GetConvertedPurchaseOrders_Result)">
             <Parameter Name="workingCurrency" Mode="In" Type="Byte" />
             <Parameter Name="workingResource" Mode="In" Type="Int32" />
@@ -1027,21 +1017,19 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
         <ComplexType Name="GetConvertedPurchaseOrders_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="Int32" Name="UserId" Nullable="false" />
-          <Property Type="Int32" Name="ResourceTypeId" Nullable="false" />
           <Property Type="Int32" Name="ToBeFilledAmount" Nullable="false" />
           <Property Type="Byte" Name="OriginalCurrencyTypeId" Nullable="false" />
           <Property Type="String" Name="OriginalCurrencyName" Nullable="true" MaxLength="20" />
-          <Property Type="Decimal" Name="SourceMultiplier" Nullable="false" Precision="38" Scale="9" />
+          <Property Type="Double" Name="SourceMultiplier" Nullable="false" />
           <Property Type="Double" Name="ConvertedCurrencyPerResource" Nullable="false" />
         </ComplexType>
         <ComplexType Name="GetConvertedSellOrders_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="Int32" Name="UserId" Nullable="false" />
-          <Property Type="Int32" Name="ResourceTypeId" Nullable="false" />
           <Property Type="Int32" Name="ToBeFilledAmount" Nullable="false" />
           <Property Type="Byte" Name="OriginalCurrencyTypeId" Nullable="false" />
           <Property Type="String" Name="OriginalCurrencyName" Nullable="true" MaxLength="20" />
-          <Property Type="Decimal" Name="SourceMultiplier" Nullable="false" Precision="38" Scale="9" />
+          <Property Type="Double" Name="SourceMultiplier" Nullable="false" />
           <Property Type="Double" Name="ConvertedCurrencyPerResource" Nullable="false" />
         </ComplexType>
       </Schema>
@@ -1206,7 +1194,6 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
               <ComplexTypeMapping TypeName="RMDDatabaseModel.GetConvertedPurchaseOrders_Result">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ResourceTypeId" ColumnName="ResourceTypeId" />
                 <ScalarProperty Name="ToBeFilledAmount" ColumnName="ToBeFilledAmount" />
                 <ScalarProperty Name="OriginalCurrencyTypeId" ColumnName="OriginalCurrencyTypeId" />
                 <ScalarProperty Name="OriginalCurrencyName" ColumnName="OriginalCurrencyName" />
@@ -1220,7 +1207,6 @@ warning 6002: The table/view 'RMDDatabase.dbo.UserResourcesPivoted' does not hav
               <ComplexTypeMapping TypeName="RMDDatabaseModel.GetConvertedSellOrders_Result">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ResourceTypeId" ColumnName="ResourceTypeId" />
                 <ScalarProperty Name="ToBeFilledAmount" ColumnName="ToBeFilledAmount" />
                 <ScalarProperty Name="OriginalCurrencyTypeId" ColumnName="OriginalCurrencyTypeId" />
                 <ScalarProperty Name="OriginalCurrencyName" ColumnName="OriginalCurrencyName" />

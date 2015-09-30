@@ -5,7 +5,6 @@ AS
 	select 
 		Id,
 		UserId,
-		ResourceTypeId,
 		isnull(ToBeFilledAmount, 0) as ToBeFilledAmount,
 		OriginalCurrencyTypeId,
 		OriginalCurrencyName,
@@ -16,13 +15,11 @@ AS
 			select 
 				po.Id,
 				po.UserId,
-				po.ResourceTypeId,
 				po.ResourceRequestAmount - ResourceFilledAmount as ToBeFilledAmount,
 				po.CurrencyTypeId as OriginalCurrencyTypeId,
 				ct.Name as OriginalCurrencyName,
-				po.CurrencyPerResource,
 				isnull(cer.SourceMultiplier, 1) as SourceMultiplier,
-				cast(po.CurrencyPerResource as float(53)) / isnull(cast(cer.SourceMultiplier as float(53)), 1) as ConvertedCurrencyPerResource
+				dbo.g_OrderSigFigsFloor(po.CurrencyPerResource / isnull(cer.SourceMultiplier, 1)) as ConvertedCurrencyPerResource
 			from
 				PurchaseOrders po
 				left join CurrencyTypes ct

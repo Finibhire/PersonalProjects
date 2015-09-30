@@ -15,11 +15,10 @@ namespace ResourceMarketDemo.DBModels
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public int ResourceTypeId { get; set; }
         public int ToBeFilledAmount { get; set; }
         public byte OriginalCurrencyTypeId { get; set; }
         public string OriginalCurrencyName { get; set; }
-        public decimal SourceMultiplier { get; set; }
+        public double SourceMultiplier { get; set; }
         public double ConvertedCurrencyPerResource { get; set; }
     }
 }

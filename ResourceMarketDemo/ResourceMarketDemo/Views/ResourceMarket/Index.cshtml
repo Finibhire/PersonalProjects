@@ -58,6 +58,7 @@
                 <th>Sale<br />Currency</th>
                 <th>Currency<br />per<br />@Model.WorkingResourceName</th>
                 <th>Total<br />Cost</th>
+                <th>Participation</th>
             </tr>
         </thead>
         <tbody>
@@ -76,6 +77,19 @@
                 <td>@Html.DisplayFor(m => rs.CurrencyName)</td>
                 <td>@rs.CurrencyPerResource.GetRMDReadableFormat()</td>
                 <td>@rs.TotalCostAmount.GetRMDReadableFormat()</td>
+                <td>@{ 
+                    if (rs.ClientParticipation)
+                    {
+                        if (rs.ClientIsBuyingResources)
+                        {
+                            Html.Display("Buyer");
+                        }
+                        else
+                        {
+                            Html.Display("Seller");
+                        }
+                    }
+                }</td>
             </tr>
             }
         </tbody>
@@ -138,14 +152,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <!--<tr>
                 <td>875</td>
                 <td>EXAMPLE</td>
                 <td>0.00091</td>
                 <td>1.2</td>
                 <td>900</td>
                 <td>@Html.ActionLink("delete", "DeletePurchaseOrder", new { PurchaseOrderId = 10 })</td>
-            </tr>
+            </tr>-->
             @foreach (ConvertedOrderView co in Model.CurrentPurchaseOrders)
             {
             <tr>
@@ -231,14 +245,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <!--<tr>
                 <td>875</td>
                 <td>Dragon Points</td>
                 <td>0.00091</td>
                 <td>1.2</td>
                 <td>900</td>
                 <td>@Html.ActionLink("delete", "DeleteSaleOrder", new { SaleOrderId = 10 })</td>
-            </tr>
+            </tr>-->
             @foreach (ConvertedOrderView co in Model.CurrentSellOrders)
             {
                 <tr>
@@ -262,10 +276,11 @@
             </tr>
             <tr>
                 <td colspan="6">
-                    <form action="CreateSaleOrder" method="post">
+                    @using (Html.BeginForm("AddSellOrder", "ResourceMarket", FormMethod.Post))
+                    {
                         <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
                         <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
-                        
+
                         <input type="submit" value="Create SO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             Total<br />
@@ -273,17 +288,20 @@
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
-                            <input type="text" name="CurrencyPerResource" class="" />
+                            @Html.EditorFor(m => m.AddSOCurrencyPerResource)
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             @Model.WorkingResourceName<br />
-                            <input type="number" name="ResourceSellAmount" class="" />
+                            @Html.EditorFor(m => m.AddSOResourceAmount)
                         </div>
-                    </form>
+                    }
                 </td>
             </tr>
             <tr style="border-bottom-style: none; border-bottom-width: 0px">
-                <td colspan="6">&nbsp;</td>
+                <td colspan="6">
+                    @Html.ValidationMessageFor(m => m.AddSOCurrencyPerResource)
+                    @Html.ValidationMessageFor(m => m.AddSOResourceAmount)
+                </td>
             </tr>
             <tr style="border-bottom-style: solid; border-bottom-width: 2px">
                 <td colspan="6">

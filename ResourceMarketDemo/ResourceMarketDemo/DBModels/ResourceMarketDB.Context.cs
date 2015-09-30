@@ -41,7 +41,7 @@ namespace ResourceMarketDemo.DBModels
         public virtual DbSet<UserCurrenciesPivoted> UserCurrenciesPivoteds { get; set; }
         public virtual DbSet<UserResourcesPivoted> UserResourcesPivoteds { get; set; }
     
-        public virtual int AddPurchaseOrder(Nullable<int> userId, Nullable<int> resourceTypeId, Nullable<int> resourceRequestAmount, Nullable<byte> currencyTypeId, Nullable<decimal> currencyPerResource)
+        public virtual int AddPurchaseOrder(Nullable<int> userId, Nullable<int> resourceTypeId, Nullable<int> resourceRequestAmount, Nullable<byte> currencyTypeId, Nullable<double> currencyPerResource)
         {
             var userIdParameter = userId.HasValue ?
                 new ObjectParameter("UserId", userId) :
@@ -61,12 +61,12 @@ namespace ResourceMarketDemo.DBModels
     
             var currencyPerResourceParameter = currencyPerResource.HasValue ?
                 new ObjectParameter("CurrencyPerResource", currencyPerResource) :
-                new ObjectParameter("CurrencyPerResource", typeof(decimal));
+                new ObjectParameter("CurrencyPerResource", typeof(double));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddPurchaseOrder", userIdParameter, resourceTypeIdParameter, resourceRequestAmountParameter, currencyTypeIdParameter, currencyPerResourceParameter);
         }
     
-        public virtual int AddSellOrder(Nullable<int> userId, Nullable<int> resourceTypeId, Nullable<int> resourceSellAmount, Nullable<byte> currencyTypeId, Nullable<decimal> currencyPerResource)
+        public virtual int AddSellOrder(Nullable<int> userId, Nullable<int> resourceTypeId, Nullable<int> resourceSellAmount, Nullable<byte> currencyTypeId, Nullable<double> currencyPerResource)
         {
             var userIdParameter = userId.HasValue ?
                 new ObjectParameter("UserId", userId) :
@@ -86,7 +86,7 @@ namespace ResourceMarketDemo.DBModels
     
             var currencyPerResourceParameter = currencyPerResource.HasValue ?
                 new ObjectParameter("CurrencyPerResource", currencyPerResource) :
-                new ObjectParameter("CurrencyPerResource", typeof(decimal));
+                new ObjectParameter("CurrencyPerResource", typeof(double));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddSellOrder", userIdParameter, resourceTypeIdParameter, resourceSellAmountParameter, currencyTypeIdParameter, currencyPerResourceParameter);
         }

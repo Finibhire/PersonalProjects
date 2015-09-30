@@ -20,7 +20,7 @@ namespace ResourceMarketDemo.DBModels
         public int ResourceRequestAmount { get; set; }
         public int ResourceFilledAmount { get; set; }
         public byte CurrencyTypeId { get; set; }
-        public decimal CurrencyPerResource { get; set; }
+        public double CurrencyPerResource { get; set; }
     
         public virtual CurrencyType CurrencyType { get; set; }
         public virtual ResourceType ResourceType { get; set; }

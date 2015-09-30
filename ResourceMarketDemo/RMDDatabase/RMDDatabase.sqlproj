@@ -17,12 +17,13 @@
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -80,6 +81,10 @@
     <None Include="Temp.sql" />
     <Build Include="GetConvertedPurchaseOrders.sql" />
     <Build Include="GetConvertedSellOrders.sql" />
+    <Build Include="g_OrderSigFigsRound.sql" />
+    <Build Include="fRoundDecimalDown.sql" />
+    <Build Include="g_OrderSigFigsFloor.sql" />
+    <Build Include="g_OrderSigFigsCeiling.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="RMDDatabase.refactorlog" />
@@ -90,5 +95,11 @@
   <ItemGroup>
     <None Include="RMDDatabase.publish.xml" />
     <None Include="RMDDatabase_1.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
 </Project>

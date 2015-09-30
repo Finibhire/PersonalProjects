@@ -56,18 +56,22 @@ WHEN NOT MATCHED BY SOURCE THEN
 DELETE;
 
 -- Reference Data for ExchangeRates
-declare @DPtoGold decimal(38,9)
-declare @DPtoHyperCoin decimal(38,9)
-declare @DPtoHTML5 decimal(38,9)
-declare @DPtoGoldPoints decimal(38,9)
-declare @DPtoFLAP decimal(38,9)
-declare @ConvertTaxRate decimal(38,9)
+declare @DPtoGold float(53)
+declare @DPtoHyperCoin float(53)
+declare @DPtoHTML5 float(53)
+declare @DPtoGoldPoints float(53)
+declare @DPtoFLAP float(53)
+declare @ConvertTaxRate float(53)
 
 set @DPtoGold		= 10
-set @DPtoHyperCoin	= 0.00008894
-set @DPtoHTML5		= 8.22637000
-set @DPtoGoldPoints = 0.00024041
-set @DPtoFLAP		= 6.37544000
+--set @DPtoHyperCoin	= 0.00008894
+--set @DPtoHTML5		= 8.22637000
+--set @DPtoGoldPoints	= 0.00024041
+--set @DPtoFLAP			= 6.37544000
+set @DPtoHyperCoin	= 0.001
+set @DPtoHTML5		= 10
+set @DPtoGoldPoints = 0.01
+set @DPtoFLAP		= 100
 set @ConvertTaxRate = 0.85
 
 MERGE INTO CurrencyExchangeRates AS Target 

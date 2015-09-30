@@ -6,10 +6,11 @@
     [ResourceSellAmount] INT NOT NULL, 
     [ResourceFilledAmount] INT NOT NULL DEFAULT 0, 
     [CurrencyTypeId] TINYINT NOT NULL, 
-    [CurrencyPerResource] DECIMAL(38, 9) NOT NULL, 
+    [CurrencyPerResource] FLOAT(53) NOT NULL, 
     CONSTRAINT [CK_SellOrders_ResourceRequestAmount] CHECK ([ResourceSellAmount] > 0 and [ResourceSellAmount] > [ResourceFilledAmount]), 
     CONSTRAINT [CK_SellOrders_ResourceFilledAmount] CHECK ([ResourceFilledAmount] >= 0 and [ResourceFilledAmount] < [ResourceSellAmount]), 
-    CONSTRAINT [CK_SellOrders_CurrencyPerResource] CHECK ([CurrencyPerResource] >= 0), 
+    CONSTRAINT [CK_SellOrders_CurrencyPerResource_NonNegative] CHECK ([CurrencyPerResource] >= 0), 
+    CONSTRAINT [CK_SellOrders_CurrencyPerResource_SigFigs] CHECK (CurrencyPerResource = dbo.g_OrderSigFigsFloor(CurrencyPerResource)),
     CONSTRAINT [FK_SellOrders_Users] FOREIGN KEY ([UserId]) REFERENCES [Users]([Id]), 
     CONSTRAINT [FK_SellOrders_ResourceTypes] FOREIGN KEY ([ResourceTypeId]) REFERENCES [ResourceTypes]([Id]),
     CONSTRAINT [FK_SellOrders_CurrencyTypes] FOREIGN KEY ([CurrencyTypeId]) REFERENCES [CurrencyTypes]([Id])
@@ -42,7 +43,7 @@ CREATE TRIGGER [dbo].[Trigger_SellOrders_INSERT]
 		select
 			i.UserId as UserId,
 			i.ResourceTypeId as ResourceTypeId,
-			cast(0 as decimal(38,9)) as OnHand
+			cast(0 as bigint) as OnHand
 		from
 			inserted i
 			left join UserResources ur on ur.UserId = i.UserId and ur.ResourceTypeId = i.ResourceTypeId

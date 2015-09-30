@@ -16,7 +16,7 @@ namespace ResourceMarketDemo.DBModels
     {
         public byte SourceCurrencyId { get; set; }
         public byte DestinationCurrencyId { get; set; }
-        public decimal SourceMultiplier { get; set; }
+        public double SourceMultiplier { get; set; }
     
         public virtual CurrencyType CurrencyType_Destination { get; set; }
         public virtual CurrencyType CurrencyType_Source { get; set; }

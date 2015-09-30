@@ -3,7 +3,7 @@
 	@ResourceTypeId int,
 	@ResourceRequestAmount int,
 	@CurrencyTypeId tinyint,
-	@CurrencyPerResource decimal(38,9)
+	@CurrencyPerResource float(53)
 AS
 	declare @newOnHand decimal(38,9)
 	declare @ResourceFilledAmount int
@@ -26,7 +26,7 @@ AS
 		(
 			@UserId,
 			@ResourceTypeId,
-			cast(0 as decimal(38,9))
+			cast(0 as bigint)
 		)
 	end
 
@@ -342,7 +342,7 @@ AS
 		set @newOnHand = null
 		select @newOnHand = OnHand from UserCurrencies where UserId = @UserId and CurrencyTypeId = @CurrencyTypeId
 
-		if @newOnHand is null or @newOnHand < 0
+		if @newOnHand is null or @newOnHand < cast(0 as decimal(38,9))
 			throw 51000, 'User does not have enough currency on hand to complete this transaction', 1
 	commit tran
 RETURN 0

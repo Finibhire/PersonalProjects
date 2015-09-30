@@ -6,10 +6,11 @@
     [ResourceRequestAmount] INT NOT NULL, 
     [ResourceFilledAmount] INT NOT NULL DEFAULT 0, 
     [CurrencyTypeId] TINYINT NOT NULL, 
-    [CurrencyPerResource] DECIMAL(38, 9) NOT NULL, 
+    [CurrencyPerResource] FLOAT(53) NOT NULL, 
     CONSTRAINT [CK_PurchaseOrders_ResourceRequestAmount] CHECK ([ResourceRequestAmount] > 0 and [ResourceRequestAmount] > [ResourceFilledAmount]), 
     CONSTRAINT [CK_PurchaseOrders_ResourceFilledAmount] CHECK ([ResourceFilledAmount] >= 0 and [ResourceFilledAmount] < [ResourceRequestAmount]), 
-    CONSTRAINT [CK_PurchaseOrders_CurrencyPerResource] CHECK ([CurrencyPerResource] >= 0), 
+    CONSTRAINT [CK_PurchaseOrders_CurrencyPerResource_NonNegative] CHECK ([CurrencyPerResource] >= 0), 
+    CONSTRAINT [CK_PurchaseOrders_CurrencyPerResource_SigFigs] CHECK (CurrencyPerResource = dbo.g_OrderSigFigsFloor(CurrencyPerResource)),
     CONSTRAINT [FK_PurchaseOrders_Users] FOREIGN KEY ([UserId]) REFERENCES [Users]([Id]), 
     CONSTRAINT [FK_PurchaseOrders_ResourceTypes] FOREIGN KEY ([ResourceTypeId]) REFERENCES [ResourceTypes]([Id]),
     CONSTRAINT [FK_PurchaseOrders_CurrencyTypes] FOREIGN KEY ([CurrencyTypeId]) REFERENCES [CurrencyTypes]([Id])
@@ -24,7 +25,7 @@ CREATE TRIGGER [dbo].[Trigger_PurchaseOrders_INSERT]
     BEGIN
         SET NoCount ON
 
-		if not exists(select * from inserted)
+		if not exists(select Id from inserted)
 			return
 
 		

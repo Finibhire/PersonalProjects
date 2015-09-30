@@ -116,5 +116,17 @@ select
 	@maxVal as [all],
 	floor(@maxVal) as whole,
 	cast(@maxVal - cast(floor(@maxVal) as decimal(29,0)) as decimal(9,9)) as fraction,
-	cast(cast(@maxVal - cast(floor(@maxVal) as decimal(29,0)) as decimal(9,9)) * cast(1000000000 as decimal(10,0)) as decimal(9,0)) as wholeFraction,
+	cast(cast(@maxVal - cast(floor(@maxVal) as decimal(29,0)) as decimal(9,9)) * cast(1000000000 as decimal(10,0)) as decimal(9,0)) as wholeFraction
+
+
+
+
+
+begin tran
+select * from UserResources where ResourceTypeId = 1 and UserId <= 2
+select * from UserCurrencies where (CurrencyTypeId = 1 or CurrencyTypeId = 2) and UserId <= 2
+exec dbo.AddSellOrder 2, 1, 10, 1, 0.5
+select * from UserResources where ResourceTypeId = 1 and UserId <= 2
+select * from UserCurrencies where (CurrencyTypeId = 1 or CurrencyTypeId = 2) and UserId <= 2
+rollback tran
 

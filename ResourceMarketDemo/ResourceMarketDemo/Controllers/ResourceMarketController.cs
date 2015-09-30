@@ -55,9 +55,30 @@ namespace ResourceMarketDemo.Controllers
                         (byte)model.WorkingCurrencyTypeId, 
                         model.AddPOCurrencyPerResource);
                 }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    string message;
+                    if (ex.InnerException != null &&
+                        ex.InnerException.GetType() == typeof(System.Data.SqlClient.SqlException) &&
+                        ((System.Data.SqlClient.SqlException)ex.InnerException).Number == 547)
+                    {
+                        message = 
+                            "Currency Per Resource must be non-negative and have 7 or less significant figures.  (DB Constraint Error)";
+                        ModelState.AddModelError("AddPOCurrencyPerResource", message);
+                    }
+                    else
+                    {
+                        message =
+                            "System.Data.Entity.Core.EntityCommandExecutionException" + Environment.NewLine +
+                            ex.Message;
+                        ModelState.AddModelError("DatabaseError", message);
+                    }
+                }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("DatabaseError", ex);
+                    ModelState.AddModelError(
+                        "DatabaseError", 
+                        ex.GetType().ToString() + Environment.NewLine + ex.Message);
                 }
             }
 
@@ -94,9 +115,26 @@ namespace ResourceMarketDemo.Controllers
                         (byte)model.WorkingCurrencyTypeId,
                         model.AddSOCurrencyPerResource);
                 }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    string message;
+                    if (ex.InnerException != null &&
+                        ex.InnerException.GetType() == typeof(System.Data.SqlClient.SqlException) &&
+                        ((System.Data.SqlClient.SqlException)ex.InnerException).Number == 547)
+                    {
+                        message = "Currency Per Resource must be non-negative and have 7 or less significant figures.  (DB Constraint Error)";
+                        ModelState.AddModelError("AddSOCurrencyPerResource", message);
+                    }
+                    message = 
+                        "System.Data.Entity.Core.EntityCommandExecutionException" + Environment.NewLine +
+                        ex.Message;
+                    ModelState.AddModelError("DatabaseError", message);
+                }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("DatabaseError", ex);
+                    ModelState.AddModelError(
+                        "DatabaseError",
+                        ex.GetType().ToString() + Environment.NewLine + ex.Message);
                 }
             }
 
@@ -168,8 +206,10 @@ namespace ResourceMarketDemo.Controllers
                     SaleTime = x.TimeStamp,
                     CurrencyName = x.CurrencyType.Name,
                     AmountSold = x.ResourcesSoldAmount,
-                    CurrencyPerResource = x.TotalCurrencyCost / (decimal)x.ResourcesSoldAmount,
-                    TotalCostAmount = x.TotalCurrencyCost
+                    CurrencyPerResource = (double)x.TotalCurrencyCost / (double)x.ResourcesSoldAmount,
+                    TotalCostAmount = x.TotalCurrencyCost,
+                    ClientParticipation = x.BuyerUserId == userId || x.SellerUserId == userId,
+                    ClientIsBuyingResources = x.BuyerUserId == userId
                 });
 
             model.ClientRecentTransactions =
@@ -181,7 +221,7 @@ namespace ResourceMarketDemo.Controllers
                     SaleTime = x.TimeStamp,
                     CurrencyName = x.CurrencyType.Name,
                     AmountSold = x.ResourcesSoldAmount,
-                    CurrencyPerResource = x.TotalCurrencyCost / (decimal)x.ResourcesSoldAmount,
+                    CurrencyPerResource = (double)x.TotalCurrencyCost / (double)x.ResourcesSoldAmount,
                     TotalCostAmount = x.TotalCurrencyCost,
                     ResourceName = x.ResourceType.Name,
                     ClientIsBuyingResources = (x.BuyerUserId == userId)
