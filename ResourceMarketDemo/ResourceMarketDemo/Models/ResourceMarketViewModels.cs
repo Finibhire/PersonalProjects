@@ -11,42 +11,62 @@ namespace ResourceMarketDemo.Models
     {
         public string WorkingCurrencyName { get; set; }
         public string WorkingResourceName { get; set; }
-        [Required]
-        public int WorkingCurrencyTypeId { get; set; }
-        [Required]
-        public int WorkingResourceTypeId { get; set; }
+        public int? WorkingCurrencyTypeId { get; set; }
+        public int? WorkingResourceTypeId { get; set; }
         public IEnumerable<ResourceSaleView> RecentResourceSales { get; set; }
         public IEnumerable<ClientResourceSaleView> ClientRecentTransactions { get; set; }
-        public IEnumerable<ConvertedOrderView> CurrentPurchaseOrders { get; set; }
-        public IEnumerable<ConvertedOrderView> CurrentSellOrders { get; set; }
+        public IEnumerable<CondensedAndConvertedOrdersView> AllPurchaseOrders { get; set; }
+        public IEnumerable<CondensedAndConvertedOrdersView> AllSellOrders { get; set; }
+        public IEnumerable<MarketOrderView> ClientPurchaseOrders { get; set; }
+        public IEnumerable<MarketOrderView> ClientSellOrders { get; set; }
 
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int AddPOResourceAmount { get; set; }
+        public AddOrder AddPurchaseOrder { get; set; }
+        public AddOrder AddSellOrder { get; set; }
 
-        [Required]
-        [Range(0, (double)decimal.MaxValue)]
-        public double AddPOCurrencyPerResource { get; set; }
-
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int AddSOResourceAmount { get; set; }
-
-        [Required]
-        [Range(0, (double)decimal.MaxValue)]
-        public double AddSOCurrencyPerResource { get; set; }
+        public ResourceMarketIndexView()
+        {
+            AddPurchaseOrder = new AddOrder();
+            AddSellOrder = new AddOrder();
+        }
     }
 
-    public class ConvertedOrderView
+    public class AddOrder
+    {
+        [Required]
+        public int? WorkingCurrencyTypeId { get; set; }
+
+        [Required]
+        public int? WorkingResourceTypeId { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int? ResourceAmount { get; set; }
+
+        [Required]
+        [Range(0, (double)decimal.MaxValue)]
+        public double? CurrencyPerResource { get; set; }
+    }
+
+    public class MarketOrderView
     {
         public int Id { get; set; }
-        public bool ClientIsOwner { get; set; }
-        public int RemainingResourceAmount { get; set; }
+        public int ResourceOrderAmount { get; set; }
+        public int ResourceFilledAmount { get; set; }
+        public string OriginalCurrencyName { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#########}")]
+        public double CurrencyPerResource { get; set; }
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#########}")]
+        //public decimal RemainingTotalCost { get; set; }
+    }
+
+    public class CondensedAndConvertedOrdersView
+    {
+        public int FillableResourceAmount { get; set; }
         public string OriginalCurrencyName { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#########}")]
         public double ExchangeRate { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#########}")]
-        public decimal CurrencyPerResource { get; set; }
+        public double CurrencyPerResource { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0.#########}")]
         public decimal TotalCost { get; set; }
     }

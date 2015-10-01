@@ -143,10 +143,10 @@
     <Compile Include="DBModels\CurrencyType.cs">
       <DependentUpon>ResourceMarketDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="DBModels\GetConvertedPurchaseOrders_Result.cs">
+    <Compile Include="DBModels\GetCondensedAndConvertedPurchaseOrders_Result.cs">
       <DependentUpon>ResourceMarketDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="DBModels\GetConvertedSellOrders_Result.cs">
+    <Compile Include="DBModels\GetCondensedAndConvertedSellOrders_Result.cs">
       <DependentUpon>ResourceMarketDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">

@@ -377,11 +377,11 @@
           <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
           <Parameter Name="CurrencyPerResource" Type="float" Mode="In" />
         </Function>
-        <Function Name="GetConvertedPurchaseOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="GetCondensedAndConvertedPurchaseOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="workingCurrency" Type="tinyint" Mode="In" />
           <Parameter Name="workingResource" Type="int" Mode="In" />
         </Function>
-        <Function Name="GetConvertedSellOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="GetCondensedAndConvertedSellOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="workingCurrency" Type="tinyint" Mode="In" />
           <Parameter Name="workingResource" Type="int" Mode="In" />
         </Function>
@@ -957,11 +957,11 @@
             <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
             <Parameter Name="CurrencyPerResource" Mode="In" Type="Double" />
           </FunctionImport>
-          <FunctionImport Name="GetConvertedPurchaseOrders" ReturnType="Collection(RMDDatabaseModel.GetConvertedPurchaseOrders_Result)">
+          <FunctionImport Name="GetCondensedAndConvertedPurchaseOrders" ReturnType="Collection(RMDDatabaseModel.GetCondensedAndConvertedPurchaseOrders_Result)">
             <Parameter Name="workingCurrency" Mode="In" Type="Byte" />
             <Parameter Name="workingResource" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="GetConvertedSellOrders" ReturnType="Collection(RMDDatabaseModel.GetConvertedSellOrders_Result)">
+          <FunctionImport Name="GetCondensedAndConvertedSellOrders" ReturnType="Collection(RMDDatabaseModel.GetCondensedAndConvertedSellOrders_Result)">
             <Parameter Name="workingCurrency" Mode="In" Type="Byte" />
             <Parameter Name="workingResource" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -1014,20 +1014,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetConvertedPurchaseOrders_Result">
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="UserId" Nullable="false" />
-          <Property Type="Int32" Name="ToBeFilledAmount" Nullable="false" />
-          <Property Type="Byte" Name="OriginalCurrencyTypeId" Nullable="false" />
+        <ComplexType Name="GetCondensedAndConvertedPurchaseOrders_Result">
+          <Property Type="Int32" Name="FillableResourceAmount" Nullable="false" />
           <Property Type="String" Name="OriginalCurrencyName" Nullable="true" MaxLength="20" />
           <Property Type="Double" Name="SourceMultiplier" Nullable="false" />
           <Property Type="Double" Name="ConvertedCurrencyPerResource" Nullable="false" />
         </ComplexType>
-        <ComplexType Name="GetConvertedSellOrders_Result">
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="UserId" Nullable="false" />
-          <Property Type="Int32" Name="ToBeFilledAmount" Nullable="false" />
-          <Property Type="Byte" Name="OriginalCurrencyTypeId" Nullable="false" />
+        <ComplexType Name="GetCondensedAndConvertedSellOrders_Result">
+          <Property Type="Int32" Name="FillableResourceAmount" Nullable="false" />
           <Property Type="String" Name="OriginalCurrencyName" Nullable="true" MaxLength="20" />
           <Property Type="Double" Name="SourceMultiplier" Nullable="false" />
           <Property Type="Double" Name="ConvertedCurrencyPerResource" Nullable="false" />
@@ -1189,26 +1183,20 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="AddPurchaseOrder" FunctionName="RMDDatabaseModel.Store.AddPurchaseOrder" />
           <FunctionImportMapping FunctionImportName="AddSellOrder" FunctionName="RMDDatabaseModel.Store.AddSellOrder" />
-          <FunctionImportMapping FunctionImportName="GetConvertedPurchaseOrders" FunctionName="RMDDatabaseModel.Store.GetConvertedPurchaseOrders">
+          <FunctionImportMapping FunctionImportName="GetCondensedAndConvertedPurchaseOrders" FunctionName="RMDDatabaseModel.Store.GetCondensedAndConvertedPurchaseOrders">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="RMDDatabaseModel.GetConvertedPurchaseOrders_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ToBeFilledAmount" ColumnName="ToBeFilledAmount" />
-                <ScalarProperty Name="OriginalCurrencyTypeId" ColumnName="OriginalCurrencyTypeId" />
+              <ComplexTypeMapping TypeName="RMDDatabaseModel.GetCondensedAndConvertedPurchaseOrders_Result">
+                <ScalarProperty Name="FillableResourceAmount" ColumnName="FillableResourceAmount" />
                 <ScalarProperty Name="OriginalCurrencyName" ColumnName="OriginalCurrencyName" />
                 <ScalarProperty Name="SourceMultiplier" ColumnName="SourceMultiplier" />
                 <ScalarProperty Name="ConvertedCurrencyPerResource" ColumnName="ConvertedCurrencyPerResource" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetConvertedSellOrders" FunctionName="RMDDatabaseModel.Store.GetConvertedSellOrders">
+          <FunctionImportMapping FunctionImportName="GetCondensedAndConvertedSellOrders" FunctionName="RMDDatabaseModel.Store.GetCondensedAndConvertedSellOrders">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="RMDDatabaseModel.GetConvertedSellOrders_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ToBeFilledAmount" ColumnName="ToBeFilledAmount" />
-                <ScalarProperty Name="OriginalCurrencyTypeId" ColumnName="OriginalCurrencyTypeId" />
+              <ComplexTypeMapping TypeName="RMDDatabaseModel.GetCondensedAndConvertedSellOrders_Result">
+                <ScalarProperty Name="FillableResourceAmount" ColumnName="FillableResourceAmount" />
                 <ScalarProperty Name="OriginalCurrencyName" ColumnName="OriginalCurrencyName" />
                 <ScalarProperty Name="SourceMultiplier" ColumnName="SourceMultiplier" />
                 <ScalarProperty Name="ConvertedCurrencyPerResource" ColumnName="ConvertedCurrencyPerResource" />

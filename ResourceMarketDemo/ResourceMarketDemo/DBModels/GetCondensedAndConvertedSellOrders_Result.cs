@@ -11,12 +11,9 @@ namespace ResourceMarketDemo.DBModels
 {
     using System;
     
-    public partial class GetConvertedPurchaseOrders_Result
+    public partial class GetCondensedAndConvertedSellOrders_Result
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public int ToBeFilledAmount { get; set; }
-        public byte OriginalCurrencyTypeId { get; set; }
+        public int FillableResourceAmount { get; set; }
         public string OriginalCurrencyName { get; set; }
         public double SourceMultiplier { get; set; }
         public double ConvertedCurrencyPerResource { get; set; }

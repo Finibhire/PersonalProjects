@@ -79,12 +79,12 @@
     <Build Include="CurrencyExchanges.sql" />
     <Build Include="fRoundDecimalUp.sql" />
     <None Include="Temp.sql" />
-    <Build Include="GetConvertedPurchaseOrders.sql" />
-    <Build Include="GetConvertedSellOrders.sql" />
     <Build Include="g_OrderSigFigsRound.sql" />
     <Build Include="fRoundDecimalDown.sql" />
     <Build Include="g_OrderSigFigsFloor.sql" />
     <Build Include="g_OrderSigFigsCeiling.sql" />
+    <Build Include="GetCondensedAndConvertedPurchaseOrders.sql" />
+    <Build Include="GetCondensedAndConvertedSellOrders.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="RMDDatabase.refactorlog" />

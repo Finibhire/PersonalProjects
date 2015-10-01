@@ -31,14 +31,9 @@ namespace ResourceMarketDemo.Controllers
 
             return View("Index", model);
         }
-
-        private const string apoWhiteList =
-            "WorkingCurrencyTypeId," +
-            "WorkingResourceTypeId," +
-            "AddPOResourceAmount," +
-            "AddPOCurrencyPerResource";
+        
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddPurchaseOrder([Bind(Include = apoWhiteList)] ResourceMarketIndexView model)
+        public ActionResult AddPurchaseOrder([Bind(Prefix = "AddPurchaseOrder")] AddOrder model)
         {
             string userName = null;
             int userId = 0;
@@ -51,9 +46,9 @@ namespace ResourceMarketDemo.Controllers
                     db.AddPurchaseOrder(
                         userId, 
                         model.WorkingResourceTypeId, 
-                        model.AddPOResourceAmount, 
+                        model.ResourceAmount, 
                         (byte)model.WorkingCurrencyTypeId, 
-                        model.AddPOCurrencyPerResource);
+                        model.CurrencyPerResource);
                 }
                 catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
                 {
@@ -69,8 +64,8 @@ namespace ResourceMarketDemo.Controllers
                     else
                     {
                         message =
-                            "System.Data.Entity.Core.EntityCommandExecutionException" + Environment.NewLine +
-                            ex.Message;
+                            "System.Data.Entity.Core.EntityCommandExecutionException: " + Environment.NewLine +
+                            ex.InnerException.Message;
                         ModelState.AddModelError("DatabaseError", message);
                     }
                 }
@@ -82,23 +77,20 @@ namespace ResourceMarketDemo.Controllers
                 }
             }
 
+            ResourceMarketIndexView viewModel = new ResourceMarketIndexView() { AddPurchaseOrder = model };
+
             PopulateModelDisplayData(
-                model,
+                viewModel,
                 model.WorkingCurrencyTypeId,
                 model.WorkingResourceTypeId,
                 userName,
                 userId);
 
-            return View("Index", model);
+            return View("Index", viewModel);
         }
-
-        private const string asoWhiteList =
-            "WorkingCurrencyTypeId," +
-            "WorkingResourceTypeId," +
-            "AddSellOrderData.ResourceAmount," +
-            "AddSellOrderData.CurrencyPerResource";
+        
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddSellOrder([Bind(Include = asoWhiteList)] ResourceMarketIndexView model)
+        public ActionResult AddSellOrder([Bind(Prefix = "AddSellOrder")] AddOrder model)
         {
             string userName = null;
             int userId = 0;
@@ -111,9 +103,9 @@ namespace ResourceMarketDemo.Controllers
                     db.AddSellOrder(
                         userId,
                         model.WorkingResourceTypeId,
-                        model.AddSOResourceAmount,
+                        model.ResourceAmount,
                         (byte)model.WorkingCurrencyTypeId,
-                        model.AddSOCurrencyPerResource);
+                        model.CurrencyPerResource);
                 }
                 catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
                 {
@@ -126,8 +118,8 @@ namespace ResourceMarketDemo.Controllers
                         ModelState.AddModelError("AddSOCurrencyPerResource", message);
                     }
                     message = 
-                        "System.Data.Entity.Core.EntityCommandExecutionException" + Environment.NewLine +
-                        ex.Message;
+                        "System.Data.Entity.Core.EntityCommandExecutionException: " + Environment.NewLine +
+                        ex.InnerException.Message;
                     ModelState.AddModelError("DatabaseError", message);
                 }
                 catch (Exception ex)
@@ -138,14 +130,16 @@ namespace ResourceMarketDemo.Controllers
                 }
             }
 
+            ResourceMarketIndexView viewModel = new ResourceMarketIndexView() { AddSellOrder = model };
+
             PopulateModelDisplayData(
-                model, 
+                viewModel, 
                 model.WorkingCurrencyTypeId, 
                 model.WorkingResourceTypeId,
                 userName,
                 userId);
 
-            return View("Index", model);
+            return View("Index", viewModel);
         }
 
         private void PopulateModelDisplayData(
@@ -160,41 +154,53 @@ namespace ResourceMarketDemo.Controllers
             byte workingCurrencyTypeId;
 
             //get the requested working currencies and working resources or provide the defaults
-            model.WorkingCurrencyName =
+            workingCurrencyName =
                 db.CurrencyTypes
                 .Where(x => x.Id == WorkingCurrencyTypeId)
                 .Select(x => x.Name)
                 .FirstOrDefault();
-            if (model.WorkingCurrencyName == null)
+            if (workingCurrencyName == null)
             {
                 var workingCurrencyInfo =
                     db.CurrencyTypes
                     .Select(x => new { x.Name, x.Id })
                     .OrderBy(x => x.Id)
                     .First();
-                model.WorkingCurrencyName = workingCurrencyInfo.Name;
-                model.WorkingCurrencyTypeId = workingCurrencyInfo.Id;
+                workingCurrencyName = workingCurrencyInfo.Name;
+                workingCurrencyTypeId = workingCurrencyInfo.Id;
             }
-            workingCurrencyTypeId = (byte)model.WorkingCurrencyTypeId;
-            workingCurrencyName = model.WorkingCurrencyName;
+            else
+            {
+                workingCurrencyTypeId = (byte)WorkingCurrencyTypeId;
+            }
+            model.WorkingCurrencyName = workingCurrencyName;
+            model.WorkingCurrencyTypeId = workingCurrencyTypeId;
+            model.AddPurchaseOrder.WorkingCurrencyTypeId = workingCurrencyTypeId;
+            model.AddSellOrder.WorkingCurrencyTypeId = workingCurrencyTypeId;
 
-            model.WorkingResourceName =
+            workingResourceName =
                 db.ResourceTypes
                 .Where(x => x.Id == WorkingResourceTypeId)
                 .Select(x => x.Name)
                 .FirstOrDefault();
-            if (model.WorkingResourceName == null)
+            if (workingResourceName == null)
             {
                 var workingResourceInfo =
                     db.ResourceTypes
                     .Select(x => new { x.Name, x.Id })
                     .OrderBy(x => x.Id)
                     .First();
-                model.WorkingResourceName = workingResourceInfo.Name;
-                model.WorkingResourceTypeId = workingResourceInfo.Id;
+                workingResourceName = workingResourceInfo.Name;
+                workingResourceTypeId = workingResourceInfo.Id;
             }
-            workingResourceTypeId = model.WorkingResourceTypeId;
-            workingResourceName = model.WorkingResourceName;
+            else
+            {
+                workingResourceTypeId = (int)WorkingResourceTypeId;
+            }
+            model.WorkingResourceName = workingResourceName;
+            model.WorkingResourceTypeId = workingResourceTypeId;
+            model.AddPurchaseOrder.WorkingResourceTypeId = workingResourceTypeId;
+            model.AddSellOrder.WorkingResourceTypeId = workingResourceTypeId;
 
             //populate what's needed for the html view tables
             model.RecentResourceSales =
@@ -227,31 +233,56 @@ namespace ResourceMarketDemo.Controllers
                     ClientIsBuyingResources = (x.BuyerUserId == userId)
                 });
 
-            model.CurrentPurchaseOrders =
-                db.GetConvertedPurchaseOrders(workingCurrencyTypeId, workingResourceTypeId)
-                .Select(x => new ConvertedOrderView()
+            model.AllPurchaseOrders =
+                db.GetCondensedAndConvertedPurchaseOrders(workingCurrencyTypeId, workingResourceTypeId)
+                .Select(x => new CondensedAndConvertedOrdersView()
                 {
-                    Id = x.Id,
-                    ClientIsOwner = x.UserId == userId,
-                    RemainingResourceAmount = x.ToBeFilledAmount,
+                    FillableResourceAmount = x.FillableResourceAmount,
                     OriginalCurrencyName = x.OriginalCurrencyName,
                     ExchangeRate = x.SourceMultiplier,
-                    CurrencyPerResource = (decimal)x.ConvertedCurrencyPerResource,
-                    TotalCost = (decimal)(x.ConvertedCurrencyPerResource * x.ToBeFilledAmount)
+                    CurrencyPerResource = x.ConvertedCurrencyPerResource,
+                    TotalCost = (decimal)(x.ConvertedCurrencyPerResource * x.FillableResourceAmount)
                 });
 
-            model.CurrentSellOrders =
-                db.GetConvertedSellOrders(workingCurrencyTypeId, workingResourceTypeId)
-                .Select(x => new ConvertedOrderView()
+            model.AllSellOrders =
+                db.GetCondensedAndConvertedSellOrders(workingCurrencyTypeId, workingResourceTypeId)
+                .Select(x => new CondensedAndConvertedOrdersView()
                 {
-                    Id = x.Id,
-                    ClientIsOwner = x.UserId == userId,
-                    RemainingResourceAmount = x.ToBeFilledAmount,
+                    FillableResourceAmount = x.FillableResourceAmount,
                     OriginalCurrencyName = x.OriginalCurrencyName,
                     ExchangeRate = x.SourceMultiplier,
-                    CurrencyPerResource = (decimal)x.ConvertedCurrencyPerResource,
-                    TotalCost = (decimal)x.ConvertedCurrencyPerResource * (decimal)x.ToBeFilledAmount
+                    CurrencyPerResource = x.ConvertedCurrencyPerResource,
+                    TotalCost = (decimal)x.ConvertedCurrencyPerResource * (decimal)x.FillableResourceAmount
                 });
+
+            model.ClientPurchaseOrders =
+                from po in db.PurchaseOrders
+                where po.UserId == userId
+                where po.ResourceTypeId == workingResourceTypeId
+                orderby po.Id
+                select new MarketOrderView()
+                {
+                    Id = po.Id,
+                    ResourceOrderAmount = po.ResourceRequestAmount,
+                    ResourceFilledAmount = po.ResourceFilledAmount,
+                    OriginalCurrencyName = po.ResourceType.Name,
+                    CurrencyPerResource = po.CurrencyPerResource
+                };
+
+            model.ClientSellOrders =
+                from so in db.SellOrders
+                where so.UserId == userId
+                where so.ResourceTypeId == workingResourceTypeId
+                orderby so.Id
+                select new MarketOrderView()
+                {
+                    Id = so.Id,
+                    ResourceOrderAmount = so.ResourceSellAmount,
+                    ResourceFilledAmount = so.ResourceFilledAmount,
+                    OriginalCurrencyName = so.ResourceType.Name,
+                    CurrencyPerResource = so.CurrencyPerResource
+                };
+
         }
     }
 }

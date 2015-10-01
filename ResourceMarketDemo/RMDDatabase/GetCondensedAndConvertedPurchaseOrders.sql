@@ -1,25 +1,24 @@
-﻿CREATE PROCEDURE [dbo].[GetConvertedPurchaseOrders]
+﻿CREATE PROCEDURE [dbo].[GetCondensedAndConvertedPurchaseOrders]
 	@workingCurrency tinyint,
 	@workingResource int
 AS
 	select 
-		Id,
-		UserId,
-		isnull(ToBeFilledAmount, 0) as ToBeFilledAmount,
-		OriginalCurrencyTypeId,
+		FillableResourceAmount,
+		--OriginalCurrencyTypeId,
 		OriginalCurrencyName,
 		SourceMultiplier,
-		isnull(ConvertedCurrencyPerResource, 0) as ConvertedCurrencyPerResource
+		ConvertedCurrencyPerResource
 	from
 		(
 			select 
-				po.Id,
-				po.UserId,
-				po.ResourceRequestAmount - ResourceFilledAmount as ToBeFilledAmount,
-				po.CurrencyTypeId as OriginalCurrencyTypeId,
+				isnull(sum(po.ResourceRequestAmount - po.ResourceFilledAmount), 0) as FillableResourceAmount,
+				--po.CurrencyTypeId as OriginalCurrencyTypeId,
 				ct.Name as OriginalCurrencyName,
 				isnull(cer.SourceMultiplier, 1) as SourceMultiplier,
-				dbo.g_OrderSigFigsFloor(po.CurrencyPerResource / isnull(cer.SourceMultiplier, 1)) as ConvertedCurrencyPerResource
+				isnull(
+					dbo.g_OrderSigFigsFloor(po.CurrencyPerResource / isnull(cer.SourceMultiplier, 1)),
+					0
+				) as ConvertedCurrencyPerResource
 			from
 				PurchaseOrders po
 				left join CurrencyTypes ct
@@ -34,6 +33,8 @@ AS
 					or
 					cer.SourceMultiplier is not null
 				)
+			group by
+				po.CurrencyPerResource, ct.Name, cer.SourceMultiplier
 			) sub
 		order by
 			ConvertedCurrencyPerResource desc

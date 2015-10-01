@@ -91,7 +91,7 @@ namespace ResourceMarketDemo.DBModels
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddSellOrder", userIdParameter, resourceTypeIdParameter, resourceSellAmountParameter, currencyTypeIdParameter, currencyPerResourceParameter);
         }
     
-        public virtual ObjectResult<GetConvertedPurchaseOrders_Result> GetConvertedPurchaseOrders(Nullable<byte> workingCurrency, Nullable<int> workingResource)
+        public virtual ObjectResult<GetCondensedAndConvertedPurchaseOrders_Result> GetCondensedAndConvertedPurchaseOrders(Nullable<byte> workingCurrency, Nullable<int> workingResource)
         {
             var workingCurrencyParameter = workingCurrency.HasValue ?
                 new ObjectParameter("workingCurrency", workingCurrency) :
@@ -101,10 +101,10 @@ namespace ResourceMarketDemo.DBModels
                 new ObjectParameter("workingResource", workingResource) :
                 new ObjectParameter("workingResource", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetConvertedPurchaseOrders_Result>("GetConvertedPurchaseOrders", workingCurrencyParameter, workingResourceParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCondensedAndConvertedPurchaseOrders_Result>("GetCondensedAndConvertedPurchaseOrders", workingCurrencyParameter, workingResourceParameter);
         }
     
-        public virtual ObjectResult<GetConvertedSellOrders_Result> GetConvertedSellOrders(Nullable<byte> workingCurrency, Nullable<int> workingResource)
+        public virtual ObjectResult<GetCondensedAndConvertedSellOrders_Result> GetCondensedAndConvertedSellOrders(Nullable<byte> workingCurrency, Nullable<int> workingResource)
         {
             var workingCurrencyParameter = workingCurrency.HasValue ?
                 new ObjectParameter("workingCurrency", workingCurrency) :
@@ -114,7 +114,7 @@ namespace ResourceMarketDemo.DBModels
                 new ObjectParameter("workingResource", workingResource) :
                 new ObjectParameter("workingResource", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetConvertedSellOrders_Result>("GetConvertedSellOrders", workingCurrencyParameter, workingResourceParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCondensedAndConvertedSellOrders_Result>("GetCondensedAndConvertedSellOrders", workingCurrencyParameter, workingResourceParameter);
         }
     }
 }

@@ -139,16 +139,15 @@
 <hr style="clear:both; display:block; margin-bottom:30px;" />
 
 <div style="display:inline; float:left;margin-bottom:30px;">
-    <div class="table-label">Current Purchase Orders</div>
+    <div class="table-label">Offers to Buy @Model.WorkingResourceName</div>
     <table>
         <thead>
             <tr>
                 <th>Resources</th>
-                <th>P.O.<br />Currency</th>
+                <th>Original<br />Currency</th>
                 <th>Exchange<br />Rate*</th>
                 <th>@Model.WorkingCurrencyName<br />per<br />@Model.WorkingResourceName</th>
-                <th>Total<br />Cost</th>
-                <th></th>
+                <th>Total<br />Cost<br />(@Model.WorkingCurrencyName)</th>
             </tr>
         </thead>
         <tbody>
@@ -160,15 +159,14 @@
                 <td>900</td>
                 <td>@Html.ActionLink("delete", "DeletePurchaseOrder", new { PurchaseOrderId = 10 })</td>
             </tr>-->
-            @foreach (ConvertedOrderView co in Model.CurrentPurchaseOrders)
+            @foreach (CondensedAndConvertedOrdersView cco in Model.AllPurchaseOrders)
             {
             <tr>
-                <td>@Html.DisplayFor(x => co.RemainingResourceAmount)</td>
-                <td>@Html.DisplayFor(x => co.OriginalCurrencyName)</td>
-                <td>@co.ExchangeRate.GetRMDReadableFormat()</td>
-                <td>@co.CurrencyPerResource.GetRMDReadableFormat()</td>
-                <td>@co.TotalCost.GetRMDReadableFormat()</td>
-                <td>@(co.ClientIsOwner ? Html.ActionLink("delete", "DeletePurchaseOrder", new { PurchaseOrderId = co.Id }) : null)</td>
+                <td>@Html.DisplayFor(x => cco.FillableResourceAmount)</td>
+                <td>@Html.DisplayFor(x => cco.OriginalCurrencyName)</td>
+                <td>@cco.ExchangeRate.GetRMDReadableFormat()</td>
+                <td>@cco.CurrencyPerResource.GetRMDReadableFormat()</td>
+                <td>@cco.TotalCost.GetRMDReadableFormat()</td>
             </tr>
             }
         </tbody>
@@ -185,8 +183,8 @@
                 <td colspan="6">
                     @using (Html.BeginForm("AddPurchaseOrder", "ResourceMarket", FormMethod.Post))
                     {
-                        @Html.HiddenFor(m => m.WorkingCurrencyTypeId)
-                        @Html.HiddenFor(m => m.WorkingResourceTypeId)
+                        @Html.HiddenFor(m => m.AddPurchaseOrder.WorkingCurrencyTypeId)
+                        @Html.HiddenFor(m => m.AddPurchaseOrder.WorkingResourceTypeId)
                         <input type="submit" value="Create PO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             Total<br />
@@ -194,12 +192,12 @@
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddPOCurrencyPerResource)
+                            @Html.EditorFor(m => m.AddPurchaseOrder.CurrencyPerResource)
                             <!--<input type="text" name="CurrencyPerResource" class="" />-->
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             @Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddPOResourceAmount)
+                            @Html.EditorFor(m => m.AddPurchaseOrder.ResourceAmount)
                             <!--<input type="number" name="ResourceRequestAmount" class="" />-->
                         </div>
                     }
@@ -207,8 +205,12 @@
             </tr>
             <tr style="border-bottom-style: none; border-bottom-width: 0px">
                 <td colspan="6" style="color:red">
-                    @Html.ValidationMessageFor(m => m.AddPOCurrencyPerResource)
-                    @Html.ValidationMessageFor(m => m.AddPOResourceAmount)
+                    <div>
+                        @Html.ValidationMessageFor(m => m.AddPurchaseOrder.CurrencyPerResource)
+                    </div>
+                    <div>
+                        @Html.ValidationMessageFor(m => m.AddPurchaseOrder.ResourceAmount)
+                    </div>
                 </td>
             </tr>
             <tr style="border-bottom-style: solid; border-bottom-width: 2px">
@@ -232,16 +234,15 @@
 </div>
 
 <div style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
-    <div class="table-label">Current Sell Orders</div>
+    <div class="table-label">Offers to Sell @Model.WorkingResourceName</div>
     <table>
         <thead>
             <tr>
                 <th>Resources</th>
-                <th>S.O.<br />Currency</th>
+                <th>Original<br />Currency</th>
                 <th>Exchange<br />Rate*</th>
                 <th>@Model.WorkingCurrencyName<br />per<br />@Model.WorkingResourceName</th>
-                <th>Total<br />Cost</th>
-                <th />
+                <th>Total<br />Cost<br />(@Model.WorkingCurrencyName)</th>
             </tr>
         </thead>
         <tbody>
@@ -253,15 +254,14 @@
                 <td>900</td>
                 <td>@Html.ActionLink("delete", "DeleteSaleOrder", new { SaleOrderId = 10 })</td>
             </tr>-->
-            @foreach (ConvertedOrderView co in Model.CurrentSellOrders)
+            @foreach (CondensedAndConvertedOrdersView cco in Model.AllSellOrders)
             {
                 <tr>
-                    <td>@co.RemainingResourceAmount.ToString()</td>
-                    <td>@co.OriginalCurrencyName</td>
-                    <td>@co.ExchangeRate</td>
-                    <td>@co.CurrencyPerResource</td>
-                    <td>@co.TotalCost</td>
-                    <td>@(co.ClientIsOwner ? Html.ActionLink("delete", "DeleteSaleOrder", new { SaleOrderId = co.Id }) : null)</td>
+                    <td>@Html.DisplayFor(x => cco.FillableResourceAmount)</td>
+                    <td>@Html.DisplayFor(x => cco.OriginalCurrencyName)</td>
+                    <td>@cco.ExchangeRate.GetRMDReadableFormat()</td>
+                    <td>@cco.CurrencyPerResource.GetRMDReadableFormat()</td>
+                    <td>@cco.TotalCost.GetRMDReadableFormat()</td>
                 </tr>
             }
         </tbody>
@@ -278,8 +278,8 @@
                 <td colspan="6">
                     @using (Html.BeginForm("AddSellOrder", "ResourceMarket", FormMethod.Post))
                     {
-                        <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
-                        <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
+                        @Html.HiddenFor(m => m.AddSellOrder.WorkingCurrencyTypeId)
+                        @Html.HiddenFor(m => m.AddSellOrder.WorkingResourceTypeId)
 
                         <input type="submit" value="Create SO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
@@ -288,19 +288,23 @@
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddSOCurrencyPerResource)
+                            @Html.EditorFor(m => m.AddSellOrder.CurrencyPerResource)
                         </div>
                         <div style="float:right; padding-left: 4px; padding-right: 4px">
                             @Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddSOResourceAmount)
+                            @Html.EditorFor(m => m.AddSellOrder.ResourceAmount)
                         </div>
                     }
                 </td>
             </tr>
             <tr style="border-bottom-style: none; border-bottom-width: 0px">
-                <td colspan="6">
-                    @Html.ValidationMessageFor(m => m.AddSOCurrencyPerResource)
-                    @Html.ValidationMessageFor(m => m.AddSOResourceAmount)
+                <td colspan="6" style="color:red">
+                    <div>
+                        @Html.ValidationMessageFor(m => m.AddSellOrder.CurrencyPerResource)
+                    </div>
+                    <div>
+                        @Html.ValidationMessageFor(m => m.AddSellOrder.ResourceAmount)
+                    </div>
                 </td>
             </tr>
             <tr style="border-bottom-style: solid; border-bottom-width: 2px">
@@ -327,3 +331,68 @@
 <div>
     *The Currency Exchange Rate to convert a PO into your working currency is based on the current live market exchange rate at (Bitrex.com) and includes an additional 15% deduction as a fee for exchanging in game.
 </div>
+<hr style="clear:both; display:block; margin-bottom:30px;" />
+
+<div style="display:inline; float:left;margin-bottom:30px;">
+    <div class="table-label">My @Model.WorkingResourceName Purchase Orders</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Resources<br />Requested</th>
+                <th>Resources<br />Filled</th>
+                <th>Resources<br />Remaining</th>
+                <th>P.O.<br />Currency</th>
+                <th>Price<br />per<br />@Model.WorkingResourceName</th>
+                <th>Total<br />Potential<br />Income</th>
+                <th><!--delete--></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (MarketOrderView mo in Model.ClientPurchaseOrders)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(x => mo.ResourceOrderAmount)</td>
+                    <td>@Html.DisplayFor(x => mo.ResourceFilledAmount)</td>
+                    <td>@((mo.ResourceOrderAmount - mo.ResourceFilledAmount).ToString())</td>
+                    <td>@Html.DisplayFor(x => mo.OriginalCurrencyName)</td>
+                    <td>@mo.CurrencyPerResource.GetRMDReadableFormat()</td>
+                    <td>@(((mo.ResourceOrderAmount - mo.ResourceFilledAmount) * mo.CurrencyPerResource).GetRMDReadableFormat())</td>
+                    <td>@Html.ActionLink("delete", "DeletePurhcaseOrder", "ResourceMarket", new { Id = mo.Id }, null)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
+    <div class="table-label">My @Model.WorkingResourceName Sell Orders</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Resources<br />Posted<br />To Sell</th>
+                <th>Resources<br />Filled</th>
+                <th>Resources<br />Remaining</th>
+                <th>S.O.<br />Currency</th>
+                <th>Price<br />per<br />@Model.WorkingResourceName</th>
+                <th>Remaining<br />Currency<br />in Escrow</th>
+                <th><!--delete--></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (MarketOrderView mo in Model.ClientSellOrders)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(x => mo.ResourceOrderAmount)</td>
+                    <td>@Html.DisplayFor(x => mo.ResourceFilledAmount)</td>
+                    <td>@((mo.ResourceOrderAmount - mo.ResourceFilledAmount).ToString())</td>
+                    <td>@Html.DisplayFor(x => mo.OriginalCurrencyName)</td>
+                    <td>@mo.CurrencyPerResource.GetRMDReadableFormat()</td>
+                    <td>@(((mo.ResourceOrderAmount - mo.ResourceFilledAmount) * mo.CurrencyPerResource).GetRMDReadableFormat())</td>
+                    <td>@Html.ActionLink("delete", "DeleteSellOrder", "ResourceMarket", new { Id = mo.Id }, null)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="clear:both; display:block; height:10px;" />
+
