@@ -2,7 +2,7 @@
 @using ResourceMarketDemo.Models
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Resource Market";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,11 +11,25 @@
         padding-left: 3px;
         padding-right: 3px;
     }
+
+    button.btn-expand {
+        float:left; 
+        display:inline; 
+        margin-top:0px; 
+        font-size:20px; 
+        padding-top:0px; 
+        padding-bottom:0px; 
+        margin-top:-5px
+    }
+    div.section-heading {
+        float:left; 
+        display:inline
+    }
 </style>
 
 <h2>Resource Market</h2>
 
-<div class="form-horizontal" style="margin-bottom:20px">
+<div class="container form-horizontal" style="margin-bottom:20px">
     @using (Html.BeginForm("Index", "ResourceMarket", FormMethod.Get))
     {
         <h4>Change Market</h4>
@@ -23,11 +37,13 @@
             <label class="control-label col-md-2">Working Currency:</label>
             <label style="text-align:left; padding-top:7px" class="col-md-1">@Model.WorkingCurrencyName</label>
             <div style="padding-top:7px" class="col-md-1">
-                @Html.DropDownList("WorkingCurrency", Enum.GetValues(typeof(CurrencyType)).Cast<CurrencyType>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString(), Selected = Model.WorkingCurrencyTypeId == (int)x }))
+                @Html.DropDownListFor(m => m.WorkingCurrencyTypeId, Model.Currencies, new { style = "width: 150px" })
             </div>
             <label class="control-label col-md-2" style="display:block; clear:left">Working Resource:</label>
             <label style="text-align:left; padding-top:7px" class="col-md-1">@Model.WorkingResourceName</label>
-            @Html.HiddenFor(m => m.WorkingResourceTypeId)
+            <div style="padding-top:7px" class="col-md-1">
+                @Html.DropDownListFor(m => m.WorkingResourceTypeId, Model.Resources, new { style = "width: 150px" })
+            </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2" style="float:left; height:10px"></div>
@@ -39,223 +55,181 @@
     }
 </div>
 <hr style="clear:left" />
-<br />
 @if (!ViewData.ModelState.IsValid)
 {
+    <br />
     @Html.ValidationSummary("Validation Errors!", htmlAttributes: new { style = "color:red" })
+    <br />
 }
-<br />
 
-<div style="display:inline; float:left; margin-bottom:20px;">
-    <div class="table-label">
+<div class="container" style="display:inline; float:left; margin-bottom:20px;">
+    <div class="table-label section-heading">
         Recent Resource Sales
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Transaction<br />Time</th>
-                <th>@Model.WorkingResourceName<br />Sold<br />Amount</th>
-                <th>Sale<br />Currency</th>
-                <th>Currency<br />per<br />@Model.WorkingResourceName</th>
-                <th>Total<br />Cost</th>
-                <th>Participation</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!--<tr>
-                <td>@DateTime.Now</td>
-                <td>900</td>
-                <td>Example</td>
-                <td>9.9</td>
-                <td>8,910</td>
-            </tr>-->
+    <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#AllSales">+</button>
+    <div id="AllSales" style="clear:left" class="collapse">
+        <table>
+            <thead>
+                <tr>
+                    <th>Transaction<br />Time</th>
+                    <th>@Model.WorkingResourceName<br />Sold<br />Amount</th>
+                    <th>Sale<br />Currency</th>
+                    <th>Currency<br />per<br />@Model.WorkingResourceName</th>
+                    <th>Total<br />Cost</th>
+                    <th>Participation</th>
+                </tr>
+            </thead>
+            <tbody>
             @foreach (ResourceSaleView rs in Model.RecentResourceSales)
             {
-            <tr>
-                <td>@Html.DisplayFor(m => rs.SaleTime)</td>
-                <td>@Html.DisplayFor(m => rs.AmountSold)</td>
-                <td>@Html.DisplayFor(m => rs.CurrencyName)</td>
-                <td>@rs.CurrencyPerResource.GetRMDReadableFormat()</td>
-                <td>@rs.TotalCostAmount.GetRMDReadableFormat()</td>
-                <td>@{ 
-                    if (rs.ClientParticipation)
-                    {
-                        if (rs.ClientIsBuyingResources)
-                        {
-                            Html.Display("Buyer");
-                        }
-                        else
-                        {
-                            Html.Display("Seller");
-                        }
-                    }
-                }</td>
-            </tr>
+                <tr>
+                    <td>@Html.DisplayFor(m => rs.SaleTime)</td>
+                    <td>@Html.DisplayFor(m => rs.AmountSold)</td>
+                    <td>@Html.DisplayFor(m => rs.CurrencyName)</td>
+                    <td>@rs.CurrencyPerResource.GetRMDReadableFormat()</td>
+                    <td>@rs.TotalCostAmount.GetRMDReadableFormat()</td>
+                    <td>@{
+                            if (rs.ClientParticipation)
+                            {
+                                if (rs.ClientIsBuyingResources)
+                                {
+                                    Html.Display("Buyer");
+                                }
+                                else
+                                {
+                                    Html.Display("Seller");
+                                }
+                            }
+                    }</td>
+                </tr>
             }
-        </tbody>
-    </table>
-</div>
-<div style="display:inline; float:left; margin-bottom:20px; margin-left:20px">
-    <div class="table-label">
-        My Recent Transactions
+            </tbody>
+        </table>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Transaction<br />Time</th>
-                <th>Buy<br />or<br />Sell</th>
-                <th>Resource<br />Type</th>
-                <th>Resources<br />Sold</th>
-                <th>Sale<br />Currency</th>
-                <th>Currency<br />per<br />Resource</th>
-                <th>Total<br />Cost</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!--<tr>
-                <td>@DateTime.Now</td>
-                <td>Buy</td>
-                <td>Fish</td>
-                <td>50</td>
-                <td>Example</td>
-                <td>9.9</td>
-                <td>495</td>
-            </tr>-->
-            @foreach (ClientResourceSaleView rs in Model.ClientRecentTransactions)
-            {
-            <tr>
-                <td>@Html.DisplayFor(m => rs.SaleTime)</td>
-                <td>@((rs.ClientIsBuyingResources) ? "Buy" : "Sell")</td>
-                <td>@Html.DisplayFor(m => rs.ResourceName)</td>
-                <td>@Html.DisplayFor(m => rs.AmountSold)</td>
-                <td>@Html.DisplayFor(m => rs.CurrencyName)</td>
-                <td>@rs.CurrencyPerResource.GetRMDReadableFormat()</td>
-                <td>@rs.TotalCostAmount.GetRMDReadableFormat()</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+</div>
+<div class="container" style="display:inline; float:left; margin-bottom:20px; margin-left:20px">
+    <div class="table-label section-heading">
+        My Recent Resource Transactions
+    </div>
+    <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#ClientResourceTransactions">+</button>
+    <div id="ClientResourceTransactions" style="clear:left" class="collapse">
+        <table>
+            <thead>
+                <tr>
+                    <th>Transaction<br />Time</th>
+                    <th>Buy<br />or<br />Sell</th>
+                    <th>Resource<br />Type</th>
+                    <th>Resources<br />Sold</th>
+                    <th>Sale<br />Currency</th>
+                    <th>Currency<br />per<br />Resource</th>
+                    <th>Total<br />Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ClientResourceSaleView rs in Model.ClientRecentTransactions)
+                {
+                <tr>
+                    <td>@Html.DisplayFor(m => rs.SaleTime)</td>
+                    <td>@((rs.ClientIsBuyingResources) ? "Buy" : "Sell")</td>
+                    <td>@Html.DisplayFor(m => rs.ResourceName)</td>
+                    <td>@Html.DisplayFor(m => rs.AmountSold)</td>
+                    <td>@Html.DisplayFor(m => rs.CurrencyName)</td>
+                    <td>@rs.CurrencyPerResource.GetRMDReadableFormat()</td>
+                    <td>@rs.TotalCostAmount.GetRMDReadableFormat()</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 <hr style="clear:both; display:block; margin-bottom:30px;" />
 
-<div style="display:inline; float:left;margin-bottom:30px;">
-    <div class="table-label">Offers to Buy @Model.WorkingResourceName</div>
-    <table>
-        <thead>
-            <tr>
-                <th>Resources</th>
-                <th>Original<br />Currency</th>
-                <th>Exchange<br />Rate*</th>
-                <th>@Model.WorkingCurrencyName<br />per<br />@Model.WorkingResourceName</th>
-                <th>Total<br />Cost<br />(@Model.WorkingCurrencyName)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!--<tr>
-                <td>875</td>
-                <td>EXAMPLE</td>
-                <td>0.00091</td>
-                <td>1.2</td>
-                <td>900</td>
-                <td>@Html.ActionLink("delete", "DeletePurchaseOrder", new { PurchaseOrderId = 10 })</td>
-            </tr>-->
-            @foreach (CondensedAndConvertedOrdersView cco in Model.AllPurchaseOrders)
-            {
-            <tr>
-                <td>@Html.DisplayFor(x => cco.FillableResourceAmount)</td>
-                <td>@Html.DisplayFor(x => cco.OriginalCurrencyName)</td>
-                <td>@cco.ExchangeRate.GetRMDReadableFormat()</td>
-                <td>@cco.CurrencyPerResource.GetRMDReadableFormat()</td>
-                <td>@cco.TotalCost.GetRMDReadableFormat()</td>
-            </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr style="border-bottom-style: none; border-bottom-width: 0px">
-                <td colspan="6">&nbsp;</td>
-            </tr>
-            <tr style="border-bottom-style: solid; border-bottom-width: 2px">
-                <td colspan="6">
-                    <div style="font-weight:700;float:left">Create Purchase Order:</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    @using (Html.BeginForm("AddPurchaseOrder", "ResourceMarket", FormMethod.Post))
-                    {
-                        @Html.HiddenFor(m => m.AddPurchaseOrder.WorkingCurrencyTypeId)
-                        @Html.HiddenFor(m => m.AddPurchaseOrder.WorkingResourceTypeId)
-                        <input type="submit" value="Create PO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
-                        <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            Total<br />
-                            <input type="text" value="*java-calc*" />
-                        </div>
-                        <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddPurchaseOrder.CurrencyPerResource)
-                            <!--<input type="text" name="CurrencyPerResource" class="" />-->
-                        </div>
-                        <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            @Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddPurchaseOrder.ResourceAmount)
-                            <!--<input type="number" name="ResourceRequestAmount" class="" />-->
-                        </div>
-                    }
-                </td>
-            </tr>
-            <tr style="border-bottom-style: none; border-bottom-width: 0px">
-                <td colspan="6" style="color:red">
-                    <div>
-                        @Html.ValidationMessageFor(m => m.AddPurchaseOrder.CurrencyPerResource)
-                    </div>
-                    <div>
-                        @Html.ValidationMessageFor(m => m.AddPurchaseOrder.ResourceAmount)
-                    </div>
-                </td>
-            </tr>
-            <tr style="border-bottom-style: solid; border-bottom-width: 2px">
-                <td colspan="6">
-                    <div style="font-weight:700;float:left">Instant @Model.WorkingResourceName Buy:</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6" style="text-align:right">
-                    <form action="InstantBuy" method="POST">
-                        <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
-                        <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
-                        Amount of @Model.WorkingResourceName to buy:
-                        <input type="number" name="ResourceAmount" class="" />
-                        <input type="submit" value="Buy Now" class="form-control button" />
-                    </form>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+<div class="container" style="display:inline; float:left;margin-bottom:30px;">
+    <div class="table-label section-heading">My @Model.WorkingResourceName Purchase Orders</div>
+    <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#ClientPurchaseOrders">+</button>
+    <div id="ClientPurchaseOrders" style="clear:left" class="collapse">
+        <table>
+            <thead>
+                <tr>
+                    <th>Resources<br />Requested</th>
+                    <th>Resources<br />Filled</th>
+                    <th>Resources<br />Remaining</th>
+                    <th>P.O.<br />Currency</th>
+                    <th>Price<br />per<br />@Model.WorkingResourceName</th>
+                    <th>Total<br />Potential<br />Income</th>
+                    <th><!--delete--></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (MarketOrderView mo in Model.ClientPurchaseOrders)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => mo.ResourceOrderAmount)</td>
+                        <td>@Html.DisplayFor(x => mo.ResourceFilledAmount)</td>
+                        <td>@((mo.ResourceOrderAmount - mo.ResourceFilledAmount).ToString())</td>
+                        <td>@Html.DisplayFor(x => mo.OriginalCurrencyName)</td>
+                        <td>@mo.CurrencyPerResource.GetRMDReadableFormat()</td>
+                        <td>@(((mo.ResourceOrderAmount - mo.ResourceFilledAmount) * mo.CurrencyPerResource).GetRMDReadableFormat())</td>
+                        <td>@Html.ActionLink("delete", "DeletePurhcaseOrder", "ResourceMarket", new { Id = mo.Id }, null)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
-    <div class="table-label">Offers to Sell @Model.WorkingResourceName</div>
-    <table>
-        <thead>
-            <tr>
-                <th>Resources</th>
-                <th>Original<br />Currency</th>
-                <th>Exchange<br />Rate*</th>
-                <th>@Model.WorkingCurrencyName<br />per<br />@Model.WorkingResourceName</th>
-                <th>Total<br />Cost<br />(@Model.WorkingCurrencyName)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!--<tr>
-                <td>875</td>
-                <td>Dragon Points</td>
-                <td>0.00091</td>
-                <td>1.2</td>
-                <td>900</td>
-                <td>@Html.ActionLink("delete", "DeleteSaleOrder", new { SaleOrderId = 10 })</td>
-            </tr>-->
-            @foreach (CondensedAndConvertedOrdersView cco in Model.AllSellOrders)
-            {
+<div class="container" style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
+    <div class="table-label section-heading">My @Model.WorkingResourceName Sell Orders</div>
+    <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#ClientSellOrders">+</button>
+    <div id="ClientSellOrders" style="clear:left" class="collapse">
+        <table>
+            <thead>
+                <tr>
+                    <th>Resources<br />Posted<br />To Sell</th>
+                    <th>Resources<br />Filled</th>
+                    <th>Resources<br />Remaining</th>
+                    <th>S.O.<br />Currency</th>
+                    <th>Price<br />per<br />@Model.WorkingResourceName</th>
+                    <th>Remaining<br />Currency<br />in Escrow</th>
+                    <th><!--delete--></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (MarketOrderView mo in Model.ClientSellOrders)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => mo.ResourceOrderAmount)</td>
+                        <td>@Html.DisplayFor(x => mo.ResourceFilledAmount)</td>
+                        <td>@((mo.ResourceOrderAmount - mo.ResourceFilledAmount).ToString())</td>
+                        <td>@Html.DisplayFor(x => mo.OriginalCurrencyName)</td>
+                        <td>@mo.CurrencyPerResource.GetRMDReadableFormat()</td>
+                        <td>@(((mo.ResourceOrderAmount - mo.ResourceFilledAmount) * mo.CurrencyPerResource).GetRMDReadableFormat())</td>
+                        <td>@Html.ActionLink("delete", "DeleteSellOrder", "ResourceMarket", new { Id = mo.Id }, null)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr style="clear:both; display:block; margin-bottom:30px;" />
+
+<div class="container" style="display:inline; float:left;margin-bottom:30px;">
+    <div class="table-label section-heading">Offers to Buy @Model.WorkingResourceName</div>
+    <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#BuyOffers">+</button>
+    <div id="BuyOffers" style="clear:left" class="in">
+        <table>
+            <thead>
+                <tr>
+                    <th>Resources</th>
+                    <th>Original<br />Currency</th>
+                    <th>Exchange<br />Rate*</th>
+                    <th>@Model.WorkingCurrencyName<br />per<br />@Model.WorkingResourceName</th>
+                    <th>Total<br />Cost<br />(@Model.WorkingCurrencyName)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CondensedAndConvertedOrdersView cco in Model.AllPurchaseOrders)
+                {
                 <tr>
                     <td>@Html.DisplayFor(x => cco.FillableResourceAmount)</td>
                     <td>@Html.DisplayFor(x => cco.OriginalCurrencyName)</td>
@@ -263,136 +237,163 @@
                     <td>@cco.CurrencyPerResource.GetRMDReadableFormat()</td>
                     <td>@cco.TotalCost.GetRMDReadableFormat()</td>
                 </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr style="border-bottom-style: none; border-bottom-width: 0px">
-                <td colspan="6">&nbsp;</td>
-            </tr>
-            <tr style="border-bottom-style: solid; border-bottom-width: 2px">
-                <td colspan="6">
-                    <div style="font-weight:700;float:left">Create Sell Order</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    @using (Html.BeginForm("AddSellOrder", "ResourceMarket", FormMethod.Post))
-                    {
-                        @Html.HiddenFor(m => m.AddSellOrder.WorkingCurrencyTypeId)
-                        @Html.HiddenFor(m => m.AddSellOrder.WorkingResourceTypeId)
+                }
+            </tbody>
+            <tfoot>
+                <tr style="border-bottom-style: none; border-bottom-width: 0px">
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+                <tr style="border-bottom-style: solid; border-bottom-width: 2px">
+                    <td colspan="6">
+                        <div style="font-weight:700;float:left">Create Purchase Order:</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        @using (Html.BeginForm("AddPurchaseOrder", "ResourceMarket", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(m => m.AddPurchaseOrder.WorkingCurrencyTypeId)
+                            @Html.HiddenFor(m => m.AddPurchaseOrder.WorkingResourceTypeId)
+                            <input type="submit" value="Create PO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
+                            <div style="float:right; padding-left: 4px; padding-right: 4px">
+                                Total<br />
+                                <input type="text" value="*java-calc*" />
+                            </div>
+                            <div style="float:right; padding-left: 4px; padding-right: 4px">
+                                @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
+                                @Html.EditorFor(m => m.AddPurchaseOrder.CurrencyPerResource)
+                                <!--<input type="text" name="CurrencyPerResource" class="" />-->
+                            </div>
+                            <div style="float:right; padding-left: 4px; padding-right: 4px">
+                                @Model.WorkingResourceName<br />
+                                @Html.EditorFor(m => m.AddPurchaseOrder.ResourceAmount)
+                                <!--<input type="number" name="ResourceRequestAmount" class="" />-->
+                            </div>
+                        }
+                    </td>
+                </tr>
+                <tr style="border-bottom-style: none; border-bottom-width: 0px">
+                    <td colspan="6" style="color:red">
+                        <div>
+                            @Html.ValidationMessageFor(m => m.AddPurchaseOrder.CurrencyPerResource)
+                        </div>
+                        <div>
+                            @Html.ValidationMessageFor(m => m.AddPurchaseOrder.ResourceAmount)
+                        </div>
+                    </td>
+                </tr>
+                <tr style="border-bottom-style: solid; border-bottom-width: 2px">
+                    <td colspan="6">
+                        <div style="font-weight:700;float:left">Instant @Model.WorkingResourceName Buy:</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="text-align:right">
+                        <form action="InstantBuy" method="POST">
+                            <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
+                            <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
+                            Amount of @Model.WorkingResourceName to buy:
+                            <input type="number" name="ResourceAmount" class="" />
+                            <input type="submit" value="Buy Now" class="form-control button" />
+                        </form>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<div class="container" style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
+    <div class="table-label section-heading">Offers to Sell @Model.WorkingResourceName</div>
+    <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#SellOffers">+</button>
+    <div id="SellOffers" style="clear:left" class="in">
+        <table>
+            <thead>
+                <tr>
+                    <th>Resources</th>
+                    <th>Original<br />Currency</th>
+                    <th>Exchange<br />Rate*</th>
+                    <th>@Model.WorkingCurrencyName<br />per<br />@Model.WorkingResourceName</th>
+                    <th>Total<br />Cost<br />(@Model.WorkingCurrencyName)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CondensedAndConvertedOrdersView cco in Model.AllSellOrders)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => cco.FillableResourceAmount)</td>
+                        <td>@Html.DisplayFor(x => cco.OriginalCurrencyName)</td>
+                        <td>@cco.ExchangeRate.GetRMDReadableFormat()</td>
+                        <td>@cco.CurrencyPerResource.GetRMDReadableFormat()</td>
+                        <td>@cco.TotalCost.GetRMDReadableFormat()</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr style="border-bottom-style: none; border-bottom-width: 0px">
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+                <tr style="border-bottom-style: solid; border-bottom-width: 2px">
+                    <td colspan="6">
+                        <div style="font-weight:700;float:left">Create Sell Order</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        @using (Html.BeginForm("AddSellOrder", "ResourceMarket", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(m => m.AddSellOrder.WorkingCurrencyTypeId)
+                            @Html.HiddenFor(m => m.AddSellOrder.WorkingResourceTypeId)
 
-                        <input type="submit" value="Create SO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
-                        <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            Total<br />
-                            <input type="text" value="*java-calc*" />
+                            <input type="submit" value="Create SO" style="float:right; margin-left: 4px; margin-top: 6px;" class="form-control button" />
+                            <div style="float:right; padding-left: 4px; padding-right: 4px">
+                                Total<br />
+                                <input type="text" value="*java-calc*" />
+                            </div>
+                            <div style="float:right; padding-left: 4px; padding-right: 4px">
+                                @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
+                                @Html.EditorFor(m => m.AddSellOrder.CurrencyPerResource)
+                            </div>
+                            <div style="float:right; padding-left: 4px; padding-right: 4px">
+                                @Model.WorkingResourceName<br />
+                                @Html.EditorFor(m => m.AddSellOrder.ResourceAmount)
+                            </div>
+                        }
+                    </td>
+                </tr>
+                <tr style="border-bottom-style: none; border-bottom-width: 0px">
+                    <td colspan="6" style="color:red">
+                        <div>
+                            @Html.ValidationMessageFor(m => m.AddSellOrder.CurrencyPerResource)
                         </div>
-                        <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            @Model.WorkingCurrencyName/@Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddSellOrder.CurrencyPerResource)
+                        <div>
+                            @Html.ValidationMessageFor(m => m.AddSellOrder.ResourceAmount)
                         </div>
-                        <div style="float:right; padding-left: 4px; padding-right: 4px">
-                            @Model.WorkingResourceName<br />
-                            @Html.EditorFor(m => m.AddSellOrder.ResourceAmount)
-                        </div>
-                    }
-                </td>
-            </tr>
-            <tr style="border-bottom-style: none; border-bottom-width: 0px">
-                <td colspan="6" style="color:red">
-                    <div>
-                        @Html.ValidationMessageFor(m => m.AddSellOrder.CurrencyPerResource)
-                    </div>
-                    <div>
-                        @Html.ValidationMessageFor(m => m.AddSellOrder.ResourceAmount)
-                    </div>
-                </td>
-            </tr>
-            <tr style="border-bottom-style: solid; border-bottom-width: 2px">
-                <td colspan="6">
-                    <div style="font-weight:700;float:left">Instant @Model.WorkingResourceName Sell:</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6" style="text-align:right">
-                    <form action="InstantSell" method="POST">
-                        <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
-                        <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
-                        Amount of @Model.WorkingResourceName to sell:
-                        <input type="number" name="ResourceAmount" class="" />
-                        <input type="submit" value="Sell Now" class="form-control button" />
-                    </form>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+                    </td>
+                </tr>
+                <tr style="border-bottom-style: solid; border-bottom-width: 2px">
+                    <td colspan="6">
+                        <div style="font-weight:700;float:left">Instant @Model.WorkingResourceName Sell:</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="text-align:right">
+                        <form action="InstantSell" method="POST">
+                            <input type="hidden" name="ResourceTypeId" value="@Model.WorkingResourceTypeId" />
+                            <input type="hidden" name="CurrencyTypeId" value="@Model.WorkingCurrencyTypeId" />
+                            Amount of @Model.WorkingResourceName to sell:
+                            <input type="number" name="ResourceAmount" class="" />
+                            <input type="submit" value="Sell Now" class="form-control button" />
+                        </form>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>
 <div style="clear:both; display:block; height:10px;" />
 
 <div>
     *The Currency Exchange Rate to convert a PO into your working currency is based on the current live market exchange rate at (Bitrex.com) and includes an additional 15% deduction as a fee for exchanging in game.
-</div>
-<hr style="clear:both; display:block; margin-bottom:30px;" />
-
-<div style="display:inline; float:left;margin-bottom:30px;">
-    <div class="table-label">My @Model.WorkingResourceName Purchase Orders</div>
-    <table>
-        <thead>
-            <tr>
-                <th>Resources<br />Requested</th>
-                <th>Resources<br />Filled</th>
-                <th>Resources<br />Remaining</th>
-                <th>P.O.<br />Currency</th>
-                <th>Price<br />per<br />@Model.WorkingResourceName</th>
-                <th>Total<br />Potential<br />Income</th>
-                <th><!--delete--></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (MarketOrderView mo in Model.ClientPurchaseOrders)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(x => mo.ResourceOrderAmount)</td>
-                    <td>@Html.DisplayFor(x => mo.ResourceFilledAmount)</td>
-                    <td>@((mo.ResourceOrderAmount - mo.ResourceFilledAmount).ToString())</td>
-                    <td>@Html.DisplayFor(x => mo.OriginalCurrencyName)</td>
-                    <td>@mo.CurrencyPerResource.GetRMDReadableFormat()</td>
-                    <td>@(((mo.ResourceOrderAmount - mo.ResourceFilledAmount) * mo.CurrencyPerResource).GetRMDReadableFormat())</td>
-                    <td>@Html.ActionLink("delete", "DeletePurhcaseOrder", "ResourceMarket", new { Id = mo.Id }, null)</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<div style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
-    <div class="table-label">My @Model.WorkingResourceName Sell Orders</div>
-    <table>
-        <thead>
-            <tr>
-                <th>Resources<br />Posted<br />To Sell</th>
-                <th>Resources<br />Filled</th>
-                <th>Resources<br />Remaining</th>
-                <th>S.O.<br />Currency</th>
-                <th>Price<br />per<br />@Model.WorkingResourceName</th>
-                <th>Remaining<br />Currency<br />in Escrow</th>
-                <th><!--delete--></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (MarketOrderView mo in Model.ClientSellOrders)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(x => mo.ResourceOrderAmount)</td>
-                    <td>@Html.DisplayFor(x => mo.ResourceFilledAmount)</td>
-                    <td>@((mo.ResourceOrderAmount - mo.ResourceFilledAmount).ToString())</td>
-                    <td>@Html.DisplayFor(x => mo.OriginalCurrencyName)</td>
-                    <td>@mo.CurrencyPerResource.GetRMDReadableFormat()</td>
-                    <td>@(((mo.ResourceOrderAmount - mo.ResourceFilledAmount) * mo.CurrencyPerResource).GetRMDReadableFormat())</td>
-                    <td>@Html.ActionLink("delete", "DeleteSellOrder", "ResourceMarket", new { Id = mo.Id }, null)</td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
 <div style="clear:both; display:block; height:10px;" />
 

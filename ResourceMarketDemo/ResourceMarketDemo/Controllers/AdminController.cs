@@ -71,7 +71,7 @@ namespace ResourceMarketDemo.Controllers
 
             AdminUserViewData viewData = new AdminUserViewData();
             viewData.Users = db.UserAllPivoteds.OrderBy(x => x.UserName).Select(x =>
-                new VFUser() {
+                new UserExpandedView() {
                     Id = x.Id,
                     UserName = x.UserName,
                     Gold = x.Gold ?? 0,
@@ -86,7 +86,7 @@ namespace ResourceMarketDemo.Controllers
                     Iron = x.Iron ?? 0
                 });
             viewData.SubData = new AdminUserSubmitData();
-            viewData.SubData.NewUser = new VFUser();
+            viewData.SubData.NewUser = new UserExpandedView();
             viewData.SubData.NewUser.Gold = 100000;
             viewData.SubData.NewUser.DragonPoints = 200000;
             viewData.SubData.NewUser.HyperCoin = 300000;
@@ -125,7 +125,7 @@ namespace ResourceMarketDemo.Controllers
 
         [Authorize]
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
-        public ActionResult EditUser(VFUser subData)
+        public ActionResult EditUser(UserExpandedView subData)
         {
             string userName = null;
             int userId = 0;
@@ -162,7 +162,7 @@ namespace ResourceMarketDemo.Controllers
             }
 
             subData = db.UserAllPivoteds.Where(x => x.Id == subData.Id).Select(x =>
-                new VFUser()
+                new UserExpandedView()
                 {
                     Id = x.Id,
                     UserName = x.UserName,

@@ -73,5 +73,46 @@ namespace ResourceMarketDemo
 
             return userName;
         }
+
+
+        // In an attempt to make a better DropDownList I made this and learned that it was already done
+        // but I had not understood the way it was built.  This was a good learning experience but the
+        // method isn't needed any more.
+        public static IHtmlString DropDownListForCustom<ModelType, KeyType>(
+            this HtmlHelper<ModelType> helper, 
+            System.Linq.Expressions.Expression<Func<ModelType, KeyType>> exp,
+            IEnumerable<KeyValuePair<KeyType, string>> list)
+        {
+            EqualityComparer<KeyType> comparer = EqualityComparer<KeyType>.Default;
+            Func<ModelType, KeyType> del = exp.Compile();
+            KeyType selectedValue = del.Invoke(helper.ViewData.Model);
+
+            string name = del.Method.Name;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<select id=\"");
+            sb.Append(name);
+            sb.Append("\" name=\"");
+            sb.Append(name);
+            sb.Append("\">");
+            foreach (KeyValuePair<KeyType, string> item in list)
+            {
+                sb.Append("<option value=\"");
+                sb.Append(item.Key);
+                if (comparer.Equals(item.Key, selectedValue))
+                {
+                    sb.Append("\" selected=\"selected\">");
+                }
+                else
+                {
+                    sb.Append("\">");
+                }
+                sb.Append(item.Value);
+                sb.Append("</option>");
+            }
+            sb.Append("</select>");
+
+            return new HtmlString(sb.ToString());
+        }
     }
 }

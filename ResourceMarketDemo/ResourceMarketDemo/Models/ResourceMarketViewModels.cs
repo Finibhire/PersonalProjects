@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ResourceMarketDemo.DBModels;
+using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace ResourceMarketDemo.Models
@@ -11,8 +13,12 @@ namespace ResourceMarketDemo.Models
     {
         public string WorkingCurrencyName { get; set; }
         public string WorkingResourceName { get; set; }
-        public int? WorkingCurrencyTypeId { get; set; }
+        public byte? WorkingCurrencyTypeId { get; set; }
         public int? WorkingResourceTypeId { get; set; }
+
+        public IEnumerable<SelectListItem> Currencies { get; set; }
+        public IEnumerable<SelectListItem> Resources { get; set; }
+
         public IEnumerable<ResourceSaleView> RecentResourceSales { get; set; }
         public IEnumerable<ClientResourceSaleView> ClientRecentTransactions { get; set; }
         public IEnumerable<CondensedAndConvertedOrdersView> AllPurchaseOrders { get; set; }

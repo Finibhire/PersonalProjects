@@ -24,8 +24,8 @@ namespace ResourceMarketDemo.Controllers
             ResourceMarketIndexView model = new ResourceMarketIndexView();
             PopulateModelDisplayData(
                 model,
-                model.WorkingCurrencyTypeId,
-                model.WorkingResourceTypeId,
+                WorkingCurrencyTypeId,
+                WorkingResourceTypeId,
                 userName,
                 userId);
 
@@ -201,6 +201,25 @@ namespace ResourceMarketDemo.Controllers
             model.WorkingResourceTypeId = workingResourceTypeId;
             model.AddPurchaseOrder.WorkingResourceTypeId = workingResourceTypeId;
             model.AddSellOrder.WorkingResourceTypeId = workingResourceTypeId;
+
+            model.Currencies =
+                db.CurrencyTypes
+                .Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString(),
+                    Selected = x.Id == workingCurrencyTypeId
+                });
+            //model.CurrenciesSelectList = new SelectList(model.Currencies, "Id", "Name", (byte)workingCurrencyTypeId);
+            model.Resources =
+                db.ResourceTypes
+                .Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString(),
+                    Selected = x.Id == workingResourceTypeId
+                });
+
 
             //populate what's needed for the html view tables
             model.RecentResourceSales =
