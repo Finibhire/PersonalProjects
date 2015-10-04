@@ -29,23 +29,24 @@ AS
 	
 	--Find all PurchaseOrders that are selling the Resource for more than the requested CurrencyPerResource price
 	insert into #ConvertedOrders
+		(OrderId, ConvertedCurrencyPerResource, ResourceAmountLeftToFill, ResourceAmountToFill, RunningTotalResourceAmount)
 	select 
-		OrderId,
-		ConvertedCurrencyPerResource,
+		sub.OrderId,
+		sub.ConvertedCurrencyPerResource,
 		--dbo.g_OrderSigFigs(ConvertedCurrencyPerResource) as SigFigCCPR,
-		ResourceAmountLeftToFill,
+		sub.ResourceAmountLeftToFill,
 		cast(0 as int) as ResourceAmountToFill,
 		cast(0 as int) as RunningTotalResourceAmount
 	from
 		(
 			select 
 				po.Id as OrderId,
-				po.ResourceRequestAmount - ResourceFilledAmount as ResourceAmountLeftToFill,
-				po.CurrencyPerResource / isnull(cer.SourceMultiplier, 1) as ConvertedCurrencyPerResource
+				po.ResourceRequestAmount - po.ResourceFilledAmount as ResourceAmountLeftToFill,
+				po.CurrencyPerResource * isnull(cer.SourceMultiplier, 1) as ConvertedCurrencyPerResource
 			from
 				PurchaseOrders po
 				left join CurrencyExchangeRates cer
-					on cer.DestinationCurrencyId = po.CurrencyTypeId and cer.SourceCurrencyId = @CurrencyTypeId
+					on cer.DestinationCurrencyId = @CurrencyTypeId and cer.SourceCurrencyId = po.CurrencyTypeId
 			where
 				po.UserId != @UserId
 				and
@@ -57,10 +58,8 @@ AS
 					cer.SourceMultiplier is not null
 				)
 			) sub
-		where
-			sub.ConvertedCurrencyPerResource >= @CurrencyPerResource
-		--order by
-		--	ConvertedCurrencyPerResource desc
+	where
+		sub.ConvertedCurrencyPerResource >= @CurrencyPerResource
 
 	--select * from #ConvertedOrders  --debug
 
@@ -234,25 +233,6 @@ AS
 			from #newCurrencyExchanges
 
 			--select * from UserCurrencies where UserId = @UserId --debug
-
-			--remove the currency required to fill the SellOrders that were in the same currency as the PurchaseOrder
-			--update uc
-			--set
-			--	uc.OnHand = uc.OnHand - nms.sumTotalCurrencyCost
-			--from
-			--	UserCurrencies uc
-			--	inner join (
-			--		select
-			--			nms2.BuyerUserId,
-			--			sum(nms2.TotalCurrencyCost) as sumTotalCurrencyCost
-			--		from
-			--			UserCurrencies uc2
-			--			inner join #newMarketSales nms2 on uc2.UserId = nms2.BuyerUserId
-			--		where
-			--			nms2.CurrencyTypeId = @CurrencyTypeId
-			--		group by
-			--			nms2.BuyerUserId
-			--	) as nms on uc.UserId = nms.BuyerUserId
 
 			--remove the resources required to fill the PurchaseOrders
 			update ur

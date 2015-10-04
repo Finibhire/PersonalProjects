@@ -93,11 +93,11 @@
                             {
                                 if (rs.ClientIsBuyingResources)
                                 {
-                                    Html.Display("Buyer");
+                                    @Html.Raw("Buyer");
                                 }
                                 else
                                 {
-                                    Html.Display("Seller");
+                                    @Html.Raw("Seller");
                                 }
                             }
                     }</td>
@@ -122,7 +122,7 @@
                     <th>Resources<br />Sold</th>
                     <th>Sale<br />Currency</th>
                     <th>Currency<br />per<br />Resource</th>
-                    <th>Total<br />Cost</th>
+                    <th>Total<br />Currency</th>
                 </tr>
             </thead>
             <tbody>
@@ -156,7 +156,7 @@
                     <th>Resources<br />Remaining</th>
                     <th>P.O.<br />Currency</th>
                     <th>Price<br />per<br />@Model.WorkingResourceName</th>
-                    <th>Total<br />Potential<br />Income</th>
+                    <th>Remaining<br />Currency<br />in Escrow</th>
                     <th><!--delete--></th>
                 </tr>
             </thead>
@@ -190,7 +190,7 @@
                     <th>Resources<br />Remaining</th>
                     <th>S.O.<br />Currency</th>
                     <th>Price<br />per<br />@Model.WorkingResourceName</th>
-                    <th>Remaining<br />Currency<br />in Escrow</th>
+                    <th>Total<br />Potential<br />Income</th>
                     <th><!--delete--></th>
                 </tr>
             </thead>

@@ -37,5 +37,5 @@ AS
 				so.CurrencyPerResource, ct.Name, cer.SourceMultiplier
 			) sub
 		order by
-			ConvertedCurrencyPerResource desc
+			ConvertedCurrencyPerResource asc
 RETURN 0

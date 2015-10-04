@@ -5,94 +5,75 @@
 	@CurrencyTypeId tinyint,
 	@CurrencyPerResource float(53)
 AS
-	declare @newOnHand decimal(38,9)
-	declare @ResourceFilledAmount int
-
-	--set @newOnHand = 0
-	--set @ResourceFilledAmount = 0
-
 	if not exists(select * from UserCurrencies where UserId = @UserId and CurrencyTypeId = @CurrencyTypeId)
-		throw 52000, 'UserCurrency.CurrencyTypeId does not exist', 1
-
-	if not exists(select * from UserResources where UserId = @UserId and ResourceTypeId = @ResourceTypeId)
 	begin
-		insert into UserResources
-		(
-			UserId,
-			ResourceTypeId,
-			OnHand
-		)
-		values
-		(
-			@UserId,
-			@ResourceTypeId,
-			cast(0 as bigint)
-		)
+		if (@CurrencyPerResource = cast(0 as float(53)))  --Not sure if I'm going to allow buying for 0 price but if I do then I need to add the record
+		begin
+			merge UserCurrencies as t
+			using (select @UserId, @CurrencyTypeId) as s (UserId, CurrencyTypeId)
+			on (t.UserId = s.UserId and t.CurrencyTypeId = s.CurrencyTypeId)
+			when not matched then
+				insert (UserId, CurrencyTypeId, OnHand)
+				values (@UserId, @CurrencyTypeId, 0);
+		end
+		else
+			throw 52000, 'UserCurrency.CurrencyTypeId does not exist', 1
 	end
+
+	merge UserResources as t
+	using (select @UserId, @ResourceTypeId) as s (UserId, ResourceTypeId)
+	on (t.UserId = s.UserId and t.ResourceTypeId = s.ResourceTypeId)
+	when not matched then
+		insert (UserId, ResourceTypeId, OnHand)
+		values (@UserId, @ResourceTypeId, 0);
 
 	create table #ConvertedOrders 
 	(
-		OrderId int,
-		--UserId int,
-		--ResourceTypeId int,
-		CurrencyPerResource decimal(38,9),
-		ResourceAmountLeftToFill int,
-		ResourceAmountToFill int,
-		RunningTotalResourceAmount int,
-		--CurrencyTypeId tinyint,
-		--TotalCost decimal(38,9),
-		--RunningTotalCost decimal(38,9)
+		OrderId int not null,
+		ConvertedCurrencyPerResource float(53) not null,
+		ResourceAmountLeftToFill int not null,
+		ResourceAmountToFill int not null,
+		RunningTotalResourceAmount int not null,
 	)
 
+	--Find all PurchaseOrders that are selling the Resource for more than the requested CurrencyPerResource price
 	insert into #ConvertedOrders
+		(OrderId, ConvertedCurrencyPerResource, ResourceAmountLeftToFill, ResourceAmountToFill, RunningTotalResourceAmount)
 	select 
-		so.Id as OrderId, 
-		case 
-			when cer.SourceMultiplier is null
-				then so.CurrencyPerResource
-			else
-				so.CurrencyPerResource / cer.SourceMultiplier
-		end as CurrencyPerResource,
-		so.ResourceSellAmount - so.ResourceFilledAmount as ResourceAmountLeftToFill, 
+		OrderId,
+		ConvertedCurrencyPerResource,
+		ResourceAmountLeftToFill,
 		cast(0 as int) as ResourceAmountToFill,
-		cast(0 as int) as RunningTotalResourceAmount--,
-		--case 
-		--	when cer.SourceMultiplier is null
-		--		then dbo.fRoundDecimalUp(cast(so.ResourceSellAmount - so.ResourceFilledAmount as decimal(38,9)) * so.CurrencyPerResource, so_ct.MaxScale)
-		--	else
-		--		dbo.fRoundDecimalUp(dbo.fRoundDecimalUp(cast(so.ResourceSellAmount - so.ResourceFilledAmount as decimal(38,9)) * so.CurrencyPerResource, cer_ct.MaxScale) / cer.SourceMultiplier, so_ct.MaxScale)
-		--end as TotalCost,
-		--cast(0 as decimal(38,9)) as RunningTotalCost
-	from SellOrders so
-	full outer join CurrencyExchangeRates cer 
-		on cer.SourceCurrencyId = @CurrencyTypeId and cer.DestinationCurrencyId = so.CurrencyTypeId
-	left join CurrencyTypes so_ct
-		on so.CurrencyTypeId = so_ct.Id
-	left join CurrencyTypes cer_ct
-		on cer.DestinationCurrencyId = cer_ct.Id
-	where
-		so.ResourceTypeId = @ResourceTypeId
-		and
-		so.UserId != @UserId  --don't include sellorders that are created by this user
-		and
+		cast(0 as int) as RunningTotalResourceAmount
+	from
 		(
-			(
-				so.CurrencyTypeId = @CurrencyTypeId 
+			select 
+				so.Id as OrderId,
+				so.ResourceSellAmount - ResourceFilledAmount as ResourceAmountLeftToFill,
+				so.CurrencyPerResource / isnull(cer.SourceMultiplier, 1) as ConvertedCurrencyPerResource
+			from
+				SellOrders so
+				left join CurrencyExchangeRates cer
+					on cer.DestinationCurrencyId = so.CurrencyTypeId and cer.SourceCurrencyId = @CurrencyTypeId
+			where
+				so.UserId != @UserId
 				and
-				so.CurrencyPerResource <= @CurrencyPerResource  --don't include orders that are more expensive
-			)
-			or
-			(
-				cer.DestinationCurrencyId is not null
+				so.ResourceTypeId = @ResourceTypeId
 				and
-				so.CurrencyPerResource / cer.SourceMultiplier <= @CurrencyPerResource  --dido
-			)
-		)
+				(
+					so.CurrencyTypeId = @CurrencyTypeId
+					or --same currency or conversion exists in the cer table
+					cer.SourceMultiplier is not null
+				)
+			) sub
+	where
+		sub.ConvertedCurrencyPerResource <= @CurrencyPerResource
+		
+	--select * from #ConvertedOrders  --debug
 
 	--Update to include running totals
 	update co
 	set	co.RunningTotalResourceAmount = co2.RunningTotalResourceAmount,
-		--co.RunningTotalCost = co2.RunningTotalCost,
 		co.ResourceAmountToFill =
 			case
 				when co2.RunningTotalResourceAmount < @ResourceRequestAmount
@@ -104,13 +85,9 @@ AS
 			select 
 				co3.OrderId,
 				sum(co3.ResourceAmountLeftToFill) over (
-						order by co3.CurrencyPerResource, co3.OrderId 
+						order by co3.ConvertedCurrencyPerResource, co3.OrderId 
 						rows between unbounded preceding and current row
-					) as RunningTotalResourceAmount--,
-				--sum(co3.TotalCost) over (
-				--		order by co3.CurrencyPerResource, co3.OrderId 
-				--		rows between unbounded preceding and current row
-				--	) as RunningTotalCost
+					) as RunningTotalResourceAmount
 			from #ConvertedOrders co3
 		) as co2 on co.OrderId = co2.OrderId
 
@@ -147,11 +124,11 @@ AS
 		
 		--select * from #ConvertedOrders  --debug
 
+		declare @ResourceFilledAmount int
+		declare @newOnHand decimal(38,9)
 		declare @runningCost decimal(38,9)
 
-		select 
-			@ResourceFilledAmount = sum(ResourceAmountToFill)
-		from #ConvertedOrders
+		set	@ResourceFilledAmount = (select sum(ResourceAmountToFill) from #ConvertedOrders)
 
 		--check to see if we have any full SellOrders to fill, if we don't make sure the variables are set to 0
 		--and short-circuit past all the statements to update the database when filling SellOrders in the db already.
@@ -168,20 +145,27 @@ AS
 			(
 				SellerUserId int,
 				BuyerUserId int,
-				ResourceTypeId int,
+				--ResourceTypeId int,
 				ResourcesSoldAmount int,
 				CurrencyTypeId tinyint,
 				TotalCurrencyCost decimal(38,9)
 			)
 		
 			insert into #newMarketSales
+			(
+				SellerUserId,
+				BuyerUserId,
+				ResourcesSoldAmount,
+				CurrencyTypeId,
+				TotalCurrencyCost
+			)
 			select 
 				so.UserId as SellerUserId,
 				@UserId as BuyerUserId,
-				@ResourceTypeId as ResourceTypeId,
+				--@ResourceTypeId as ResourceTypeId,
 				co.ResourceAmountToFill as ResourcesSoldAmount,
 				so.CurrencyTypeId,
-				dbo.fRoundDecimalUp(cast(co.ResourceAmountToFill as decimal(38,9)) * so.CurrencyPerResource, ct.MaxScale) as TotalCurrencyCost
+				dbo.fRoundDecimalUp(cast(cast(co.ResourceAmountToFill as float(53)) * so.CurrencyPerResource as decimal(38,9)), ct.MaxScale) as TotalCurrencyCost
 			from #ConvertedOrders co
 				inner join SellOrders so on co.OrderId = so.Id
 				inner join CurrencyTypes ct on so.CurrencyTypeId = ct.Id
@@ -198,9 +182,15 @@ AS
 			)
 
 			insert into #newCurrencyExchanges
+			(
+				UserId,
+				SourceCurrencyTypeId,
+				SourceAmount,
+				DestinationAmount
+			)
 			select 
 				nms.BuyerUserId as UserId,
-				@CurrencyTypeId as SourceCurrencyTypeId,
+				--@CurrencyTypeId as SourceCurrencyTypeId,
 				nms.CurrencyTypeId as DestinationCurrencyTypeId,
 				dbo.fRoundDecimalUp(nms.TotalCurrencyCost / cer.SourceMultiplier, ct.MaxScale) as SourceAmount,
 				nms.TotalCurrencyCost as DestinationAmount
@@ -222,7 +212,7 @@ AS
 			)
 			select 
 				UserId,
-				SourceCurrencyTypeId,
+				@CurrencyTypeId as SourceCurrencyTypeId,
 				DestinationCurrencyTypeId,
 				SourceAmount,
 				DestinationAmount
@@ -242,7 +232,7 @@ AS
 			select 
 				SellerUserId,
 				BuyerUserId,
-				ResourceTypeId,
+				@ResourceTypeId as ResourceTypeId,
 				ResourcesSoldAmount,
 				CurrencyTypeId,
 				TotalCurrencyCost
@@ -310,10 +300,6 @@ AS
 				co.ResourceAmountLeftToFill > co.ResourceAmountToFill
 
 		end --Filling any SellOrders in the db that have equal or better CurrencyPerResource
-
-		--truncate table #ConvertedOrders
-		--truncate table #newMarketSales
-		--truncate table #newCurrencyExchanges
 
 		if @ResourceFilledAmount < @ResourceRequestAmount
 		begin
