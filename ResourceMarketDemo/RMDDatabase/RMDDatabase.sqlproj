@@ -60,31 +60,35 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Snapshots" />
+    <Folder Include="ScalarFunctions" />
+    <Folder Include="StoredProcedures" />
+    <Folder Include="Tables" />
+    <Folder Include="Views" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Users.sql" />
-    <Build Include="CurrencyTypes.sql" />
-    <Build Include="UserCurrencies.sql" />
-    <Build Include="UserCurrenciesPivoted.sql" />
-    <Build Include="ResourceTypes.sql" />
     <None Include="TestingPivotQueries.sql" />
-    <Build Include="UserResources.sql" />
-    <Build Include="DynamicUpdateUserPivotViews.sql" />
-    <Build Include="CurrencyExchangeRates.sql" />
-    <Build Include="PurchaseOrders.sql" />
-    <Build Include="SellOrders.sql" />
-    <Build Include="AddPurchaseOrder.sql" />
-    <Build Include="AddSellOrder.sql" />
-    <Build Include="MarketSales.sql" />
-    <Build Include="CurrencyExchanges.sql" />
-    <Build Include="fRoundDecimalUp.sql" />
     <None Include="Temp.sql" />
-    <Build Include="g_OrderSigFigsRound.sql" />
-    <Build Include="fRoundDecimalDown.sql" />
-    <Build Include="g_OrderSigFigsFloor.sql" />
-    <Build Include="g_OrderSigFigsCeiling.sql" />
-    <Build Include="GetCondensedAndConvertedPurchaseOrders.sql" />
-    <Build Include="GetCondensedAndConvertedSellOrders.sql" />
+    <Build Include="ScalarFunctions\fRoundDecimalDown.sql" />
+    <Build Include="ScalarFunctions\fRoundDecimalUp.sql" />
+    <Build Include="ScalarFunctions\g_OrderSigFigsCeiling.sql" />
+    <Build Include="ScalarFunctions\g_OrderSigFigsFloor.sql" />
+    <Build Include="ScalarFunctions\g_OrderSigFigsRound.sql" />
+    <Build Include="StoredProcedures\AddPurchaseOrder.sql" />
+    <Build Include="StoredProcedures\AddSellOrder.sql" />
+    <Build Include="StoredProcedures\GetCondensedAndConvertedPurchaseOrders.sql" />
+    <Build Include="StoredProcedures\GetCondensedAndConvertedSellOrders.sql" />
+    <Build Include="Tables\CurrencyExchangeRates.sql" />
+    <Build Include="Tables\CurrencyTypes.sql" />
+    <Build Include="Tables\CurrencyExchanges.sql" />
+    <Build Include="StoredProcedures\DynamicUpdateUserPivotViews.sql" />
+    <Build Include="Tables\MarketSales.sql" />
+    <Build Include="Tables\PurchaseOrders.sql" />
+    <Build Include="Tables\ResourceTypes.sql" />
+    <Build Include="Tables\SellOrders.sql" />
+    <Build Include="Tables\UserCurrencies.sql" />
+    <Build Include="Tables\UserResources.sql" />
+    <Build Include="Tables\Users.sql" />
+    <Build Include="Views\UserCurrenciesPivoted.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="RMDDatabase.refactorlog" />
@@ -101,5 +105,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="StoredProcedures\RefundDeleteRemainingPurchaseOrder.sql" />
+    <Build Include="StoredProcedures\RefundDeleteRemainingSellOrder.sql" />
+    <Build Include="StoredProcedures\InstantBuyResources.sql" />
+    <Build Include="StoredProcedures\InstantSellResources.sql" />
   </ItemGroup>
 </Project>

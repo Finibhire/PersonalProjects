@@ -385,6 +385,26 @@
           <Parameter Name="workingCurrency" Type="tinyint" Mode="In" />
           <Parameter Name="workingResource" Type="int" Mode="In" />
         </Function>
+        <Function Name="InstantBuyResources" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="ResourceTypeId" Type="int" Mode="In" />
+          <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
+          <Parameter Name="MaxBuyAmount" Type="int" Mode="In" />
+        </Function>
+        <Function Name="InstantSellResources" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="ResourceTypeId" Type="int" Mode="In" />
+          <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
+          <Parameter Name="MaxSellAmount" Type="int" Mode="In" />
+        </Function>
+        <Function Name="RefundDeleteRemainingPurchaseOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PurchaseOrderId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="RefundDeleteRemainingSellOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SellOrderId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="RMDDatabaseModelStoreContainer">
           <EntitySet Name="CurrencyExchangeRates" EntityType="Self.CurrencyExchangeRates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CurrencyExchanges" EntityType="Self.CurrencyExchanges" Schema="dbo" store:Type="Tables" />
@@ -965,6 +985,26 @@
             <Parameter Name="workingCurrency" Mode="In" Type="Byte" />
             <Parameter Name="workingResource" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="InstantBuyResources">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
+            <Parameter Name="MaxBuyAmount" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="InstantSellResources">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
+            <Parameter Name="MaxSellAmount" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RefundDeleteRemainingPurchaseOrder">
+            <Parameter Name="PurchaseOrderId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RefundDeleteRemainingSellOrder">
+            <Parameter Name="SellOrderId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <Association Name="FK_MarketSales_CurrencyTypes">
           <End Type="RMDDatabaseModel.CurrencyType" Role="CurrencyType" Multiplicity="1" />
@@ -1203,6 +1243,10 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="InstantBuyResources" FunctionName="RMDDatabaseModel.Store.InstantBuyResources" />
+          <FunctionImportMapping FunctionImportName="InstantSellResources" FunctionName="RMDDatabaseModel.Store.InstantSellResources" />
+          <FunctionImportMapping FunctionImportName="RefundDeleteRemainingPurchaseOrder" FunctionName="RMDDatabaseModel.Store.RefundDeleteRemainingPurchaseOrder" />
+          <FunctionImportMapping FunctionImportName="RefundDeleteRemainingSellOrder" FunctionName="RMDDatabaseModel.Store.RefundDeleteRemainingSellOrder" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

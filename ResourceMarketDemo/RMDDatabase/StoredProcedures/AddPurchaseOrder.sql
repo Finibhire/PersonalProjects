@@ -175,7 +175,7 @@ AS
 			create table #newCurrencyExchanges
 			(
 				UserId int,
-				SourceCurrencyTypeId tinyint,
+				--SourceCurrencyTypeId tinyint,
 				DestinationCurrencyTypeId tinyint,
 				SourceAmount decimal(38,9),
 				DestinationAmount decimal(38,9)
@@ -184,7 +184,7 @@ AS
 			insert into #newCurrencyExchanges
 			(
 				UserId,
-				SourceCurrencyTypeId,
+				DestinationCurrencyTypeId,
 				SourceAmount,
 				DestinationAmount
 			)

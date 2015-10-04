@@ -16,15 +16,15 @@ AS
 				ct.Name as OriginalCurrencyName,
 				isnull(cer.SourceMultiplier, 1) as SourceMultiplier,
 				isnull(
-					dbo.g_OrderSigFigsFloor(po.CurrencyPerResource / isnull(cer.SourceMultiplier, 1)),
+					dbo.g_OrderSigFigsFloor(po.CurrencyPerResource * isnull(cer.SourceMultiplier, 1)),
 					0
 				) as ConvertedCurrencyPerResource
 			from
 				PurchaseOrders po
-				left join CurrencyTypes ct
+				inner join CurrencyTypes ct
 					on po.CurrencyTypeId = ct.Id
 				left join CurrencyExchangeRates cer
-					on cer.DestinationCurrencyId = po.CurrencyTypeId and cer.SourceCurrencyId = @workingCurrency
+					on cer.SourceCurrencyId = po.CurrencyTypeId and cer.DestinationCurrencyId = @workingCurrency
 			where
 				po.ResourceTypeId = @workingResource
 				and

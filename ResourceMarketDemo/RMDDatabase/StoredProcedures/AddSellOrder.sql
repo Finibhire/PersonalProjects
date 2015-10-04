@@ -168,7 +168,7 @@ AS
 			(
 				UserId int not null,
 				SourceCurrencyTypeId tinyint not null,
-				--DestinationCurrencyTypeId tinyint,
+				--DestinationCurrencyTypeId tinyint not null,
 				SourceAmount decimal(38,9) not null,
 				DestinationAmount decimal(38,9) not null
 			)

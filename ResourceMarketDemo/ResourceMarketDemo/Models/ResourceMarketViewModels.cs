@@ -19,6 +19,9 @@ namespace ResourceMarketDemo.Models
         public IEnumerable<SelectListItem> Currencies { get; set; }
         public IEnumerable<SelectListItem> Resources { get; set; }
 
+        public IEnumerable<ClientResource> UserResources { get; set; }
+        public IEnumerable<ClientCurrency> UserCurrencies { get; set; }
+
         public IEnumerable<ResourceSaleView> RecentResourceSales { get; set; }
         public IEnumerable<ClientResourceSaleView> ClientRecentTransactions { get; set; }
         public IEnumerable<CondensedAndConvertedOrdersView> AllPurchaseOrders { get; set; }
@@ -29,11 +32,41 @@ namespace ResourceMarketDemo.Models
         public AddOrder AddPurchaseOrder { get; set; }
         public AddOrder AddSellOrder { get; set; }
 
+        public InstantOrder InstantBuyResources { get; set; }
+        public InstantOrder InstantSellResources { get; set; }
+
         public ResourceMarketIndexView()
         {
             AddPurchaseOrder = new AddOrder();
             AddSellOrder = new AddOrder();
+            InstantBuyResources = new InstantOrder();
+            InstantSellResources = new InstantOrder();
         }
+    }
+
+    public class ClientResource
+    {
+        public string Name { get; set; }
+        public long OnHand { get; set; }
+    }
+
+    public class ClientCurrency
+    {
+        public string Name { get; set; }
+        public decimal OnHand { get; set; }
+    }
+
+    public class InstantOrder
+    {
+        [Required]
+        public int? ResourceTypeId { get; set; }
+
+        [Required]
+        public byte? CurrencyTypeId { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int? MaxResourceAmount { get; set; }
     }
 
     public class AddOrder

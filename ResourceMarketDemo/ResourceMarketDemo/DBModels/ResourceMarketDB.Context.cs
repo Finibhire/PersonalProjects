@@ -116,5 +116,73 @@ namespace ResourceMarketDemo.DBModels
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCondensedAndConvertedSellOrders_Result>("GetCondensedAndConvertedSellOrders", workingCurrencyParameter, workingResourceParameter);
         }
+    
+        public virtual int InstantBuyResources(Nullable<int> userId, Nullable<int> resourceTypeId, Nullable<byte> currencyTypeId, Nullable<int> maxBuyAmount)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            var resourceTypeIdParameter = resourceTypeId.HasValue ?
+                new ObjectParameter("ResourceTypeId", resourceTypeId) :
+                new ObjectParameter("ResourceTypeId", typeof(int));
+    
+            var currencyTypeIdParameter = currencyTypeId.HasValue ?
+                new ObjectParameter("CurrencyTypeId", currencyTypeId) :
+                new ObjectParameter("CurrencyTypeId", typeof(byte));
+    
+            var maxBuyAmountParameter = maxBuyAmount.HasValue ?
+                new ObjectParameter("MaxBuyAmount", maxBuyAmount) :
+                new ObjectParameter("MaxBuyAmount", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InstantBuyResources", userIdParameter, resourceTypeIdParameter, currencyTypeIdParameter, maxBuyAmountParameter);
+        }
+    
+        public virtual int InstantSellResources(Nullable<int> userId, Nullable<int> resourceTypeId, Nullable<byte> currencyTypeId, Nullable<int> maxSellAmount)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            var resourceTypeIdParameter = resourceTypeId.HasValue ?
+                new ObjectParameter("ResourceTypeId", resourceTypeId) :
+                new ObjectParameter("ResourceTypeId", typeof(int));
+    
+            var currencyTypeIdParameter = currencyTypeId.HasValue ?
+                new ObjectParameter("CurrencyTypeId", currencyTypeId) :
+                new ObjectParameter("CurrencyTypeId", typeof(byte));
+    
+            var maxSellAmountParameter = maxSellAmount.HasValue ?
+                new ObjectParameter("MaxSellAmount", maxSellAmount) :
+                new ObjectParameter("MaxSellAmount", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InstantSellResources", userIdParameter, resourceTypeIdParameter, currencyTypeIdParameter, maxSellAmountParameter);
+        }
+    
+        public virtual int RefundDeleteRemainingPurchaseOrder(Nullable<int> purchaseOrderId, Nullable<int> userId)
+        {
+            var purchaseOrderIdParameter = purchaseOrderId.HasValue ?
+                new ObjectParameter("PurchaseOrderId", purchaseOrderId) :
+                new ObjectParameter("PurchaseOrderId", typeof(int));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RefundDeleteRemainingPurchaseOrder", purchaseOrderIdParameter, userIdParameter);
+        }
+    
+        public virtual int RefundDeleteRemainingSellOrder(Nullable<int> sellOrderId, Nullable<int> userId)
+        {
+            var sellOrderIdParameter = sellOrderId.HasValue ?
+                new ObjectParameter("SellOrderId", sellOrderId) :
+                new ObjectParameter("SellOrderId", typeof(int));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RefundDeleteRemainingSellOrder", sellOrderIdParameter, userIdParameter);
+        }
     }
 }

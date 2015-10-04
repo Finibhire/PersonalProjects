@@ -142,6 +142,234 @@ namespace ResourceMarketDemo.Controllers
             return View("Index", viewModel);
         }
 
+        [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Get)]
+        public ActionResult DeletePurchaseOrder(int? PurchaseOrderId, int? WorkingResourceTypeId, byte? WorkingCurrencyTypeId)
+        {
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
+
+            if (PurchaseOrderId == null)
+            {
+                return Redirect("~/ResourceMarket");
+            }
+
+            try
+            {
+                db.RefundDeleteRemainingPurchaseOrder(
+                    PurchaseOrderId,
+                    userId);
+            }
+            catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+            {
+                string message;
+                if (ex.InnerException != null &&
+                    ex.InnerException.GetType() == typeof(System.Data.SqlClient.SqlException))
+                {
+                    var inner = (System.Data.SqlClient.SqlException)ex.InnerException;
+                    message =
+                        "EntityCommandExecutionException > SqlException: " + inner.Number + Environment.NewLine +
+                        " > Line Number: " + inner.LineNumber + Environment.NewLine +
+                        " > Message: " + inner.Message + Environment.NewLine;
+                }
+                else
+                {
+                    message =
+                        "System.Data.Entity.Core.EntityCommandExecutionException: " + ex.HResult + Environment.NewLine +
+                        " Message: " + ex.Message;
+                }
+                ModelState.AddModelError("DeletePurchaseOrder", message);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(
+                    "DeletePurchaseOrder",
+                    ex.GetType().ToString() + Environment.NewLine + ex.Message);
+            }
+
+            ResourceMarketIndexView viewModel = new ResourceMarketIndexView();
+
+            PopulateModelDisplayData(
+                viewModel,
+                WorkingCurrencyTypeId,
+                WorkingResourceTypeId,
+                userName,
+                userId);
+
+            return View("Index", viewModel);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Get)]
+        public ActionResult DeleteSellOrder(int? SellOrderId, int? WorkingResourceTypeId, byte? WorkingCurrencyTypeId)
+        {
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
+
+            if (SellOrderId == null)
+            {
+                return Redirect("~/ResourceMarket");
+            }
+
+            try
+            {
+                db.RefundDeleteRemainingSellOrder(
+                    SellOrderId,
+                    userId);
+            }
+            catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+            {
+                string message;
+                if (ex.InnerException != null &&
+                    ex.InnerException.GetType() == typeof(System.Data.SqlClient.SqlException))
+                {
+                    var inner = (System.Data.SqlClient.SqlException)ex.InnerException;
+                    message =
+                        "EntityCommandExecutionException > SqlException: " + inner.Number + Environment.NewLine +
+                        " > Line Number: " + inner.LineNumber + Environment.NewLine +
+                        " > Message: " + inner.Message + Environment.NewLine;
+                }
+                else
+                {
+                    message =
+                        "System.Data.Entity.Core.EntityCommandExecutionException: " + ex.HResult + Environment.NewLine +
+                        " Message: " + ex.Message;
+                }
+                ModelState.AddModelError("DeleteSellOrder", message);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(
+                    "DeleteSellOrder",
+                    ex.GetType().ToString() + Environment.NewLine + ex.Message);
+            }
+
+            ResourceMarketIndexView viewModel = new ResourceMarketIndexView();
+
+            PopulateModelDisplayData(
+                viewModel,
+                WorkingCurrencyTypeId,
+                WorkingResourceTypeId,
+                userName,
+                userId);
+
+            return View("Index", viewModel);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult InstantBuyResources([Bind(Prefix = "InstantBuyResources")] InstantOrder model)
+        {
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.InstantBuyResources(
+                        userId,
+                        model.ResourceTypeId,
+                        model.CurrencyTypeId,
+                        model.MaxResourceAmount);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    string message;
+                    if (ex.InnerException != null &&
+                        ex.InnerException.GetType() == typeof(System.Data.SqlClient.SqlException))
+                    {
+                        var inner = (System.Data.SqlClient.SqlException)ex.InnerException;
+                        message =
+                            "EntityCommandExecutionException > SqlException: " + inner.Number + Environment.NewLine +
+                            " > Line Number: " + inner.LineNumber + Environment.NewLine +
+                            " > Message: " + inner.Message + Environment.NewLine;
+                    }
+                    else
+                    {
+                        message =
+                            "System.Data.Entity.Core.EntityCommandExecutionException: " + ex.HResult + Environment.NewLine +
+                            " Message: " + ex.Message;
+                    }
+                    ModelState.AddModelError("InstantBuyResources", message);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(
+                        "InstantBuyResources",
+                        ex.GetType().ToString() + Environment.NewLine + ex.Message);
+                }
+            }
+
+            ResourceMarketIndexView viewModel = new ResourceMarketIndexView() { InstantBuyResources = model };
+
+            PopulateModelDisplayData(
+                viewModel,
+                model.CurrencyTypeId,
+                model.ResourceTypeId,
+                userName,
+                userId);
+
+            return View("Index", viewModel);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult InstantSellResources([Bind(Prefix = "InstantSellResources")] InstantOrder model)
+        {
+            string userName = null;
+            int userId = 0;
+            this.GetUserData(out userId, out userName);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.InstantSellResources(
+                        userId,
+                        model.ResourceTypeId,
+                        model.CurrencyTypeId,
+                        model.MaxResourceAmount);
+                }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    string message;
+                    if (ex.InnerException != null &&
+                        ex.InnerException.GetType() == typeof(System.Data.SqlClient.SqlException))
+                    {
+                        var inner = (System.Data.SqlClient.SqlException)ex.InnerException;
+                        message =
+                            "EntityCommandExecutionException > SqlException: " + inner.Number + Environment.NewLine +
+                            " > Line Number: " + inner.LineNumber + Environment.NewLine +
+                            " > Message: " + inner.Message + Environment.NewLine;
+                    }
+                    else
+                    {
+                        message =
+                            "System.Data.Entity.Core.EntityCommandExecutionException: " + ex.HResult + Environment.NewLine +
+                            " Message: " + ex.Message;
+                    }
+                    ModelState.AddModelError("InstantSellResources", message);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(
+                        "InstantSellResources",
+                        ex.GetType().ToString() + Environment.NewLine + ex.Message);
+                }
+            }
+
+            ResourceMarketIndexView viewModel = new ResourceMarketIndexView() { InstantSellResources = model };
+
+            PopulateModelDisplayData(
+                viewModel,
+                model.CurrencyTypeId,
+                model.ResourceTypeId,
+                userName,
+                userId);
+
+            return View("Index", viewModel);
+        }
+
         private void PopulateModelDisplayData(
                         ResourceMarketIndexView model, 
                         int? WorkingCurrencyTypeId, 
@@ -177,6 +405,8 @@ namespace ResourceMarketDemo.Controllers
             model.WorkingCurrencyTypeId = workingCurrencyTypeId;
             model.AddPurchaseOrder.WorkingCurrencyTypeId = workingCurrencyTypeId;
             model.AddSellOrder.WorkingCurrencyTypeId = workingCurrencyTypeId;
+            model.InstantBuyResources.CurrencyTypeId = workingCurrencyTypeId;
+            model.InstantSellResources.CurrencyTypeId = workingCurrencyTypeId;
 
             workingResourceName =
                 db.ResourceTypes
@@ -201,6 +431,8 @@ namespace ResourceMarketDemo.Controllers
             model.WorkingResourceTypeId = workingResourceTypeId;
             model.AddPurchaseOrder.WorkingResourceTypeId = workingResourceTypeId;
             model.AddSellOrder.WorkingResourceTypeId = workingResourceTypeId;
+            model.InstantBuyResources.ResourceTypeId = workingResourceTypeId;
+            model.InstantSellResources.ResourceTypeId = workingResourceTypeId;
 
             model.Currencies =
                 db.CurrencyTypes
@@ -210,7 +442,7 @@ namespace ResourceMarketDemo.Controllers
                     Value = x.Id.ToString(),
                     Selected = x.Id == workingCurrencyTypeId
                 });
-            //model.CurrenciesSelectList = new SelectList(model.Currencies, "Id", "Name", (byte)workingCurrencyTypeId);
+
             model.Resources =
                 db.ResourceTypes
                 .Select(x => new SelectListItem()
@@ -218,6 +450,23 @@ namespace ResourceMarketDemo.Controllers
                     Text = x.Name,
                     Value = x.Id.ToString(),
                     Selected = x.Id == workingResourceTypeId
+                });
+
+            model.UserCurrencies =
+                db.UserCurrencies
+                .Where(x => x.UserId == userId)
+                .Select(x => new ClientCurrency()
+                {
+                    Name = x.CurrencyType.Name,
+                    OnHand = x.OnHand
+                });
+            model.UserResources =
+                db.UserResources
+                .Where(x => x.UserId == userId)
+                .Select(x => new ClientResource()
+                {
+                    Name = x.ResourceType.Name,
+                    OnHand = x.OnHand
                 });
 
 
