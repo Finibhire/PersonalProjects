@@ -62,7 +62,7 @@ CREATE TRIGGER [dbo].[Trigger_PurchaseOrders_INSERT]
 				select
 					i2.UserId,
 					i2.CurrencyTypeId,
-					sum(dbo.fRoundDecimalUp(i2.CurrencyPerResource * cast(i2.ResourceRequestAmount - i2.ResourceFilledAmount as decimal(38,9)), ct.MaxScale)) as TotalCurrencyCost 
+					sum(dbo.fRoundDecimalUp(cast(i2.CurrencyPerResource * cast(i2.ResourceRequestAmount - i2.ResourceFilledAmount as float(53)) as decimal(38,9)), ct.MaxScale)) as TotalCurrencyCost 
 				from 
 					UserCurrencies uc2
 					inner join inserted i2 on uc2.UserId = i2.UserId and uc2.CurrencyTypeId = i2.CurrencyTypeId

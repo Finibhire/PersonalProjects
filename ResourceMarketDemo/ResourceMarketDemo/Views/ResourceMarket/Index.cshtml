@@ -29,12 +29,13 @@
 
 <h2>Resource Market</h2>
 
-<div class="container form-horizontal" style="margin-bottom:20px; float:left">
+<div style="margin-bottom:20px; float:left; display:inline; clear:left">
     @using (Html.BeginForm("Index", "ResourceMarket", FormMethod.Get))
     {
-    <h4>Change Market</h4>
-    <div class="form-group">
-        <label style="width:170px; float:left; margin-left:20px">Working Currency:</label>
+        <div class="table-label section-heading">
+            Change Market
+        </div>
+        <label style="width:170px; float:left; clear:left; margin-left:20px">Working Currency:</label>
         <label style="width:100px; float:left">@Model.WorkingCurrencyName</label>
         <div style="width:200px; float:left">
             @Html.DropDownListFor(m => m.WorkingCurrencyTypeId, Model.Currencies, new { style = "width: 150px" })
@@ -45,7 +46,6 @@
             @Html.DropDownListFor(m => m.WorkingResourceTypeId, Model.Resources, new { style = "width: 150px" })
             <input type="submit" class="form-control button" style="float:left; clear:left; margin-top:5px" value="Update" />
         </div>
-    </div>
     }
 </div>
 <div style="float:left; margin-top:30px">
@@ -90,7 +90,7 @@
     <br />
 }
 
-<div class="container" style="display:inline; float:left; margin-bottom:20px;">
+<div style="display:inline; float:left; margin-bottom:20px;">
     <div class="table-label section-heading">
         Recent Resource Sales
     </div>
@@ -135,7 +135,7 @@
         </table>
     </div>
 </div>
-<div class="container" style="display:inline; float:left; margin-bottom:20px; margin-left:20px">
+<div style="display:inline; float:left; margin-bottom:20px; margin-left:20px">
     <div class="table-label section-heading">
         My Recent Resource Transactions
     </div>
@@ -172,7 +172,7 @@
 </div>
 <hr style="clear:both; display:block; margin-bottom:30px;" />
 
-<div class="container" style="display:inline; float:left;margin-bottom:30px;">
+<div style="display:inline; float:left;margin-bottom:30px;">
     <div class="table-label section-heading">My @Model.WorkingResourceName Purchase Orders</div>
     <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#ClientPurchaseOrders">+</button>
     <div id="ClientPurchaseOrders" style="clear:left" class="collapse">
@@ -206,7 +206,7 @@
     </div>
 </div>
 
-<div class="container" style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
+<div style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
     <div class="table-label section-heading">My @Model.WorkingResourceName Sell Orders</div>
     <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#ClientSellOrders">+</button>
     <div id="ClientSellOrders" style="clear:left" class="collapse">
@@ -241,7 +241,7 @@
 </div>
 <hr style="clear:both; display:block; margin-bottom:30px;" />
 
-<div class="container" style="display:inline; float:left;margin-bottom:30px;">
+<div style="display:inline; float:left;margin-bottom:30px;">
     <div class="table-label section-heading">Offers to Buy @Model.WorkingResourceName</div>
     <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#BuyOffers">+</button>
     <div id="BuyOffers" style="clear:left" class="in">
@@ -331,7 +331,7 @@
         </table>
     </div>
 </div>
-<div class="container" style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
+<div style="display:inline; float:left; margin-left:30px; margin-bottom:30px;">
     <div class="table-label section-heading">Offers to Sell @Model.WorkingResourceName</div>
     <button type="button" class="btn btn-link btn-expand" data-toggle="collapse" data-target="#SellOffers">+</button>
     <div id="SellOffers" style="clear:left" class="in">

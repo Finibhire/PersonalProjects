@@ -175,7 +175,7 @@ namespace ResourceMarketDemo.Controllers
                 else
                 {
                     message =
-                        "System.Data.Entity.Core.EntityCommandExecutionException: " + ex.HResult + Environment.NewLine +
+                        "System.Data.Entity.Core.EntityCommandExecutionException: " + Environment.NewLine +
                         " Message: " + ex.Message;
                 }
                 ModelState.AddModelError("DeletePurchaseOrder", message);
@@ -232,7 +232,7 @@ namespace ResourceMarketDemo.Controllers
                 else
                 {
                     message =
-                        "System.Data.Entity.Core.EntityCommandExecutionException: " + ex.HResult + Environment.NewLine +
+                        "System.Data.Entity.Core.EntityCommandExecutionException: " + Environment.NewLine +
                         " Message: " + ex.Message;
                 }
                 ModelState.AddModelError("DeleteSellOrder", message);
@@ -288,7 +288,7 @@ namespace ResourceMarketDemo.Controllers
                     else
                     {
                         message =
-                            "System.Data.Entity.Core.EntityCommandExecutionException: " + ex.HResult + Environment.NewLine +
+                            "System.Data.Entity.Core.EntityCommandExecutionException: " + Environment.NewLine +
                             " Message: " + ex.Message;
                     }
                     ModelState.AddModelError("InstantBuyResources", message);
@@ -345,7 +345,7 @@ namespace ResourceMarketDemo.Controllers
                     else
                     {
                         message =
-                            "System.Data.Entity.Core.EntityCommandExecutionException: " + ex.HResult + Environment.NewLine +
+                            "System.Data.Entity.Core.EntityCommandExecutionException: " + Environment.NewLine +
                             " Message: " + ex.Message;
                     }
                     ModelState.AddModelError("InstantSellResources", message);
