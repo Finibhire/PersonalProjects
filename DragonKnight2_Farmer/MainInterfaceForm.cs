@@ -103,21 +103,28 @@ namespace DragonKnight2_Farmer
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
             request.Host = "dknight2.com";
-            request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
+            request.UserAgent = @"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0";
             request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
             request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
             request.Referer = url;
             request.CookieContainer = new CookieContainer();
             foreach (Cookie cook in postCookies)
                 request.CookieContainer.Add(cook);
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
             request.KeepAlive = false;
 
-            using (Stream postStream = request.GetRequestStream())
+            if (postBuffer == null || postBuffer.Length == 0)
             {
-                postStream.Write(postBuffer, 0, postBuffer.Length);
-                postStream.Close();
+                request.Method = "GET";
+            }
+            else
+            {
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                using (Stream postStream = request.GetRequestStream())
+                {
+                    postStream.Write(postBuffer, 0, postBuffer.Length);
+                    postStream.Close();
+                }
             }
 
             return request;
@@ -188,7 +195,7 @@ namespace DragonKnight2_Farmer
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(@"https://dknight2.com/index.php");
 
             request.Host = "dknight2.com";
-            request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
+            request.UserAgent = @"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0";
             request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
             request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
             request.Referer = @"https://dknight2.com/index.php";
@@ -219,7 +226,7 @@ namespace DragonKnight2_Farmer
                 request = (HttpWebRequest)WebRequest.Create(act.ActionURL);
 
                 request.Host = "dknight2.com";
-                request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
+                request.UserAgent = @"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0";
                 request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
                 request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
                 request.Referer = act.ActionRefererURL;
@@ -465,50 +472,89 @@ namespace DragonKnight2_Farmer
             parseEnd = fullResponse.IndexOf('<', parseStart);
             c.CurrentDPBank = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
 
-            return c;
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            using (var client = new TcpClient("dknight2.com", 443))
+            if (request.RequestUri.Query.ToLower() == "?do=viewvillages")
             {
-                using (var stream = new SslStream(client.GetStream()))
-                //using (var writer = new StreamWriter(stream))
-                //using (var reader = new StreamReader(stream))
+                int tableStart, tableEnd;
+                tableStart = fullResponse.IndexOf("<th>Teleport</th>") + 15;
+                tableEnd = fullResponse.IndexOf("</table>", tableStart);
+
+                parseStart = tableStart;
+                while (parseStart >= tableStart && parseStart < tableEnd)
                 {
-                    stream.AuthenticateAsClient("dknight2.com");
+                    Village v = new Village();
+                    loc = new Point();
 
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("GET /index.php?do=woodcut HTTP/1.1\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("Host: dknight2.com\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("Accept-Language: en-GB,en;q=0.5\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("Referer: https://dknight2.com/index.php?do=woodcut\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("Content-Type: application/x-www-form-urlencoded\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("Connection: close\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("Cookie: dkgame=" + ddlCookie.Text + "\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("ac=t4&submit=Yes\r\n"));
-                    stream.Write(ASCIIEncoding.ASCII.GetBytes("\r\n\r\n"));
-                    stream.Flush();
+                    parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                    parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                    loc.Y = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
 
-                    StringBuilder sb = new StringBuilder();
-                    byte[] buffer = new byte[1024];
-                    int byteCount = 1;
+                    parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                    parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                    loc.X = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+                    v.Location = loc;
 
-                    while (byteCount > 0)
-                    {
-                        byteCount = stream.Read(buffer, 0, buffer.Length);
+                    parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                    parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                    v.Fish = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
 
-                        Decoder decoder = Encoding.UTF8.GetDecoder();
-                        char[] chars = new char[decoder.GetCharCount(buffer, 0, byteCount)];
-                        decoder.GetChars(buffer, 0, byteCount, chars, 0);
-                        sb.Append(chars);
-                    }
+                    parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                    parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                    v.Wood = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
 
-                    tbOut.Text = sb.ToString();
+                    parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                    parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                    v.Iron = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+                    parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                    parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                    v.Stone = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+                    c.Villages.Add(v);
+                    parseStart = fullResponse.IndexOf("</tr><tr>", parseStart) + 9;
                 }
+
             }
+            else if (request.RequestUri.Query.ToLower() == "?do=transfer")
+            {
+                parseStart = fullResponse.IndexOf("<p class='center'>Summon Troops and Resources from Village</p>") + 63;
+                
+                Village v = new Village();
+                v.Location = c.CurrentLocation;
+
+                parseStart = fullResponse.IndexOf("<td>Fish</td>", parseStart) + 13;
+                parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                v.Fish = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+                parseStart = fullResponse.IndexOf("<td>Wood</td>", parseStart) + 14;
+                parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                v.Wood = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+                parseStart = fullResponse.IndexOf("<td>Stone</td>", parseStart) + 15;
+                parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                v.Stone = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+                parseStart = fullResponse.IndexOf("<td>Iron</td>", parseStart) + 14;
+                parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                v.Iron = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+                parseStart = fullResponse.IndexOf("<td>Gold</td>", parseStart) + 14;
+                parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                v.Gold = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+                parseStart = fullResponse.IndexOf("<td>DP</td>", parseStart) + 12;
+                parseStart = fullResponse.IndexOf("<td>", parseStart) + 4;
+                parseEnd = fullResponse.IndexOf("</td>", parseStart);
+                v.DragonPoints = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart));
+
+                c.CurrentVillage = v;
+            }
+
+            return c;
         }
 
         //private delegate void DelDefBtnFarmResources_Click(object sender, EventArgs e);
@@ -562,7 +608,8 @@ namespace DragonKnight2_Farmer
                 btnFarmMonsters.Enabled = true;
                 btnGambling.Enabled = true;
                 btnFarmResources.Text = "Farm Resources!";
-                //UpdateTextAsyc();
+                UpdateTextAsyc();
+                PeriodsCompleted = 0;
                 //textBox1.Text += Environment.NewLine + "Finished Farming Resources!";
             }
         }
@@ -582,7 +629,7 @@ namespace DragonKnight2_Farmer
                 request = (HttpWebRequest)WebRequest.Create(act.ActionURL);
 
                 request.Host = "dknight2.com";
-                request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
+                request.UserAgent = @"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0";
                 request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
                 request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
                 request.Referer = act.ActionRefererURL;
@@ -695,19 +742,41 @@ namespace DragonKnight2_Farmer
             {
                 StringBuilder sb = new StringBuilder();
 
-                if (SleepingForTurns)
-                {
-                    sb.AppendLine("Waiting to regenerate Turns to continue farming...");
-                    sb.AppendLine();
-                }
 
-                sb.Append("Rotations: ");
-                sb.AppendLine(PeriodsCompleted.ToString());
-                sb.Append("Total Execption Count: ");
-                sb.AppendLine(exceptionCount.ToString());
                 if (c != null)
                 {
-                    sb.Append("Location: ");
+                    if (SleepingForTurns)
+                    {
+                        lblAction.Text =
+                            "Sleeping Until: " +
+                            DateTime.Now.AddMinutes((double)(MaxAcceptableTurns - c.CurrentTurns) / (double)c.TurnsPerMin)
+                            .ToShortTimeString();
+                    }
+                    else if (farmMonstersWorkerThread != null && farmMonstersWorkerThread.IsAlive)
+                    {
+                        lblAction.Text = c.GetNextMonsterFarmAction().Action.ToString();
+                    }
+                    else if (farmResourcesWorkerThread != null && farmResourcesWorkerThread.IsAlive)
+                    {
+                        lblAction.Text = c.GetNextRangerFarmAction().Action.ToString();
+                    }
+                    else
+                    {
+                        lblAction.Text = "UNKNOWN";
+                    }
+
+                    lblTurns.Text = c.CurrentTurns.ToString();
+                    lblGold.Text = c.CurrentGold.ToString("#,0,") + "k";
+                    lblBankGold.Text = c.CurrentGoldBank.ToString("#,0,") + "k";
+                    lblDragonPoints.Text = c.CurrentDragonPoints.ToString("#,0");
+                    lblBankDragonPoints.Text = c.CurrentDPBank.ToString("#,0");
+                    lblCycles.Text = PeriodsCompleted.ToString("#,#");
+
+                    lblFish.Text = c.CurrentFishCount.ToString("#,0,") + "k";
+                    lblIron.Text = c.CurrentIronCount.ToString("#,0,") + "k";
+                    lblStone.Text = c.CurrentStoneCount.ToString("#,0,") + "k";
+                    lblWood.Text = c.CurrentWoodCount.ToString("#,0,") + "k";
+                    
                     if (c.CurrentLocation.Y < 0)
                     {
                         sb.Append(c.CurrentLocation.Y * -1);
@@ -728,24 +797,12 @@ namespace DragonKnight2_Farmer
                         sb.Append(c.CurrentLocation.X);
                         sb.Append('E');
                     }
-                    sb.AppendLine();
-
-                    sb.Append("Turns: ");
-                    sb.Append(c.CurrentTurns);
-                    sb.AppendLine();
-                    sb.Append("Gold: ");
-                    sb.Append(c.CurrentGold);
-                    sb.AppendLine();
-                    //sb.Append("Gold Bank: ");
-                    //sb.Append(c.CurrentGoldBank);
-                    //sb.AppendLine();
-                    sb.Append("Dragon Points: ");
-                    sb.Append(c.CurrentDragonPoints);
-                    sb.AppendLine();
-                    //sb.Append("DP Bank: ");
-                    //sb.Append(c.CurrentDPBank);
-                    //sb.AppendLine();
+                    lblLocation.Text = sb.ToString();
+                    sb.Clear();
                 }
+
+                sb.Append("Total Execption Count: ");
+                sb.AppendLine(exceptionCount.ToString());
                 sb.AppendLine();
                 sb.AppendLine("Exception Queue:");
 
@@ -760,11 +817,6 @@ namespace DragonKnight2_Farmer
                 }
 
                 tbOut.Text = sb.ToString();
-
-                if (KillFarmResourcesThread)
-                {
-                    btnFarmResources.Text = "Start Farming!";
-                }
             }
         }
 
@@ -831,6 +883,81 @@ namespace DragonKnight2_Farmer
             Application.Exit();
         }
 
+        private void MainInterfaceForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnCollectResources_Click(object sender, EventArgs e)
+        {
+            //const string GoldBankURL = "https://dknight2.com/index.php?do=bank";
+            const string VillagesURL = "https://dknight2.com/index.php?do=viewvillages";
+            const string TeleportURL = "https://dknight2.com/index.php?do=teleport";
+            const string TransferURL = "https://dknight2.com/index.php?do=transfer";
+            //const string GoldBankPOST = "bank=Withdraw&withdraw=10000";
+            const string TeleportPOST = "longitude={0}&latitude={1}&teleport=Visit";
+            const string TransferPOST = "fish={0}&wood={1}&stone={2}&iron={3}&gold={4}&dp={5}&swords=0&knights=0&pults=0&bows=0&scouts=0&withdrawres=Summon";
+
+
+            var request = (HttpWebRequest)WebRequest.Create(VillagesURL);
+
+            request.Host = "dknight2.com";
+            request.UserAgent = @"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0";
+            request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+            request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
+            request.Referer = VillagesURL;
+            request.CookieContainer = new CookieContainer();
+            foreach (Cookie cook in postCookies)
+                request.CookieContainer.Add(cook);
+            request.KeepAlive = false;
+            request.Method = "GET";
+
+            Character c = ParseResponse(request);
+
+            foreach (Village v in c.Villages)
+            {
+                if (c.CurrentTravelPoints <= 20)
+                {
+                    if (c.CurrentLocation.X != 0 || c.CurrentLocation.Y != 0)
+                    {
+                        PostRequest(CharacterAction.LookupActionURL(ActionID.GoToTown01, false), null, c);
+                    }
+                    if (c.CurrentGold < c.CurrentLevel * 10)
+                    {
+                        PostRequest(
+                            CharacterAction.LookupActionURL(ActionID.WithdrawGold, false),
+                            Encoding.ASCII.GetBytes(CharacterAction.LookupActionPOST(ActionID.WithdrawGold, c.CurrentLevel * 10)), 
+                            c);
+                    }
+                    PostRequest(
+                        CharacterAction.LookupActionURL(ActionID.SleepAtInn, false),
+                        Encoding.ASCII.GetBytes(CharacterAction.LookupActionPOST(ActionID.SleepAtInn, c.CurrentLevel * 10)),
+                        c);
+                }
+                PostRequest(
+                    TeleportURL,
+                    Encoding.ASCII.GetBytes(string.Format(TeleportPOST, v.Location.X.ToString(), v.Location.Y.ToString())),
+                    c);
+
+                PostRequest(TransferURL, null, c);
+                string postData = string.Format(
+                    TransferPOST,
+                    c.CurrentVillage.Fish.ToString(),
+                    c.CurrentVillage.Wood.ToString(),
+                    c.CurrentVillage.Stone.ToString(),
+                    c.CurrentVillage.Iron.ToString(),
+                    c.CurrentVillage.Gold.ToString(),
+                    c.CurrentVillage.DragonPoints.ToString());
+                PostRequest(TransferURL, Encoding.ASCII.GetBytes(postData), c);
+            }
+
+        }
+
+        private void chkAlwaysOnTop_CheckedChanged(object sender, EventArgs e)
+        {
+            this.TopMost = chkAlwaysOnTop.Checked;
+        }
+
         private void GamblingMain(object TurnsPerMinuet)
         {
 
@@ -854,7 +981,7 @@ namespace DragonKnight2_Farmer
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(@"https://dknight2.com/index.php");
 
             request.Host = "dknight2.com";
-            request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0";
+            request.UserAgent = @"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0";
             request.Accept = @"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
             request.Headers.Add("Accept-Language", "en-GB,en;q=0.5");
             request.Referer = @"https://dknight2.com/index.php";

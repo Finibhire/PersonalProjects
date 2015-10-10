@@ -252,6 +252,9 @@ namespace DragonKnight2_Farmer
             }
         }
 
+        public List<Village> Villages { get; set; }
+        public Village CurrentVillage { get; set; }
+
         public Point FightFromCity { get; set; }
         public Point CurrentLocation { get; set; }
 
@@ -260,6 +263,8 @@ namespace DragonKnight2_Farmer
             FightFromCity = new Point(120, -580);
             currentTurnsTimeStamp = DateTime.Now;
             turnsPerMin = 2;
+
+            Villages = new List<Village>(20);
         }
 
         public CharacterAction GetNextMonsterFarmAction()
@@ -393,5 +398,16 @@ namespace DragonKnight2_Farmer
                 return new CharacterAction(ActionID.RangerStone50);
             }
         }
+    }
+
+    public class Village
+    {
+        public Point Location { get; set; }
+        public int Fish { get; set; }
+        public int Iron { get; set; }
+        public int Stone { get; set; }
+        public int Wood { get; set; }
+        public int Gold { get; set; }
+        public int DragonPoints { get; set; }
     }
 }
