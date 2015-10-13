@@ -291,7 +291,7 @@ namespace DragonKnight2_Farmer
                 case ActionID.RangerFish50:
                 case ActionID.RangerStone50:
                 case ActionID.RangerIron50:
-                    return "ac=t6&submit=Yes!";
+                    return "ac=t6&submit=Yes%21";
             }
             return null;
         }
