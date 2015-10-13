@@ -383,20 +383,20 @@ namespace DragonKnight2_Farmer
             parseEnd = fullResponse.IndexOf(")", parseStart);
             c.CurrentPotionTPCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
 
-            parseStart = fullResponse.IndexOf("<center class='blackbg'>You own ", parseEnd) + 32;
-            parseEnd = fullResponse.IndexOf(" Wood", parseStart);
+            parseStart = fullResponse.IndexOf("<li><a>You own ", parseEnd) + 15;
+            parseEnd = fullResponse.IndexOf(" Wood</a></li>", parseStart);
             c.CurrentWoodCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
 
-            parseStart = fullResponse.IndexOf("<center class='blackbg'>You own ", parseEnd) + 32;
-            parseEnd = fullResponse.IndexOf(" Fish", parseStart);
+            parseStart = fullResponse.IndexOf("<li><a>You own ", parseEnd) + 15;
+            parseEnd = fullResponse.IndexOf(" Fish</a></li>", parseStart);
             c.CurrentFishCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
 
-            parseStart = fullResponse.IndexOf("<center class='blackbg'>You own ", parseEnd) + 32;
-            parseEnd = fullResponse.IndexOf(" Stone", parseStart);
+            parseStart = fullResponse.IndexOf("<li><a>You own ", parseEnd) + 15;
+            parseEnd = fullResponse.IndexOf(" Stone</a></li>", parseStart);
             c.CurrentStoneCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
 
-            parseStart = fullResponse.IndexOf("<center class='blackbg'>You own ", parseEnd) + 32;
-            parseEnd = fullResponse.IndexOf(" Iron", parseStart);
+            parseStart = fullResponse.IndexOf("<li><a>You own ", parseEnd) + 15;
+            parseEnd = fullResponse.IndexOf(" Iron</a></li>", parseStart);
             c.CurrentIronCount = int.Parse(fullResponse.Substring(parseStart, parseEnd - parseStart).Replace(",", ""));
 
             parseEnd = fullResponse.IndexOf("Hello <a href='index.php?do=onlinechar:", parseEnd) + 350;
