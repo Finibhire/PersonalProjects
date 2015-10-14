@@ -1,0 +1,1273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RMDDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CurrencyExchangeRates">
+          <Key>
+            <PropertyRef Name="SourceCurrencyId" />
+            <PropertyRef Name="DestinationCurrencyId" />
+          </Key>
+          <Property Name="SourceCurrencyId" Type="tinyint" Nullable="false" />
+          <Property Name="DestinationCurrencyId" Type="tinyint" Nullable="false" />
+          <Property Name="SourceMultiplier" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CurrencyExchanges">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="SourceCurrencyTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="DestinationCurrencyTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="SourceAmount" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="DestinationAmount" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="TimeStamp" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CurrencyTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="tinyint" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="MaxScale" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MarketSales">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SellerUserId" Type="int" Nullable="false" />
+          <Property Name="BuyerUserId" Type="int" Nullable="false" />
+          <Property Name="ResourceTypeId" Type="int" Nullable="false" />
+          <Property Name="ResourcesSoldAmount" Type="int" Nullable="false" />
+          <Property Name="CurrencyTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="TotalCurrencyCost" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="TimeStamp" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PurchaseOrders">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ResourceTypeId" Type="int" Nullable="false" />
+          <Property Name="ResourceRequestAmount" Type="int" Nullable="false" />
+          <Property Name="ResourceFilledAmount" Type="int" Nullable="false" />
+          <Property Name="CurrencyTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="CurrencyPerResource" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResourceTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SellOrders">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ResourceTypeId" Type="int" Nullable="false" />
+          <Property Name="ResourceSellAmount" Type="int" Nullable="false" />
+          <Property Name="ResourceFilledAmount" Type="int" Nullable="false" />
+          <Property Name="CurrencyTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="CurrencyPerResource" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserCurrencies">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="CurrencyTypeId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CurrencyTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="OnHand" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserResources">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="ResourceTypeId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ResourceTypeId" Type="int" Nullable="false" />
+          <Property Name="OnHand" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserAllPivoted">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Dragon Points" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="FLAP" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="Gold" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="Gold Points" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="HTML5" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="HyperCoin" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="Fish" Type="bigint" />
+          <Property Name="Iron" Type="bigint" />
+          <Property Name="Stone" Type="bigint" />
+          <Property Name="Wood" Type="bigint" />
+        </EntityType>
+        <EntityType Name="UserCurrenciesPivoted">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Dragon Points" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="FLAP" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="Gold" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="Gold Points" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="HTML5" Type="decimal" Precision="38" Scale="9" />
+          <Property Name="HyperCoin" Type="decimal" Precision="38" Scale="9" />
+        </EntityType>
+        <EntityType Name="UserResourcesPivoted">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Fish" Type="bigint" />
+          <Property Name="Iron" Type="bigint" />
+          <Property Name="Stone" Type="bigint" />
+          <Property Name="Wood" Type="bigint" />
+        </EntityType>
+        <Association Name="FK_CurrencyExchangeRates_CurrencyTypes_DestinationId">
+          <End Role="CurrencyTypes" Type="Self.CurrencyTypes" Multiplicity="1" />
+          <End Role="CurrencyExchangeRates" Type="Self.CurrencyExchangeRates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyExchangeRates">
+              <PropertyRef Name="DestinationCurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrencyExchangeRates_CurrencyTypes_SourceId">
+          <End Role="CurrencyTypes" Type="Self.CurrencyTypes" Multiplicity="1" />
+          <End Role="CurrencyExchangeRates" Type="Self.CurrencyExchangeRates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyExchangeRates">
+              <PropertyRef Name="SourceCurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrencyExchanges_CrurrencyTypes_Destination">
+          <End Role="CurrencyTypes" Type="Self.CurrencyTypes" Multiplicity="1" />
+          <End Role="CurrencyExchanges" Type="Self.CurrencyExchanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyExchanges">
+              <PropertyRef Name="DestinationCurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrencyExchanges_CrurrencyTypes_Source">
+          <End Role="CurrencyTypes" Type="Self.CurrencyTypes" Multiplicity="1" />
+          <End Role="CurrencyExchanges" Type="Self.CurrencyExchanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyExchanges">
+              <PropertyRef Name="SourceCurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarketSales_CurrencyTypes">
+          <End Role="CurrencyTypes" Type="Self.CurrencyTypes" Multiplicity="1" />
+          <End Role="MarketSales" Type="Self.MarketSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MarketSales">
+              <PropertyRef Name="CurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarketSales_ResourceTypes">
+          <End Role="ResourceTypes" Type="Self.ResourceTypes" Multiplicity="1" />
+          <End Role="MarketSales" Type="Self.MarketSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MarketSales">
+              <PropertyRef Name="ResourceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarketSales_Users_Buyer">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="MarketSales" Type="Self.MarketSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MarketSales">
+              <PropertyRef Name="BuyerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarketSales_Users_Seller">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="MarketSales" Type="Self.MarketSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MarketSales">
+              <PropertyRef Name="SellerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrders_CurrencyTypes">
+          <End Role="CurrencyTypes" Type="Self.CurrencyTypes" Multiplicity="1" />
+          <End Role="PurchaseOrders" Type="Self.PurchaseOrders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchaseOrders">
+              <PropertyRef Name="CurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrders_ResourceTypes">
+          <End Role="ResourceTypes" Type="Self.ResourceTypes" Multiplicity="1" />
+          <End Role="PurchaseOrders" Type="Self.PurchaseOrders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchaseOrders">
+              <PropertyRef Name="ResourceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrders_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="PurchaseOrders" Type="Self.PurchaseOrders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchaseOrders">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SellOrders_CurrencyTypes">
+          <End Role="CurrencyTypes" Type="Self.CurrencyTypes" Multiplicity="1" />
+          <End Role="SellOrders" Type="Self.SellOrders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SellOrders">
+              <PropertyRef Name="CurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SellOrders_ResourceTypes">
+          <End Role="ResourceTypes" Type="Self.ResourceTypes" Multiplicity="1" />
+          <End Role="SellOrders" Type="Self.SellOrders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SellOrders">
+              <PropertyRef Name="ResourceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SellOrders_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="SellOrders" Type="Self.SellOrders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SellOrders">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCurrencies_CurrencyTypes">
+          <End Role="CurrencyTypes" Type="Self.CurrencyTypes" Multiplicity="1" />
+          <End Role="UserCurrencies" Type="Self.UserCurrencies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserCurrencies">
+              <PropertyRef Name="CurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCurrencies_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserCurrencies" Type="Self.UserCurrencies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserCurrencies">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserResources_ResourceTypes">
+          <End Role="ResourceTypes" Type="Self.ResourceTypes" Multiplicity="1" />
+          <End Role="UserResources" Type="Self.UserResources" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserResources">
+              <PropertyRef Name="ResourceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserResources_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserResources" Type="Self.UserResources" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserResources">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="AddPurchaseOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="ResourceTypeId" Type="int" Mode="In" />
+          <Parameter Name="ResourceRequestAmount" Type="int" Mode="In" />
+          <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
+          <Parameter Name="CurrencyPerResource" Type="float" Mode="In" />
+        </Function>
+        <Function Name="AddSellOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="ResourceTypeId" Type="int" Mode="In" />
+          <Parameter Name="ResourceSellAmount" Type="int" Mode="In" />
+          <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
+          <Parameter Name="CurrencyPerResource" Type="float" Mode="In" />
+        </Function>
+        <Function Name="GetCondensedAndConvertedPurchaseOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="workingCurrency" Type="tinyint" Mode="In" />
+          <Parameter Name="workingResource" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetCondensedAndConvertedSellOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="workingCurrency" Type="tinyint" Mode="In" />
+          <Parameter Name="workingResource" Type="int" Mode="In" />
+        </Function>
+        <Function Name="InstantBuyResources" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="ResourceTypeId" Type="int" Mode="In" />
+          <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
+          <Parameter Name="MaxBuyAmount" Type="int" Mode="In" />
+        </Function>
+        <Function Name="InstantSellResources" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="ResourceTypeId" Type="int" Mode="In" />
+          <Parameter Name="CurrencyTypeId" Type="tinyint" Mode="In" />
+          <Parameter Name="MaxSellAmount" Type="int" Mode="In" />
+        </Function>
+        <Function Name="RefundDeleteRemainingPurchaseOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PurchaseOrderId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="RefundDeleteRemainingSellOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SellOrderId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="RMDDatabaseModelStoreContainer">
+          <EntitySet Name="CurrencyExchangeRates" EntityType="Self.CurrencyExchangeRates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CurrencyExchanges" EntityType="Self.CurrencyExchanges" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CurrencyTypes" EntityType="Self.CurrencyTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MarketSales" EntityType="Self.MarketSales" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PurchaseOrders" EntityType="Self.PurchaseOrders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceTypes" EntityType="Self.ResourceTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SellOrders" EntityType="Self.SellOrders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserCurrencies" EntityType="Self.UserCurrencies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserResources" EntityType="Self.UserResources" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAllPivoted" EntityType="Self.UserAllPivoted" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserAllPivoted].[Id] AS [Id], 
+    [UserAllPivoted].[UserName] AS [UserName], 
+    [UserAllPivoted].[Dragon Points] AS [Dragon Points], 
+    [UserAllPivoted].[FLAP] AS [FLAP], 
+    [UserAllPivoted].[Gold] AS [Gold], 
+    [UserAllPivoted].[Gold Points] AS [Gold Points], 
+    [UserAllPivoted].[HTML5] AS [HTML5], 
+    [UserAllPivoted].[HyperCoin] AS [HyperCoin], 
+    [UserAllPivoted].[Fish] AS [Fish], 
+    [UserAllPivoted].[Iron] AS [Iron], 
+    [UserAllPivoted].[Stone] AS [Stone], 
+    [UserAllPivoted].[Wood] AS [Wood]
+    FROM [dbo].[UserAllPivoted] AS [UserAllPivoted]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserCurrenciesPivoted" EntityType="Self.UserCurrenciesPivoted" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserCurrenciesPivoted].[Id] AS [Id], 
+    [UserCurrenciesPivoted].[UserName] AS [UserName], 
+    [UserCurrenciesPivoted].[Dragon Points] AS [Dragon Points], 
+    [UserCurrenciesPivoted].[FLAP] AS [FLAP], 
+    [UserCurrenciesPivoted].[Gold] AS [Gold], 
+    [UserCurrenciesPivoted].[Gold Points] AS [Gold Points], 
+    [UserCurrenciesPivoted].[HTML5] AS [HTML5], 
+    [UserCurrenciesPivoted].[HyperCoin] AS [HyperCoin]
+    FROM [dbo].[UserCurrenciesPivoted] AS [UserCurrenciesPivoted]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserResourcesPivoted" EntityType="Self.UserResourcesPivoted" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserResourcesPivoted].[Id] AS [Id], 
+    [UserResourcesPivoted].[UserName] AS [UserName], 
+    [UserResourcesPivoted].[Fish] AS [Fish], 
+    [UserResourcesPivoted].[Iron] AS [Iron], 
+    [UserResourcesPivoted].[Stone] AS [Stone], 
+    [UserResourcesPivoted].[Wood] AS [Wood]
+    FROM [dbo].[UserResourcesPivoted] AS [UserResourcesPivoted]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" Association="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="CurrencyExchangeRates" EntitySet="CurrencyExchangeRates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrencyExchangeRates_CurrencyTypes_SourceId" Association="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="CurrencyExchangeRates" EntitySet="CurrencyExchangeRates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrencyExchanges_CrurrencyTypes_Destination" Association="Self.FK_CurrencyExchanges_CrurrencyTypes_Destination">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="CurrencyExchanges" EntitySet="CurrencyExchanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrencyExchanges_CrurrencyTypes_Source" Association="Self.FK_CurrencyExchanges_CrurrencyTypes_Source">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="CurrencyExchanges" EntitySet="CurrencyExchanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarketSales_CurrencyTypes" Association="Self.FK_MarketSales_CurrencyTypes">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="MarketSales" EntitySet="MarketSales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarketSales_ResourceTypes" Association="Self.FK_MarketSales_ResourceTypes">
+            <End Role="ResourceTypes" EntitySet="ResourceTypes" />
+            <End Role="MarketSales" EntitySet="MarketSales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarketSales_Users_Buyer" Association="Self.FK_MarketSales_Users_Buyer">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="MarketSales" EntitySet="MarketSales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarketSales_Users_Seller" Association="Self.FK_MarketSales_Users_Seller">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="MarketSales" EntitySet="MarketSales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrders_CurrencyTypes" Association="Self.FK_PurchaseOrders_CurrencyTypes">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrders_ResourceTypes" Association="Self.FK_PurchaseOrders_ResourceTypes">
+            <End Role="ResourceTypes" EntitySet="ResourceTypes" />
+            <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrders_Users" Association="Self.FK_PurchaseOrders_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SellOrders_CurrencyTypes" Association="Self.FK_SellOrders_CurrencyTypes">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="SellOrders" EntitySet="SellOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SellOrders_ResourceTypes" Association="Self.FK_SellOrders_ResourceTypes">
+            <End Role="ResourceTypes" EntitySet="ResourceTypes" />
+            <End Role="SellOrders" EntitySet="SellOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SellOrders_Users" Association="Self.FK_SellOrders_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="SellOrders" EntitySet="SellOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCurrencies_CurrencyTypes" Association="Self.FK_UserCurrencies_CurrencyTypes">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="UserCurrencies" EntitySet="UserCurrencies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCurrencies_Users" Association="Self.FK_UserCurrencies_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserCurrencies" EntitySet="UserCurrencies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserResources_ResourceTypes" Association="Self.FK_UserResources_ResourceTypes">
+            <End Role="ResourceTypes" EntitySet="ResourceTypes" />
+            <End Role="UserResources" EntitySet="UserResources" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserResources_Users" Association="Self.FK_UserResources_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserResources" EntitySet="UserResources" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RMDDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CurrencyExchangeRate">
+          <Key>
+            <PropertyRef Name="SourceCurrencyId" />
+            <PropertyRef Name="DestinationCurrencyId" />
+          </Key>
+          <Property Name="SourceCurrencyId" Type="Byte" Nullable="false" />
+          <Property Name="DestinationCurrencyId" Type="Byte" Nullable="false" />
+          <Property Name="SourceMultiplier" Type="Double" Nullable="false" />
+          <NavigationProperty Name="CurrencyType_Destination" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" FromRole="CurrencyExchangeRates" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="CurrencyType_Source" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId" FromRole="CurrencyExchangeRates" ToRole="CurrencyTypes" />
+        </EntityType>
+        <EntityType Name="CurrencyExchanx">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="SourceCurrencyTypeId" Type="Byte" Nullable="false" />
+          <Property Name="DestinationCurrencyTypeId" Type="Byte" Nullable="false" />
+          <Property Name="SourceAmount" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="DestinationAmount" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CurrencyType_Destination" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Destination" FromRole="CurrencyExchanges" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="CurrencyType_Source" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Source" FromRole="CurrencyExchanges" ToRole="CurrencyTypes" />
+        </EntityType>
+        <EntityType Name="CurrencyType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Byte" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MaxScale" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="CurrencyExchangeRates_Destination" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" FromRole="CurrencyTypes" ToRole="CurrencyExchangeRates" />
+          <NavigationProperty Name="CurrencyExchangeRates_Source" Relationship="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId" FromRole="CurrencyTypes" ToRole="CurrencyExchangeRates" />
+          <NavigationProperty Name="CurrencyExchanges_Destination" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Destination" FromRole="CurrencyTypes" ToRole="CurrencyExchanges" />
+          <NavigationProperty Name="CurrencyExchanges_Source" Relationship="Self.FK_CurrencyExchanges_CrurrencyTypes_Source" FromRole="CurrencyTypes" ToRole="CurrencyExchanges" />
+          <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK_PurchaseOrders_CurrencyTypes" FromRole="CurrencyTypes" ToRole="PurchaseOrders" />
+          <NavigationProperty Name="SellOrders" Relationship="Self.FK_SellOrders_CurrencyTypes" FromRole="CurrencyTypes" ToRole="SellOrders" />
+          <NavigationProperty Name="UserCurrencies" Relationship="Self.FK_UserCurrencies_CurrencyTypes" FromRole="CurrencyTypes" ToRole="UserCurrencies" />
+          <NavigationProperty Name="MarketSales" Relationship="RMDDatabaseModel.FK_MarketSales_CurrencyTypes" FromRole="CurrencyType" ToRole="MarketSale" />
+        </EntityType>
+        <EntityType Name="MarketSale">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SellerUserId" Type="Int32" Nullable="false" />
+          <Property Name="BuyerUserId" Type="Int32" Nullable="false" />
+          <Property Name="ResourceTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ResourcesSoldAmount" Type="Int32" Nullable="false" />
+          <Property Name="CurrencyTypeId" Type="Byte" Nullable="false" />
+          <Property Name="TotalCurrencyCost" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CurrencyType" Relationship="RMDDatabaseModel.FK_MarketSales_CurrencyTypes" FromRole="MarketSale" ToRole="CurrencyType" />
+          <NavigationProperty Name="ResourceType" Relationship="RMDDatabaseModel.FK_MarketSales_ResourceTypes" FromRole="MarketSale" ToRole="ResourceType" />
+          <NavigationProperty Name="User_Buyer" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Buyer" FromRole="MarketSale" ToRole="User" />
+          <NavigationProperty Name="User_Seller" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Seller" FromRole="MarketSale" ToRole="User" />
+        </EntityType>
+        <EntityType Name="PurchaseOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ResourceTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ResourceRequestAmount" Type="Int32" Nullable="false" />
+          <Property Name="ResourceFilledAmount" Type="Int32" Nullable="false" />
+          <Property Name="CurrencyTypeId" Type="Byte" Nullable="false" />
+          <Property Name="CurrencyPerResource" Type="Double" Nullable="false" />
+          <NavigationProperty Name="CurrencyType" Relationship="Self.FK_PurchaseOrders_CurrencyTypes" FromRole="PurchaseOrders" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="ResourceType" Relationship="Self.FK_PurchaseOrders_ResourceTypes" FromRole="PurchaseOrders" ToRole="ResourceTypes" />
+          <NavigationProperty Name="User" Relationship="Self.FK_PurchaseOrders_Users" FromRole="PurchaseOrders" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="ResourceType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK_PurchaseOrders_ResourceTypes" FromRole="ResourceTypes" ToRole="PurchaseOrders" />
+          <NavigationProperty Name="SellOrders" Relationship="Self.FK_SellOrders_ResourceTypes" FromRole="ResourceTypes" ToRole="SellOrders" />
+          <NavigationProperty Name="UserResources" Relationship="Self.FK_UserResources_ResourceTypes" FromRole="ResourceTypes" ToRole="UserResources" />
+          <NavigationProperty Name="MarketSales" Relationship="RMDDatabaseModel.FK_MarketSales_ResourceTypes" FromRole="ResourceType" ToRole="MarketSale" />
+        </EntityType>
+        <EntityType Name="SellOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ResourceTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ResourceSellAmount" Type="Int32" Nullable="false" />
+          <Property Name="ResourceFilledAmount" Type="Int32" Nullable="false" />
+          <Property Name="CurrencyTypeId" Type="Byte" Nullable="false" />
+          <Property Name="CurrencyPerResource" Type="Double" Nullable="false" />
+          <NavigationProperty Name="CurrencyType" Relationship="Self.FK_SellOrders_CurrencyTypes" FromRole="SellOrders" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="ResourceType" Relationship="Self.FK_SellOrders_ResourceTypes" FromRole="SellOrders" ToRole="ResourceTypes" />
+          <NavigationProperty Name="User" Relationship="Self.FK_SellOrders_Users" FromRole="SellOrders" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="UserCurrency">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="CurrencyTypeId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CurrencyTypeId" Type="Byte" Nullable="false" />
+          <Property Name="OnHand" Type="Decimal" Precision="38" Scale="9" Nullable="false" />
+          <NavigationProperty Name="CurrencyType" Relationship="Self.FK_UserCurrencies_CurrencyTypes" FromRole="UserCurrencies" ToRole="CurrencyTypes" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserCurrencies_Users" FromRole="UserCurrencies" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="UserResource">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="ResourceTypeId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ResourceTypeId" Type="Int32" Nullable="false" />
+          <Property Name="OnHand" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="ResourceType" Relationship="Self.FK_UserResources_ResourceTypes" FromRole="UserResources" ToRole="ResourceTypes" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserResources_Users" FromRole="UserResources" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PurchaseOrders" Relationship="Self.FK_PurchaseOrders_Users" FromRole="Users" ToRole="PurchaseOrders" />
+          <NavigationProperty Name="SellOrders" Relationship="Self.FK_SellOrders_Users" FromRole="Users" ToRole="SellOrders" />
+          <NavigationProperty Name="UserCurrencies" Relationship="Self.FK_UserCurrencies_Users" FromRole="Users" ToRole="UserCurrencies" />
+          <NavigationProperty Name="UserResources" Relationship="Self.FK_UserResources_Users" FromRole="Users" ToRole="UserResources" />
+          <NavigationProperty Name="MarketSales_Buyer" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Buyer" FromRole="User" ToRole="MarketSale" />
+          <NavigationProperty Name="MarketSales_Seller" Relationship="RMDDatabaseModel.FK_MarketSales_Users_Seller" FromRole="User" ToRole="MarketSale" />
+        </EntityType>
+        <EntityType Name="UserAllPivoted">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Dragon_Points" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="FLAP" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="Gold" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="Gold_Points" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="HTML5" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="HyperCoin" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="Fish" Type="Int64" />
+          <Property Name="Iron" Type="Int64" />
+          <Property Name="Stone" Type="Int64" />
+          <Property Name="Wood" Type="Int64" />
+        </EntityType>
+        <EntityType Name="UserCurrenciesPivoted">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Dragon_Points" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="FLAP" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="Gold" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="Gold_Points" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="HTML5" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="HyperCoin" Type="Decimal" Precision="38" Scale="9" />
+        </EntityType>
+        <EntityType Name="UserResourcesPivoted">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fish" Type="Int64" />
+          <Property Name="Iron" Type="Int64" />
+          <Property Name="Stone" Type="Int64" />
+          <Property Name="Wood" Type="Int64" />
+        </EntityType>
+        <Association Name="FK_CurrencyExchangeRates_CurrencyTypes_DestinationId">
+          <End Role="CurrencyTypes" Type="Self.CurrencyType" Multiplicity="1" />
+          <End Role="CurrencyExchangeRates" Type="Self.CurrencyExchangeRate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyExchangeRates">
+              <PropertyRef Name="DestinationCurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrencyExchangeRates_CurrencyTypes_SourceId">
+          <End Role="CurrencyTypes" Type="Self.CurrencyType" Multiplicity="1" />
+          <End Role="CurrencyExchangeRates" Type="Self.CurrencyExchangeRate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyExchangeRates">
+              <PropertyRef Name="SourceCurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrencyExchanges_CrurrencyTypes_Destination">
+          <End Role="CurrencyTypes" Type="Self.CurrencyType" Multiplicity="1" />
+          <End Role="CurrencyExchanges" Type="Self.CurrencyExchanx" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyExchanges">
+              <PropertyRef Name="DestinationCurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrencyExchanges_CrurrencyTypes_Source">
+          <End Role="CurrencyTypes" Type="Self.CurrencyType" Multiplicity="1" />
+          <End Role="CurrencyExchanges" Type="Self.CurrencyExchanx" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyExchanges">
+              <PropertyRef Name="SourceCurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrders_CurrencyTypes">
+          <End Role="CurrencyTypes" Type="Self.CurrencyType" Multiplicity="1" />
+          <End Role="PurchaseOrders" Type="Self.PurchaseOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchaseOrders">
+              <PropertyRef Name="CurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SellOrders_CurrencyTypes">
+          <End Role="CurrencyTypes" Type="Self.CurrencyType" Multiplicity="1" />
+          <End Role="SellOrders" Type="Self.SellOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SellOrders">
+              <PropertyRef Name="CurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCurrencies_CurrencyTypes">
+          <End Role="CurrencyTypes" Type="Self.CurrencyType" Multiplicity="1" />
+          <End Role="UserCurrencies" Type="Self.UserCurrency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserCurrencies">
+              <PropertyRef Name="CurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrders_ResourceTypes">
+          <End Role="ResourceTypes" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="PurchaseOrders" Type="Self.PurchaseOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchaseOrders">
+              <PropertyRef Name="ResourceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchaseOrders_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="PurchaseOrders" Type="Self.PurchaseOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchaseOrders">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SellOrders_ResourceTypes">
+          <End Role="ResourceTypes" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="SellOrders" Type="Self.SellOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SellOrders">
+              <PropertyRef Name="ResourceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserResources_ResourceTypes">
+          <End Role="ResourceTypes" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="UserResources" Type="Self.UserResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserResources">
+              <PropertyRef Name="ResourceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SellOrders_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="SellOrders" Type="Self.SellOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SellOrders">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCurrencies_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="UserCurrencies" Type="Self.UserCurrency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserCurrencies">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserResources_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="UserResources" Type="Self.UserResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserResources">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RMDDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CurrencyExchangeRates" EntityType="Self.CurrencyExchangeRate" />
+          <EntitySet Name="CurrencyExchanges" EntityType="Self.CurrencyExchanx" />
+          <EntitySet Name="CurrencyTypes" EntityType="Self.CurrencyType" />
+          <EntitySet Name="MarketSales" EntityType="Self.MarketSale" />
+          <EntitySet Name="PurchaseOrders" EntityType="Self.PurchaseOrder" />
+          <EntitySet Name="ResourceTypes" EntityType="Self.ResourceType" />
+          <EntitySet Name="SellOrders" EntityType="Self.SellOrder" />
+          <EntitySet Name="UserCurrencies" EntityType="Self.UserCurrency" />
+          <EntitySet Name="UserResources" EntityType="Self.UserResource" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="UserAllPivoteds" EntityType="Self.UserAllPivoted" />
+          <EntitySet Name="UserCurrenciesPivoteds" EntityType="Self.UserCurrenciesPivoted" />
+          <EntitySet Name="UserResourcesPivoteds" EntityType="Self.UserResourcesPivoted" />
+          <AssociationSet Name="FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" Association="Self.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="CurrencyExchangeRates" EntitySet="CurrencyExchangeRates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrencyExchangeRates_CurrencyTypes_SourceId" Association="Self.FK_CurrencyExchangeRates_CurrencyTypes_SourceId">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="CurrencyExchangeRates" EntitySet="CurrencyExchangeRates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrencyExchanges_CrurrencyTypes_Destination" Association="Self.FK_CurrencyExchanges_CrurrencyTypes_Destination">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="CurrencyExchanges" EntitySet="CurrencyExchanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrencyExchanges_CrurrencyTypes_Source" Association="Self.FK_CurrencyExchanges_CrurrencyTypes_Source">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="CurrencyExchanges" EntitySet="CurrencyExchanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrders_CurrencyTypes" Association="Self.FK_PurchaseOrders_CurrencyTypes">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SellOrders_CurrencyTypes" Association="Self.FK_SellOrders_CurrencyTypes">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="SellOrders" EntitySet="SellOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCurrencies_CurrencyTypes" Association="Self.FK_UserCurrencies_CurrencyTypes">
+            <End Role="CurrencyTypes" EntitySet="CurrencyTypes" />
+            <End Role="UserCurrencies" EntitySet="UserCurrencies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrders_ResourceTypes" Association="Self.FK_PurchaseOrders_ResourceTypes">
+            <End Role="ResourceTypes" EntitySet="ResourceTypes" />
+            <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchaseOrders_Users" Association="Self.FK_PurchaseOrders_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PurchaseOrders" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SellOrders_ResourceTypes" Association="Self.FK_SellOrders_ResourceTypes">
+            <End Role="ResourceTypes" EntitySet="ResourceTypes" />
+            <End Role="SellOrders" EntitySet="SellOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserResources_ResourceTypes" Association="Self.FK_UserResources_ResourceTypes">
+            <End Role="ResourceTypes" EntitySet="ResourceTypes" />
+            <End Role="UserResources" EntitySet="UserResources" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SellOrders_Users" Association="Self.FK_SellOrders_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="SellOrders" EntitySet="SellOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCurrencies_Users" Association="Self.FK_UserCurrencies_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserCurrencies" EntitySet="UserCurrencies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserResources_Users" Association="Self.FK_UserResources_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserResources" EntitySet="UserResources" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarketSales_CurrencyTypes" Association="RMDDatabaseModel.FK_MarketSales_CurrencyTypes">
+            <End Role="CurrencyType" EntitySet="CurrencyTypes" />
+            <End Role="MarketSale" EntitySet="MarketSales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarketSales_ResourceTypes" Association="RMDDatabaseModel.FK_MarketSales_ResourceTypes">
+            <End Role="ResourceType" EntitySet="ResourceTypes" />
+            <End Role="MarketSale" EntitySet="MarketSales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarketSales_Users_Buyer" Association="RMDDatabaseModel.FK_MarketSales_Users_Buyer">
+            <End Role="User" EntitySet="Users" />
+            <End Role="MarketSale" EntitySet="MarketSales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarketSales_Users_Seller" Association="RMDDatabaseModel.FK_MarketSales_Users_Seller">
+            <End Role="User" EntitySet="Users" />
+            <End Role="MarketSale" EntitySet="MarketSales" />
+          </AssociationSet>
+          <FunctionImport Name="AddPurchaseOrder">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceRequestAmount" Mode="In" Type="Int32" />
+            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
+            <Parameter Name="CurrencyPerResource" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="AddSellOrder">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceSellAmount" Mode="In" Type="Int32" />
+            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
+            <Parameter Name="CurrencyPerResource" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="GetCondensedAndConvertedPurchaseOrders" ReturnType="Collection(RMDDatabaseModel.GetCondensedAndConvertedPurchaseOrders_Result)">
+            <Parameter Name="workingCurrency" Mode="In" Type="Byte" />
+            <Parameter Name="workingResource" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetCondensedAndConvertedSellOrders" ReturnType="Collection(RMDDatabaseModel.GetCondensedAndConvertedSellOrders_Result)">
+            <Parameter Name="workingCurrency" Mode="In" Type="Byte" />
+            <Parameter Name="workingResource" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="InstantBuyResources">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
+            <Parameter Name="MaxBuyAmount" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="InstantSellResources">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="ResourceTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="CurrencyTypeId" Mode="In" Type="Byte" />
+            <Parameter Name="MaxSellAmount" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RefundDeleteRemainingPurchaseOrder">
+            <Parameter Name="PurchaseOrderId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RefundDeleteRemainingSellOrder">
+            <Parameter Name="SellOrderId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <Association Name="FK_MarketSales_CurrencyTypes">
+          <End Type="RMDDatabaseModel.CurrencyType" Role="CurrencyType" Multiplicity="1" />
+          <End Type="RMDDatabaseModel.MarketSale" Role="MarketSale" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MarketSale">
+              <PropertyRef Name="CurrencyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarketSales_ResourceTypes">
+          <End Type="RMDDatabaseModel.ResourceType" Role="ResourceType" Multiplicity="1" />
+          <End Type="RMDDatabaseModel.MarketSale" Role="MarketSale" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MarketSale">
+              <PropertyRef Name="ResourceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarketSales_Users_Buyer">
+          <End Type="RMDDatabaseModel.User" Role="User" Multiplicity="1" />
+          <End Type="RMDDatabaseModel.MarketSale" Role="MarketSale" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MarketSale">
+              <PropertyRef Name="BuyerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarketSales_Users_Seller">
+          <End Type="RMDDatabaseModel.User" Role="User" Multiplicity="1" />
+          <End Type="RMDDatabaseModel.MarketSale" Role="MarketSale" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MarketSale">
+              <PropertyRef Name="SellerUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetCondensedAndConvertedPurchaseOrders_Result">
+          <Property Type="Int32" Name="FillableResourceAmount" Nullable="false" />
+          <Property Type="String" Name="OriginalCurrencyName" Nullable="true" MaxLength="20" />
+          <Property Type="Double" Name="SourceMultiplier" Nullable="false" />
+          <Property Type="Double" Name="ConvertedCurrencyPerResource" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetCondensedAndConvertedSellOrders_Result">
+          <Property Type="Int32" Name="FillableResourceAmount" Nullable="false" />
+          <Property Type="String" Name="OriginalCurrencyName" Nullable="true" MaxLength="20" />
+          <Property Type="Double" Name="SourceMultiplier" Nullable="false" />
+          <Property Type="Double" Name="ConvertedCurrencyPerResource" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RMDDatabaseModelStoreContainer" CdmEntityContainer="RMDDatabaseEntities">
+          <EntitySetMapping Name="CurrencyExchangeRates">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.CurrencyExchangeRate">
+              <MappingFragment StoreEntitySet="CurrencyExchangeRates">
+                <ScalarProperty Name="SourceCurrencyId" ColumnName="SourceCurrencyId" />
+                <ScalarProperty Name="DestinationCurrencyId" ColumnName="DestinationCurrencyId" />
+                <ScalarProperty Name="SourceMultiplier" ColumnName="SourceMultiplier" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CurrencyExchanges">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.CurrencyExchanx">
+              <MappingFragment StoreEntitySet="CurrencyExchanges">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="SourceCurrencyTypeId" ColumnName="SourceCurrencyTypeId" />
+                <ScalarProperty Name="DestinationCurrencyTypeId" ColumnName="DestinationCurrencyTypeId" />
+                <ScalarProperty Name="SourceAmount" ColumnName="SourceAmount" />
+                <ScalarProperty Name="DestinationAmount" ColumnName="DestinationAmount" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CurrencyTypes">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.CurrencyType">
+              <MappingFragment StoreEntitySet="CurrencyTypes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MaxScale" ColumnName="MaxScale" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MarketSales">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.MarketSale">
+              <MappingFragment StoreEntitySet="MarketSales">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SellerUserId" ColumnName="SellerUserId" />
+                <ScalarProperty Name="BuyerUserId" ColumnName="BuyerUserId" />
+                <ScalarProperty Name="ResourceTypeId" ColumnName="ResourceTypeId" />
+                <ScalarProperty Name="ResourcesSoldAmount" ColumnName="ResourcesSoldAmount" />
+                <ScalarProperty Name="CurrencyTypeId" ColumnName="CurrencyTypeId" />
+                <ScalarProperty Name="TotalCurrencyCost" ColumnName="TotalCurrencyCost" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrders">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.PurchaseOrder">
+              <MappingFragment StoreEntitySet="PurchaseOrders">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ResourceTypeId" ColumnName="ResourceTypeId" />
+                <ScalarProperty Name="ResourceRequestAmount" ColumnName="ResourceRequestAmount" />
+                <ScalarProperty Name="ResourceFilledAmount" ColumnName="ResourceFilledAmount" />
+                <ScalarProperty Name="CurrencyTypeId" ColumnName="CurrencyTypeId" />
+                <ScalarProperty Name="CurrencyPerResource" ColumnName="CurrencyPerResource" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceTypes">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.ResourceType">
+              <MappingFragment StoreEntitySet="ResourceTypes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SellOrders">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.SellOrder">
+              <MappingFragment StoreEntitySet="SellOrders">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ResourceTypeId" ColumnName="ResourceTypeId" />
+                <ScalarProperty Name="ResourceSellAmount" ColumnName="ResourceSellAmount" />
+                <ScalarProperty Name="ResourceFilledAmount" ColumnName="ResourceFilledAmount" />
+                <ScalarProperty Name="CurrencyTypeId" ColumnName="CurrencyTypeId" />
+                <ScalarProperty Name="CurrencyPerResource" ColumnName="CurrencyPerResource" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCurrencies">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.UserCurrency">
+              <MappingFragment StoreEntitySet="UserCurrencies">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CurrencyTypeId" ColumnName="CurrencyTypeId" />
+                <ScalarProperty Name="OnHand" ColumnName="OnHand" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserResources">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.UserResource">
+              <MappingFragment StoreEntitySet="UserResources">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ResourceTypeId" ColumnName="ResourceTypeId" />
+                <ScalarProperty Name="OnHand" ColumnName="OnHand" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAllPivoteds">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.UserAllPivoted">
+              <MappingFragment StoreEntitySet="UserAllPivoted">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Dragon_Points" ColumnName="Dragon Points" />
+                <ScalarProperty Name="FLAP" ColumnName="FLAP" />
+                <ScalarProperty Name="Gold" ColumnName="Gold" />
+                <ScalarProperty Name="Gold_Points" ColumnName="Gold Points" />
+                <ScalarProperty Name="HTML5" ColumnName="HTML5" />
+                <ScalarProperty Name="HyperCoin" ColumnName="HyperCoin" />
+                <ScalarProperty Name="Fish" ColumnName="Fish" />
+                <ScalarProperty Name="Iron" ColumnName="Iron" />
+                <ScalarProperty Name="Stone" ColumnName="Stone" />
+                <ScalarProperty Name="Wood" ColumnName="Wood" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCurrenciesPivoteds">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.UserCurrenciesPivoted">
+              <MappingFragment StoreEntitySet="UserCurrenciesPivoted">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Dragon_Points" ColumnName="Dragon Points" />
+                <ScalarProperty Name="FLAP" ColumnName="FLAP" />
+                <ScalarProperty Name="Gold" ColumnName="Gold" />
+                <ScalarProperty Name="Gold_Points" ColumnName="Gold Points" />
+                <ScalarProperty Name="HTML5" ColumnName="HTML5" />
+                <ScalarProperty Name="HyperCoin" ColumnName="HyperCoin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserResourcesPivoteds">
+            <EntityTypeMapping TypeName="RMDDatabaseModel.UserResourcesPivoted">
+              <MappingFragment StoreEntitySet="UserResourcesPivoted">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Fish" ColumnName="Fish" />
+                <ScalarProperty Name="Iron" ColumnName="Iron" />
+                <ScalarProperty Name="Stone" ColumnName="Stone" />
+                <ScalarProperty Name="Wood" ColumnName="Wood" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AddPurchaseOrder" FunctionName="RMDDatabaseModel.Store.AddPurchaseOrder" />
+          <FunctionImportMapping FunctionImportName="AddSellOrder" FunctionName="RMDDatabaseModel.Store.AddSellOrder" />
+          <FunctionImportMapping FunctionImportName="GetCondensedAndConvertedPurchaseOrders" FunctionName="RMDDatabaseModel.Store.GetCondensedAndConvertedPurchaseOrders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMDDatabaseModel.GetCondensedAndConvertedPurchaseOrders_Result">
+                <ScalarProperty Name="FillableResourceAmount" ColumnName="FillableResourceAmount" />
+                <ScalarProperty Name="OriginalCurrencyName" ColumnName="OriginalCurrencyName" />
+                <ScalarProperty Name="SourceMultiplier" ColumnName="SourceMultiplier" />
+                <ScalarProperty Name="ConvertedCurrencyPerResource" ColumnName="ConvertedCurrencyPerResource" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetCondensedAndConvertedSellOrders" FunctionName="RMDDatabaseModel.Store.GetCondensedAndConvertedSellOrders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMDDatabaseModel.GetCondensedAndConvertedSellOrders_Result">
+                <ScalarProperty Name="FillableResourceAmount" ColumnName="FillableResourceAmount" />
+                <ScalarProperty Name="OriginalCurrencyName" ColumnName="OriginalCurrencyName" />
+                <ScalarProperty Name="SourceMultiplier" ColumnName="SourceMultiplier" />
+                <ScalarProperty Name="ConvertedCurrencyPerResource" ColumnName="ConvertedCurrencyPerResource" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="InstantBuyResources" FunctionName="RMDDatabaseModel.Store.InstantBuyResources" />
+          <FunctionImportMapping FunctionImportName="InstantSellResources" FunctionName="RMDDatabaseModel.Store.InstantSellResources" />
+          <FunctionImportMapping FunctionImportName="RefundDeleteRemainingPurchaseOrder" FunctionName="RMDDatabaseModel.Store.RefundDeleteRemainingPurchaseOrder" />
+          <FunctionImportMapping FunctionImportName="RefundDeleteRemainingSellOrder" FunctionName="RMDDatabaseModel.Store.RefundDeleteRemainingSellOrder" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

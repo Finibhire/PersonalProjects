@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0b520647c342444f99c0e2f3a17dbe7c" Name="Diagram1" ZoomLevel="55">
+        <EntityTypeShape EntityType="RMDDatabaseModel.CurrencyExchangeRate" Width="1.5" PointX="4.625" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.CurrencyExchanx" Width="1.5" PointX="1" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.CurrencyType" Width="1.5" PointX="4.625" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.MarketSale" Width="1.5" PointX="9.875" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.PurchaseOrder" Width="1.5" PointX="2.25" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.ResourceType" Width="1.5" PointX="9.875" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.SellOrder" Width="1.5" PointX="1" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.UserCurrency" Width="1.5" PointX="7.625" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.UserResource" Width="1.5" PointX="7.625" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.User" Width="1.5" PointX="4.625" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.UserAllPivoted" Width="1.5" PointX="6.75" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.UserCurrenciesPivoted" Width="1.5" PointX="8.375" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMDDatabaseModel.UserResourcesPivoted" Width="1.5" PointX="10" PointY="9" IsExpanded="true" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_CurrencyExchangeRates_CurrencyTypes_DestinationId" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_CurrencyExchangeRates_CurrencyTypes_SourceId" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_CurrencyExchanges_CrurrencyTypes_Destination" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_CurrencyExchanges_CrurrencyTypes_Source" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_PurchaseOrders_CurrencyTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_SellOrders_CurrencyTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_UserCurrencies_CurrencyTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_PurchaseOrders_ResourceTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_PurchaseOrders_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_SellOrders_ResourceTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_UserResources_ResourceTypes" ManuallyRouted="false" >
+        </AssociationConnector>
+        <AssociationConnector Association="RMDDatabaseModel.FK_SellOrders_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_UserCurrencies_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_UserResources_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_MarketSales_CurrencyTypes" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_MarketSales_ResourceTypes" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_MarketSales_Users_Buyer" />
+        <AssociationConnector Association="RMDDatabaseModel.FK_MarketSales_Users_Seller" ManuallyRouted="false" >
+        </AssociationConnector>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

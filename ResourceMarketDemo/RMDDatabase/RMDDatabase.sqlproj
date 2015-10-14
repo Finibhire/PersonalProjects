@@ -17,12 +17,14 @@
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetFrameworkProfile />
+    <GenerateCreateScript>True</GenerateCreateScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -34,6 +36,7 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -46,6 +49,7 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -58,18 +62,56 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Snapshots" />
+    <Folder Include="ScalarFunctions" />
+    <Folder Include="StoredProcedures" />
+    <Folder Include="Tables" />
+    <Folder Include="Views" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Users.sql" />
-    <Build Include="CurrencyTypes.sql" />
-    <Build Include="UserCurrencies.sql" />
-    <Build Include="UserCurrenciesPivoted.sql" />
-    <Build Include="ResourceTypes.sql" />
     <None Include="TestingPivotQueries.sql" />
-    <Build Include="UserResources.sql" />
-    <Build Include="DynamicUpdateUserPivotViews.sql" />
+    <None Include="Temp.sql" />
+    <Build Include="ScalarFunctions\fRoundDecimalDown.sql" />
+    <Build Include="ScalarFunctions\fRoundDecimalUp.sql" />
+    <Build Include="ScalarFunctions\g_OrderSigFigsCeiling.sql" />
+    <Build Include="ScalarFunctions\g_OrderSigFigsFloor.sql" />
+    <Build Include="ScalarFunctions\g_OrderSigFigsRound.sql" />
+    <Build Include="StoredProcedures\AddPurchaseOrder.sql" />
+    <Build Include="StoredProcedures\AddSellOrder.sql" />
+    <Build Include="StoredProcedures\GetCondensedAndConvertedPurchaseOrders.sql" />
+    <Build Include="StoredProcedures\GetCondensedAndConvertedSellOrders.sql" />
+    <Build Include="Tables\CurrencyExchangeRates.sql" />
+    <Build Include="Tables\CurrencyTypes.sql" />
+    <Build Include="Tables\CurrencyExchanges.sql" />
+    <Build Include="StoredProcedures\DynamicUpdateUserPivotViews.sql" />
+    <Build Include="Tables\MarketSales.sql" />
+    <Build Include="Tables\PurchaseOrders.sql" />
+    <Build Include="Tables\ResourceTypes.sql" />
+    <Build Include="Tables\SellOrders.sql" />
+    <Build Include="Tables\UserCurrencies.sql" />
+    <Build Include="Tables\UserResources.sql" />
+    <Build Include="Tables\Users.sql" />
+    <Build Include="Views\UserCurrenciesPivoted.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="RMDDatabase.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RMDDatabase.publish.xml" />
+    <None Include="RMDDatabase_1.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="StoredProcedures\RefundDeleteRemainingPurchaseOrder.sql" />
+    <Build Include="StoredProcedures\RefundDeleteRemainingSellOrder.sql" />
+    <Build Include="StoredProcedures\InstantBuyResources.sql" />
+    <Build Include="StoredProcedures\InstantSellResources.sql" />
   </ItemGroup>
 </Project>
