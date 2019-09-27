@@ -1,0 +1,39 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema id="ReferenceData" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="ReferenceData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+        <xs:element name="Items" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="artefact_type" type="xs:int" minOccurs="1" maxOccurs="1" />
+              <xs:element name="two_handed" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="BaseItemPower" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="artefact_type" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="teir" type="xs:int" minOccurs="1" maxOccurs="1" />
+              <xs:element name="item_power" type="xs:int" minOccurs="1" maxOccurs="1" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="EnchantProgression" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="artefact_type" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="teir" type="xs:int" minOccurs="1" maxOccurs="1" />
+              <xs:element name="enchant_rune" type="xs:int" minOccurs="1" maxOccurs="1" />
+              <xs:element name="enchant_soul" type="xs:int" minOccurs="1" maxOccurs="1" />
+              <xs:element name="enchant_relic" type="xs:int" minOccurs="1" maxOccurs="1" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
