@@ -23,6 +23,7 @@ using System.Runtime.Serialization.Json;
 using System.Xml.Linq;
 using System.Data;
 using static AlbionPriceComparer.DataSchemaLoader;
+using System.Threading;
 
 namespace AlbionPriceComparer
 {
@@ -204,7 +205,7 @@ namespace AlbionPriceComparer
 
             //DataSchemaLoader.Load();
             DataSet ds = DataSchemaLoader.Read();
-            DataSet items = DataSchemaLoader.CompileData();
+            //DataSet items = DataSchemaLoader.CompileData();
 
             WebRequest request;
             Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
@@ -309,6 +310,22 @@ namespace AlbionPriceComparer
                     }
                 }
             }
+        }
+
+
+        Thread worker;
+        private void BtnCollateItemData_Click(object sender, RoutedEventArgs e)
+        {
+            List<ItemData> items;
+            worker = new Thread(() => DataSchemaLoader.CompileData(txtOut, out items));
+            worker.Start();
+        }
+
+        private void BtnPause_Click(object sender, RoutedEventArgs e)
+        {
+            worker.Suspend();
+            string content = (string)lblStatus.Content;
+            worker.Resume();
         }
     }
 }

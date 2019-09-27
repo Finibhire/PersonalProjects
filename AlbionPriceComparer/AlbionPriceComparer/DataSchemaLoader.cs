@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
+using System.Windows.Controls;
 
 namespace AlbionPriceComparer
 {
@@ -173,7 +174,9 @@ namespace AlbionPriceComparer
             }
         }
 
-        public static DataSet CompileData()
+        public delegate void CompileDataDelegate(Label lbl, out List<ItemData> items);
+
+        public static void CompileData(TextBlock txt, out List<ItemData> items)
         {
             //List<ItemJSONLookupRow> filteredList = new List<ItemJSONLookupRow>();
             ItemJSONLookupRow[] rawData;
@@ -189,10 +192,12 @@ namespace AlbionPriceComparer
 
             JsonSerializer serializer = new JsonSerializer();
             serializer.NullValueHandling = NullValueHandling.Ignore;
-            List<ItemData> items = new List<ItemData>(filteredList.Count());
+            items = new List<ItemData>(filteredList.Count());
             var seri = new DataContractSerializer(typeof(ItemData));
+            int k = 0;
             foreach (ItemJSONLookupRow item in filteredList)
             {
+                txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Processing Item #" + k + ": " + item.UniqueName));
                 ItemData buffer;
                 var request = HttpWebRequest.Create(@"https://gameinfo.albiononline.com/api/gameinfo/items/" + item.UniqueName + @"/data");
                 try
@@ -212,6 +217,7 @@ namespace AlbionPriceComparer
                     if (!(ex.Status == WebExceptionStatus.ProtocolError && ex.Message.Contains("(404)")))
                         throw ex;
                 }
+                k++;
             }
             //items.GroupBy(x => x.itemType).Select(g => g.First().itemType).ToList();
             items = (from i in items
@@ -265,8 +271,6 @@ namespace AlbionPriceComparer
                     dtItems.Rows.Add(row);
                 }
             }
-
-            return ds;
         }
 
         private static ArtefactType ArtefactTypeLookup(DataTable dt, int teir, int itemPower)
