@@ -122,7 +122,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="items.json" />
+    <Content Include="binItems.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -133,10 +133,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ReferenceData.xml" />
+    <Resource Include="ReferenceData.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ReferenceDataSchema.xml" />
+    <Resource Include="ReferenceDataSchema.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ItemDataSchema.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

@@ -134,6 +134,11 @@ namespace AlbionPriceComparer
             public ItemEnchantment[] enchantments { get; set; }
         }
 
+        public enum SlotType
+        {
+            unknown = 0, armor = 1, bag, cape, head, mainhand, offhand, shoes
+        }
+
         // TODO: add twohanded property
         [DataContract]
         public class ItemData
@@ -152,6 +157,29 @@ namespace AlbionPriceComparer
 
             [DataMember]
             public ItemEnchantmentBase enchantments { get; set; }
+
+
+            public SlotType slotType { get; set; }
+
+            [DataMember(Name = "slotType")]
+            public string slotType_s
+            {
+                get
+                {
+                    return Enum.GetName(typeof(SlotType), slotType);
+                }
+                set
+                {
+                    foreach (SlotType slot in Enum.GetValues(typeof(SlotType)))
+                    {
+                        if (value.Equals(Enum.GetName(typeof(SlotType), slot), StringComparison.OrdinalIgnoreCase))
+                        {
+                            slotType = slot;
+                            break;
+                        }
+                    }
+                }
+            }
 
             public int teir { get; set; }
 
@@ -189,7 +217,7 @@ namespace AlbionPriceComparer
             var filteredList = from item in rawData
                                where item.UniqueName.StartsWith("T4")
                                select item;
-
+            //filteredList = filteredList.Where(x => x.UniqueName.Contains("SHIELD"));
             JsonSerializer serializer = new JsonSerializer();
             serializer.NullValueHandling = NullValueHandling.Ignore;
             items = new List<ItemData>(filteredList.Count());
@@ -223,6 +251,8 @@ namespace AlbionPriceComparer
             items = (from i in items
                      where i.itemType == "equipment" || i.itemType == "weapon"
                      select i).GroupBy(i => i.uniqueName + i.teir).Select(i => i.First()).ToList();
+            //items = (from i in items
+            //         select i).GroupBy(i => i.slotType).Select(i => i.First()).ToList();
 
             var ds = new DataSet();
             using (Stream stream = typeof(AlbionPriceComparer.MainWindow).Assembly.GetManifestResourceStream("AlbionPriceComparer.ReferenceDataSchema.xml"))
@@ -250,12 +280,14 @@ namespace AlbionPriceComparer
                 dtEnch.Rows.Add(r);
             }
 
+            dtItems.Clear();
             foreach (ItemData i in items)
             {
                 var row = dtItems.NewRow();
                 row["id"] = i.uniqueName.Replace("T4_", "");
                 row["name"] = i.localizedNames.ENUS.Replace("Adept's ", "");
                 row["two_handed"] = i.twoHanded;
+                row["slot_type"] = i.slotType;
                 if (i.itemPower >= 500 || (i.itemPower < 500 && i.enchantments != null))
                 {
                     if (i.itemPower < 500)
@@ -270,7 +302,10 @@ namespace AlbionPriceComparer
                     }
                     dtItems.Rows.Add(row);
                 }
+                //else
+                //    throw new Exception("Error looking up artefact_type for: " + i.uniqueName);
             }
+            ds.WriteXml("ReferenceData.xml");
         }
 
         private static ArtefactType ArtefactTypeLookup(DataTable dt, int teir, int itemPower)
