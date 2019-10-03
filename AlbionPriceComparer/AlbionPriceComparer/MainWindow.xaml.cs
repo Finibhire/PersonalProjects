@@ -24,6 +24,7 @@ using System.Xml.Linq;
 using System.Data;
 using static AlbionPriceComparer.DataSchemaLoader;
 using System.Threading;
+using System.Web;
 
 namespace AlbionPriceComparer
 {
@@ -324,8 +325,87 @@ namespace AlbionPriceComparer
         private void BtnPause_Click(object sender, RoutedEventArgs e)
         {
             worker.Suspend();
-            string content = (string)lblStatus.Content;
+            string content = txtOut.Text;
             worker.Resume();
+        }
+
+        private void BtnUpdateItemSelection_Click(object sender, RoutedEventArgs e)
+        {
+            DataSet ds = new DataSet();
+            using (var stream = Application.GetResourceStream(new Uri("/ItemDataSchema.xml", UriKind.Relative)).Stream)
+                ds.ReadXmlSchema(stream);
+            using (var stream = new FileStream(System.AppDomain.CurrentDomain.BaseDirectory + "\\ItemData.xml", FileMode.Open))
+                ds.ReadXml(stream);
+            var dtItems = ds.Tables["Items"];
+            cmbItemSelection.DisplayMemberPath = "name";
+            cmbItemSelection.SelectedValuePath = "id";
+            cmbItemSelection.ItemsSource = dtItems.DefaultView;
+        }
+
+        private void CmbItemSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            txtOut.Text = "Selected: " + ((DataRowView)cmbItemSelection.SelectedItem)["id"];
+        }
+
+        //TODO: make this run in another thread so the screen doesn't lock up as it does the HTTP Web Requests.
+        private void BtnAnalyzeMarket_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbItemSelection.SelectedIndex < 0)
+            {
+                txtOut.Text = "Error: select an item first!";
+                return;
+            }
+
+            StringBuilder sNormal = new StringBuilder();
+            StringBuilder sEnchant = new StringBuilder();
+            StringBuilder sEnd = new StringBuilder();
+
+            sNormal.Append("https://www.albion-online-data.com/api/v2/stats/prices/T");
+            int replaceIndex = sNormal.Length;
+            sNormal.Append("4_");
+            sNormal.Append(((DataRowView)cmbItemSelection.SelectedItem)["id"]);
+            sEnchant.Append(sNormal.ToString());
+            sEnchant.Append("@1");
+            int replaceIndexEnchant = sEnchant.Length - 1;
+            sEnd.Append("?locations=");
+            foreach (City c in Enum.GetValues(typeof(City)))
+                if (c != City.Unknown)
+                    sEnd.Append(HttpUtility.UrlEncode(c.DisplayName())).Append(",");
+            sEnd.Length -= 1;
+            string sTemp = sEnd.ToString();
+            sNormal.Append(sTemp);
+            sEnchant.Append(sTemp);
+
+
+            var listings = new List<MarketListing>();
+
+            void AppendMarketListings(StringBuilder url)
+            {
+                for (char teir = '4'; teir <= '8'; teir++)
+                {
+                    url[replaceIndex] = teir;
+                    string sUrl = url.ToString();
+                    txtOut.Text = "Loading URL:  " + sUrl;
+
+                    var request = HttpWebRequest.Create(sUrl);
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        var ser = new DataContractJsonSerializer(typeof(MarketListing[]));
+                        using (Stream sr = response.GetResponseStream())
+                        {
+                            listings.AddRange((MarketListing[])ser.ReadObject(sr));
+                        }
+                    }
+                    txtOut.Text = "Finished Loading URL:  " + sUrl;
+                }
+            }
+
+            AppendMarketListings(sNormal);
+            for (char i = '1'; i <= '3'; i++)
+            {
+                sEnchant[replaceIndexEnchant] = i;
+                AppendMarketListings(sEnchant);
+            }
         }
     }
 }

@@ -10,10 +10,18 @@
         <Button Content="Button" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button x:Name="btnEnchantPriceLookup" Content="Enchant Price Lookup" HorizontalAlignment="Left" Margin="379,10,0,0" VerticalAlignment="Top" Width="140" Click="BtnEnchantPriceLookup_Click"/>
         <Button x:Name="btnCollateItemData" Content="Collate Item Data" HorizontalAlignment="Left" Margin="571,10,0,0" VerticalAlignment="Top" Width="139" Click="BtnCollateItemData_Click"/>
-        <Label x:Name="lblStatus" Content="Waiting for Command" HorizontalAlignment="Left" Margin="60,383,0,0" VerticalAlignment="Top" Width="712"/>
         <Label Content="Status:" HorizontalAlignment="Left" Margin="10,383,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Left" Margin="458,178,0,0" VerticalAlignment="Top" Width="75" Click="BtnPause_Click"/>
-        <TextBlock x:Name="txtOut" HorizontalAlignment="Left" Margin="285,285,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+        <TextBlock x:Name="txtOut" HorizontalAlignment="Left" Margin="60,388,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+        <CheckBox x:Name="chkArmor" Content="Armor" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkBag" Content="Bag" HorizontalAlignment="Left" Margin="100,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkCape" Content="Cape" HorizontalAlignment="Left" Margin="200,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkMainhand" Content="Main Hand" HorizontalAlignment="Left" Margin="300,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkOffhand" Content="Off Hand" HorizontalAlignment="Left" Margin="399,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkShoes" Content="Shoes" HorizontalAlignment="Left" Margin="500,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <ComboBox x:Name="cmbItemSelection" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" Width="237" SelectionChanged="CmbItemSelection_SelectionChanged"/>
+        <Button x:Name="btnUpdateItemSelection" Content="Update Item Selection" HorizontalAlignment="Left" Margin="591,65,0,0" VerticalAlignment="Top" Width="142" Click="BtnUpdateItemSelection_Click"/>
+        <Button x:Name="btnAnalyzeMarket" Content="Analyze Market" HorizontalAlignment="Left" Margin="260,88,0,0" VerticalAlignment="Top" Width="118" Click="BtnAnalyzeMarket_Click" Height="22"/>
 
     </Grid>
 </Window>

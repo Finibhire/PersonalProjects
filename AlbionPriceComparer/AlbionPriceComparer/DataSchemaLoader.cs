@@ -10,6 +10,8 @@ using System.IO;
 using System.Net;
 using Newtonsoft.Json;
 using System.Windows.Controls;
+using System.Windows.Resources;
+using System.Windows;
 
 namespace AlbionPriceComparer
 {
@@ -206,18 +208,17 @@ namespace AlbionPriceComparer
 
         public static void CompileData(TextBlock txt, out List<ItemData> items)
         {
-            //List<ItemJSONLookupRow> filteredList = new List<ItemJSONLookupRow>();
             ItemJSONLookupRow[] rawData;
 
             var ser = new DataContractJsonSerializer(typeof(ItemJSONLookupRow[]));
-            using (FileStream fs = new FileStream("items.json", FileMode.Open))
+            using (var stream = Application.GetContentStream(new Uri("/binItems.json", UriKind.Relative)).Stream)
             {
-                rawData = (ItemJSONLookupRow[])ser.ReadObject(fs);
+                rawData = (ItemJSONLookupRow[])ser.ReadObject(stream);
             }
             var filteredList = from item in rawData
                                where item.UniqueName.StartsWith("T4")
                                select item;
-            //filteredList = filteredList.Where(x => x.UniqueName.Contains("SHIELD"));
+            
             JsonSerializer serializer = new JsonSerializer();
             serializer.NullValueHandling = NullValueHandling.Ignore;
             items = new List<ItemData>(filteredList.Count());
@@ -225,7 +226,7 @@ namespace AlbionPriceComparer
             int k = 0;
             foreach (ItemJSONLookupRow item in filteredList)
             {
-                txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Processing Item #" + k + ": " + item.UniqueName));
+                txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Downloading Item Data #" + k + ": " + item.UniqueName));
                 ItemData buffer;
                 var request = HttpWebRequest.Create(@"https://gameinfo.albiononline.com/api/gameinfo/items/" + item.UniqueName + @"/data");
                 try
@@ -247,30 +248,29 @@ namespace AlbionPriceComparer
                 }
                 k++;
             }
-            //items.GroupBy(x => x.itemType).Select(g => g.First().itemType).ToList();
+            txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Finished downloading" + k + " items #"));
+
             items = (from i in items
                      where i.itemType == "equipment" || i.itemType == "weapon"
                      select i).GroupBy(i => i.uniqueName + i.teir).Select(i => i.First()).ToList();
-            //items = (from i in items
-            //         select i).GroupBy(i => i.slotType).Select(i => i.First()).ToList();
+
 
             var ds = new DataSet();
-            using (Stream stream = typeof(AlbionPriceComparer.MainWindow).Assembly.GetManifestResourceStream("AlbionPriceComparer.ReferenceDataSchema.xml"))
+            using (var stream = Application.GetResourceStream(new Uri("/ReferenceDataSchema.xml", UriKind.Relative)).Stream)
                 ds.ReadXmlSchema(stream);
-            using (Stream stream = typeof(AlbionPriceComparer.MainWindow).Assembly.GetManifestResourceStream("AlbionPriceComparer.ReferenceData.xml"))
+            using (var stream = Application.GetResourceStream(new Uri("/ReferenceData.xml", UriKind.Relative)).Stream)
                 ds.ReadXml(stream);
 
-            var dtItems = ds.Tables["Items"];
             var dtBase = ds.Tables["BaseItemPower"];
-
             var dtEnch = ds.Tables["BaseItemPower"].Copy();
+            dtEnch.Clear();
 
             var une = dtBase.AsEnumerable().Where(r => (int)r["teir"] == 4).Join(
                 ds.Tables["EnchantProgression"].AsEnumerable().Where(ep => (int)ep["teir"] == 4),
-                r => (string)((DataRow)r)["artefact_type"],
-                ep => (string)((DataRow)ep)["artefact_type"],
+                r => (string)r["artefact_type"],
+                ep => (string)ep["artefact_type"],
                 (r, ep) => new { artefact_type = (string)r["artefact_type"], item_power = (int)r["item_power"] + (int)ep["enchant_rune"] });
-            dtEnch.Clear();
+
             foreach (var a in une)
             {
                 var r = dtEnch.NewRow();
@@ -280,7 +280,11 @@ namespace AlbionPriceComparer
                 dtEnch.Rows.Add(r);
             }
 
-            dtItems.Clear();
+            DataSet dsOut = new DataSet();
+            using (var stream = Application.GetResourceStream(new Uri("/ItemDataSchema.xml", UriKind.Relative)).Stream)
+                dsOut.ReadXmlSchema(stream);
+            var dtItems = dsOut.Tables["Items"];
+
             foreach (ItemData i in items)
             {
                 var row = dtItems.NewRow();
@@ -305,7 +309,7 @@ namespace AlbionPriceComparer
                 //else
                 //    throw new Exception("Error looking up artefact_type for: " + i.uniqueName);
             }
-            ds.WriteXml("ReferenceData.xml");
+            dsOut.WriteXml("ItemData.xml");
         }
 
         private static ArtefactType ArtefactTypeLookup(DataTable dt, int teir, int itemPower)
