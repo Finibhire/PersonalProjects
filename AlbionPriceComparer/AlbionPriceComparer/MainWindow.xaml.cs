@@ -79,6 +79,38 @@ namespace AlbionPriceComparer
         [DataContract]
         private class MarketListing
         {
+            public MarketListing DeepCopy()
+            {
+                MarketListing ml = new MarketListing();
+                ml.buy_price_max = buy_price_max;
+                ml.buy_price_max_date = buy_price_max_date;
+                ml.buy_price_min = buy_price_min;
+                ml.buy_price_min_date = buy_price_min_date;
+                ml.city = city;
+                ml.item_id = item_id;
+                ml.quality = quality;
+                ml.RelicEnchantCost = RelicEnchantCost;
+                ml.RuneEnchantCost = RuneEnchantCost;
+                ml.sell_price_max = sell_price_max;
+                ml.sell_price_max_date = sell_price_max_date;
+                ml.sell_price_min = sell_price_min;
+                ml.sell_price_min_date = sell_price_min_date;
+                ml.SoulEnchantCost = SoulEnchantCost;
+                ml.FinalItemPower = FinalItemPower;
+                return ml;
+            }
+            public int RuneEnchantCost { get; set; }
+            public int SoulEnchantCost { get; set; }
+            public int RelicEnchantCost { get; set; }
+            public int FinalItemPower { get; set; }
+            public int Teir
+            {
+                get
+                {
+                    return Convert.ToInt32(item_id[1]) - Convert.ToInt32('0');
+                }
+            }
+
             [DataMember]
             public string item_id { get; set; }
             [DataMember]
@@ -246,7 +278,7 @@ namespace AlbionPriceComparer
 
         public enum EnchantLevel
         {
-            None = 0, Rune, Soul, Relic
+            Unknown = -1, None = 0, Rune, Soul, Relic
         }
 
         private EnchantPrices enchPrices = new EnchantPrices();
@@ -344,7 +376,8 @@ namespace AlbionPriceComparer
 
         private void CmbItemSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            txtOut.Text = "Selected: " + ((DataRowView)cmbItemSelection.SelectedItem)["id"];
+            if (cmbItemSelection.SelectedIndex >= 0)
+                txtOut.Text = "Selected: " + ((DataRowView)cmbItemSelection.SelectedItem)["id"];
         }
 
         //TODO: make this run in another thread so the screen doesn't lock up as it does the HTTP Web Requests.
@@ -400,12 +433,27 @@ namespace AlbionPriceComparer
                 }
             }
 
+            var dsl = new DataSchemaLoader();
+            var lookupItem = (DataRowView)cmbItemSelection.SelectedItem;
+
             AppendMarketListings(sNormal);
+            for (int i = listings.Count - 1; i >= 0; i--)
+            {
+                listings[i].FinalItemPower = dsl.ItemPowerLookup((ArtefactType)lookupItem["artefact_type"], listings[i].Teir, ArtefactType.Normal) + (int)listings[i].quality;
+                MarketListing ml = listings[i].DeepCopy();
+                var sb = new StringBuilder(ml.item_id);
+                sb[1] = (char)((int)sb[1] + 1);
+                ml.item_id = sb.ToString();
+            }
             for (char i = '1'; i <= '3'; i++)
             {
                 sEnchant[replaceIndexEnchant] = i;
                 AppendMarketListings(sEnchant);
             }
+
+            BtnEnchantPriceLookup_Click(null, null);
+
+
         }
     }
 }

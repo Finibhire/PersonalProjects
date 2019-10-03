@@ -1,240 +1,240 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ReferenceData>
   <BaseItemPower>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>4</teir>
     <item_power>700</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>5</teir>
     <item_power>800</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>6</teir>
     <item_power>900</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>7</teir>
     <item_power>980</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>8</teir>
     <item_power>1060</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>4</teir>
     <item_power>800</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>5</teir>
     <item_power>900</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>6</teir>
     <item_power>980</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>7</teir>
     <item_power>1060</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>8</teir>
     <item_power>1120</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>4</teir>
     <item_power>900</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>5</teir>
     <item_power>980</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>6</teir>
     <item_power>1060</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>7</teir>
     <item_power>1120</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>8</teir>
     <item_power>1180</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>4</teir>
     <item_power>980</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>5</teir>
     <item_power>1060</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>6</teir>
     <item_power>1120</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>7</teir>
     <item_power>1180</item_power>
   </BaseItemPower>
   <BaseItemPower>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>8</teir>
     <item_power>1240</item_power>
   </BaseItemPower>
   <EnchantProgression>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>4</teir>
     <enchant_rune>100</enchant_rune>
     <enchant_soul>100</enchant_soul>
     <enchant_relic>80</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>5</teir>
     <enchant_rune>100</enchant_rune>
     <enchant_soul>80</enchant_soul>
     <enchant_relic>80</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>6</teir>
     <enchant_rune>80</enchant_rune>
     <enchant_soul>80</enchant_soul>
     <enchant_relic>60</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>7</teir>
     <enchant_rune>80</enchant_rune>
     <enchant_soul>60</enchant_soul>
     <enchant_relic>60</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>normal</artefact_type>
+    <artefact_type>0</artefact_type>
     <teir>8</teir>
     <enchant_rune>60</enchant_rune>
     <enchant_soul>60</enchant_soul>
     <enchant_relic>60</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>4</teir>
     <enchant_rune>80</enchant_rune>
     <enchant_soul>68</enchant_soul>
     <enchant_relic>64</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>5</teir>
     <enchant_rune>64</enchant_rune>
     <enchant_soul>64</enchant_soul>
     <enchant_relic>56</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>6</teir>
     <enchant_rune>64</enchant_rune>
     <enchant_soul>52</enchant_soul>
     <enchant_relic>48</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>7</teir>
     <enchant_rune>48</enchant_rune>
     <enchant_soul>48</enchant_soul>
     <enchant_relic>48</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>rune</artefact_type>
+    <artefact_type>1</artefact_type>
     <teir>8</teir>
     <enchant_rune>48</enchant_rune>
     <enchant_soul>48</enchant_soul>
     <enchant_relic>48</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>4</teir>
     <enchant_rune>48</enchant_rune>
     <enchant_soul>48</enchant_soul>
     <enchant_relic>40</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>5</teir>
     <enchant_rune>48</enchant_rune>
     <enchant_soul>36</enchant_soul>
     <enchant_relic>44</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>6</teir>
     <enchant_rune>36</enchant_rune>
     <enchant_soul>36</enchant_soul>
     <enchant_relic>36</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>7</teir>
     <enchant_rune>36</enchant_rune>
     <enchant_soul>36</enchant_soul>
     <enchant_relic>36</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>soul</artefact_type>
+    <artefact_type>2</artefact_type>
     <teir>8</teir>
     <enchant_rune>36</enchant_rune>
     <enchant_soul>36</enchant_soul>
     <enchant_relic>36</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>4</teir>
     <enchant_rune>32</enchant_rune>
     <enchant_soul>24</enchant_soul>
     <enchant_relic>24</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>5</teir>
     <enchant_rune>24</enchant_rune>
     <enchant_soul>24</enchant_soul>
     <enchant_relic>24</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>6</teir>
     <enchant_rune>24</enchant_rune>
     <enchant_soul>24</enchant_soul>
     <enchant_relic>24</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>7</teir>
     <enchant_rune>24</enchant_rune>
     <enchant_soul>24</enchant_soul>
     <enchant_relic>24</enchant_relic>
   </EnchantProgression>
   <EnchantProgression>
-    <artefact_type>relic</artefact_type>
+    <artefact_type>3</artefact_type>
     <teir>8</teir>
     <enchant_rune>24</enchant_rune>
     <enchant_soul>24</enchant_soul>

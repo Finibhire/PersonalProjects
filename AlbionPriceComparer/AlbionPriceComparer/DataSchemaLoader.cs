@@ -21,18 +21,18 @@ namespace AlbionPriceComparer
         {
             DataSet ds = new DataSet("ReferenceData");
             DataTable dt = new DataTable("BaseItemPower");
-            dt.Columns.Add("artefact_type", typeof(string));
+            dt.Columns.Add("artefact_type", typeof(ArtefactType));
             dt.Columns.Add("teir", typeof(int));
             dt.Columns.Add("item_power", typeof(int));
 
             DataRow dr = dt.NewRow();
-            dr["artefact_type"] = "normal";
+            dr["artefact_type"] = ArtefactType.Normal;
             dr["teir"] = 4;
             dr["item_power"] = 700;
             dt.Rows.Add(dr);
 
             dr = dt.NewRow();
-            dr["artefact_type"] = "normal";
+            dr["artefact_type"] = ArtefactType.Normal;
             dr["teir"] = 5;
             dr["item_power"] = 800;
             dt.Rows.Add(dr);
@@ -40,14 +40,14 @@ namespace AlbionPriceComparer
             ds.Tables.Add(dt);
 
             dt = new DataTable("EnchantProgression");
-            dt.Columns.Add("artefact_type", typeof(string));
+            dt.Columns.Add("artefact_type", typeof(ArtefactType));
             dt.Columns.Add("teir", typeof(int));
             dt.Columns.Add("enchant_rune", typeof(int));
             dt.Columns.Add("enchant_soul", typeof(int));
             dt.Columns.Add("enchant_relic", typeof(int));
 
             dr = dt.NewRow();
-            dr["artefact_type"] = "normal";
+            dr["artefact_type"] = ArtefactType.Normal;
             dr["teir"] = 4;
             dr["enchant_rune"] = 100;
             dr["enchant_soul"] = 100;
@@ -55,7 +55,7 @@ namespace AlbionPriceComparer
             dt.Rows.Add(dr);
 
             dr = dt.NewRow();
-            dr["artefact_type"] = "normal";
+            dr["artefact_type"] = ArtefactType.Normal;
             dr["teir"] = 5;
             dr["enchant_rune"] = 100;
             dr["enchant_soul"] = 80;
@@ -117,7 +117,7 @@ namespace AlbionPriceComparer
 
         public enum ArtefactType
         {
-            Unknown = 0, Normal, Rune, Soul, Relic
+            Unknown = -1, Normal, Rune, Soul, Relic
         }
 
         [DataContract]
@@ -267,9 +267,9 @@ namespace AlbionPriceComparer
 
             var une = dtBase.AsEnumerable().Where(r => (int)r["teir"] == 4).Join(
                 ds.Tables["EnchantProgression"].AsEnumerable().Where(ep => (int)ep["teir"] == 4),
-                r => (string)r["artefact_type"],
-                ep => (string)ep["artefact_type"],
-                (r, ep) => new { artefact_type = (string)r["artefact_type"], item_power = (int)r["item_power"] + (int)ep["enchant_rune"] });
+                r => (ArtefactType)r["artefact_type"],
+                ep => (ArtefactType)ep["artefact_type"],
+                (r, ep) => new { artefact_type = (ArtefactType)r["artefact_type"], item_power = (int)r["item_power"] + (int)ep["enchant_rune"] });
 
             foreach (var a in une)
             {
@@ -284,6 +284,15 @@ namespace AlbionPriceComparer
             using (var stream = Application.GetResourceStream(new Uri("/ItemDataSchema.xml", UriKind.Relative)).Stream)
                 dsOut.ReadXmlSchema(stream);
             var dtItems = dsOut.Tables["Items"];
+
+
+            ArtefactType ArtefactTypeLookup(DataTable dt, int teir, int itemPower)
+            {
+                return (ArtefactType)dt.AsEnumerable()
+                    .Where(row => (int)row["teir"] == teir && (int)row["item_power"] == itemPower)
+                    .First()["artefact_type"];
+            }
+
 
             foreach (ItemData i in items)
             {
@@ -312,18 +321,71 @@ namespace AlbionPriceComparer
             dsOut.WriteXml("ItemData.xml");
         }
 
-        private static ArtefactType ArtefactTypeLookup(DataTable dt, int teir, int itemPower)
+        public static int EnchantRuneCount(SlotType slot, bool twoHanded)
         {
-            var x = (string)dt.AsEnumerable()
-                .Where(row => (int)row["teir"] == teir && (int)row["item_power"] == itemPower)
-                .First()["artefact_type"];
-            
-            foreach (ArtefactType a in Enum.GetValues(typeof(ArtefactType)))
+
+            switch (slot)
             {
-                if (Enum.GetName(typeof(ArtefactType), a).Equals(x, StringComparison.OrdinalIgnoreCase))
-                    return a;
+                case SlotType.armor:
+                case SlotType.bag:
+                    return 48;
+                case SlotType.head:
+                case SlotType.offhand:
+                case SlotType.shoes:
+                    return 24;
+                case SlotType.mainhand:
+                    if (twoHanded)
+                        return 96;
+                    return 72;
+                default:
+                    throw new Exception("Unknown Rune Count to Enchant Item");
             }
-            return ArtefactType.Unknown;
+        }
+
+        private readonly DataSet refData;
+        private readonly DataTable baseItemPower;
+        private readonly DataTable enchantProgression;
+
+        public DataSchemaLoader()
+        {
+            refData = new DataSet();
+            using (var stream = Application.GetResourceStream(new Uri("/ReferenceDataSchema.xml", UriKind.Relative)).Stream)
+                refData.ReadXmlSchema(stream);
+            using (var stream = Application.GetResourceStream(new Uri("/ReferenceData.xml", UriKind.Relative)).Stream)
+                refData.ReadXml(stream);
+            baseItemPower = refData.Tables["BaseItemPower"];
+            enchantProgression = refData.Tables["EnchantProgression"];
+        }
+
+        public int ItemPowerLookup(ArtefactType artType, int teir, ArtefactType enchLevel)
+        {
+            var results = baseItemPower.AsEnumerable().Where(r => (ArtefactType)r["artefact_type"] == artType && (int)r["teir"] == teir);
+            if (results.Count() <= 0)
+                throw new Exception("Unable to find base Item Power");
+            if (results.Count() > 1)
+                throw new Exception("Too many results!");
+
+            int ip = (int)results.First()["item_power"];
+            results = enchantProgression.AsEnumerable().Where(r => (ArtefactType)r["artefact_type"] == artType && (int)r["teir"] == teir);
+            if (results.Count() <= 0)
+                throw new Exception("Unable to find base Item Power");
+            if (results.Count() > 1)
+                throw new Exception("Too many results!");
+
+            DataRow dr = results.First();
+            if (enchLevel >= ArtefactType.Rune)
+            {
+                ip += (int)dr["enchant_rune"];
+                if (enchLevel >= ArtefactType.Soul)
+                {
+                    ip += (int)dr["enchant_soul"];
+                    if (enchLevel >= ArtefactType.Relic)
+                    {
+                        ip += (int)dr["enchant_relic"];
+                    }
+                }
+            }
+            return ip;
         }
     }
 }

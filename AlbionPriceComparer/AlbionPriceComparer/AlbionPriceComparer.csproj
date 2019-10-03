@@ -90,6 +90,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ReferenceDataSchema.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReferenceDataSchema.xsd</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -130,6 +135,17 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ReferenceDataSchema.xsc">
+      <DependentUpon>ReferenceDataSchema.xsd</DependentUpon>
+    </None>
+    <None Include="ReferenceDataSchema.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ReferenceDataSchema.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ReferenceDataSchema.xss">
+      <DependentUpon>ReferenceDataSchema.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>

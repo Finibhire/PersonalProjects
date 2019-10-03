@@ -6,7 +6,7 @@
         <xs:element name="BaseItemPower" minOccurs="1" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="artefact_type" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="artefact_type" type="xs:int" minOccurs="1" maxOccurs="1" />
               <xs:element name="teir" type="xs:int" minOccurs="1" maxOccurs="1" />
               <xs:element name="item_power" type="xs:int" minOccurs="1" maxOccurs="1" />
             </xs:sequence>
@@ -15,7 +15,7 @@
         <xs:element name="EnchantProgression" minOccurs="1" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="artefact_type" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="artefact_type" type="xs:int" minOccurs="1" maxOccurs="1" />
               <xs:element name="teir" type="xs:int" minOccurs="1" maxOccurs="1" />
               <xs:element name="enchant_rune" type="xs:int" minOccurs="1" maxOccurs="1" />
               <xs:element name="enchant_soul" type="xs:int" minOccurs="1" maxOccurs="1" />
