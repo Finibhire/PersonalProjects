@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema id="ReferenceData" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-  <xs:element name="ReferenceData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+<xs:schema id="ReferenceDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:element name="ReferenceDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="BaseItemPower" maxOccurs="79228162514264337593543950335">
+        <xs:element name="BaseItemPowerTable" msprop:typedName="BaseItemPower" msprop:typedPlural="BaseItemPowerTable" maxOccurs="79228162514264337593543950335">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="artefact_type" type="xs:int" />
-              <xs:element name="teir" type="xs:int" />
-              <xs:element name="item_power" type="xs:int" />
+              <xs:element name="ArtefactType" type="xs:int" />
+              <xs:element name="Teir" type="xs:int" />
+              <xs:element name="ItemPower" type="xs:int" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="EnchantProgression" maxOccurs="79228162514264337593543950335">
+        <xs:element name="EnchantProgressionTable" msprop:typedName="EnchantProgression" msprop:typedPlural="EnchantProgressionTable" maxOccurs="79228162514264337593543950335">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="artefact_type" type="xs:int" />
-              <xs:element name="teir" type="xs:int" />
-              <xs:element name="enchant_rune" type="xs:int" />
-              <xs:element name="enchant_soul" type="xs:int" />
-              <xs:element name="enchant_relic" type="xs:int" />
+              <xs:element name="ArtefactType" msprop:typedName="ArtefactType" type="xs:int" />
+              <xs:element name="Teir" msprop:typedName="Teir" type="xs:int" />
+              <xs:element name="EnchantRune" msprop:typedName="EnchantRune" type="xs:int" />
+              <xs:element name="EnchantSoul" msprop:typedName="EnchantSoul" type="xs:int" />
+              <xs:element name="EnchantRelic" msprop:typedName="EnchantRelic" type="xs:int" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

@@ -25,6 +25,7 @@ using System.Data;
 using static AlbionPriceComparer.DataSchemaLoader;
 using System.Threading;
 using System.Web;
+using static AlbionPriceComparer.GameItemDataSet;
 
 namespace AlbionPriceComparer
 {
@@ -60,15 +61,6 @@ namespace AlbionPriceComparer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private enum ItemQuality
-        {
-            Unknown = -1,
-            Normal = 0,
-            Good = 10,
-            Outstanding = 20,
-            Excelent = 50,
-            Masterpeice = 100
-        }
 
 
         public MainWindow()
@@ -76,217 +68,17 @@ namespace AlbionPriceComparer
             InitializeComponent();
         }
 
-        [DataContract]
-        private class MarketListing
-        {
-            public MarketListing DeepCopy()
-            {
-                MarketListing ml = new MarketListing();
-                ml.buy_price_max = buy_price_max;
-                ml.buy_price_max_date = buy_price_max_date;
-                ml.buy_price_min = buy_price_min;
-                ml.buy_price_min_date = buy_price_min_date;
-                ml.city = city;
-                ml.item_id = item_id;
-                ml.quality = quality;
-                ml.RelicEnchantCost = RelicEnchantCost;
-                ml.RuneEnchantCost = RuneEnchantCost;
-                ml.sell_price_max = sell_price_max;
-                ml.sell_price_max_date = sell_price_max_date;
-                ml.sell_price_min = sell_price_min;
-                ml.sell_price_min_date = sell_price_min_date;
-                ml.SoulEnchantCost = SoulEnchantCost;
-                ml.FinalItemPower = FinalItemPower;
-                return ml;
-            }
-            public int RuneEnchantCost { get; set; }
-            public int SoulEnchantCost { get; set; }
-            public int RelicEnchantCost { get; set; }
-            public int FinalItemPower { get; set; }
-            public int Teir
-            {
-                get
-                {
-                    return Convert.ToInt32(item_id[1]) - Convert.ToInt32('0');
-                }
-            }
-
-            [DataMember]
-            public string item_id { get; set; }
-            [DataMember]
-            public int sell_price_min { get; set; }
-            [DataMember]
-            public int sell_price_max { get; set; }
-            [DataMember]
-            public int buy_price_min { get; set; }
-            [DataMember]
-            public int buy_price_max { get; set; }
-
-            public City city { get; set; }
-
-            [DataMember(Name = "city")]
-            public string city_s
-            {
-                get => city.DisplayName();
-                set
-                {
-                    city = City.Unknown;
-                    string cityName = value.Replace(" ", "").ToLower();
-                    foreach (City id in (City[])Enum.GetValues(typeof(City)))
-                    {
-                        if (Enum.GetName(typeof(City), id).ToLower() == cityName)
-                        {
-                            city = id;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            public ItemQuality quality { get; set; }
-
-            [DataMember(Name = "quality")]
-            private int quality_id
-            {
-                get => ItemQualityIdLookup(quality);
-                set => quality = ItemQualityLookup(value);
-            }
-
-            private static ItemQuality ItemQualityLookup(int iq)
-            {
-                switch (iq)
-                {
-                    case 1:
-                        return ItemQuality.Normal;
-                    case 2:
-                        return ItemQuality.Good;
-                    case 3:
-                        return ItemQuality.Outstanding;
-                    case 4:
-                        return ItemQuality.Excelent;
-                    case 5:
-                        return ItemQuality.Masterpeice;
-                    default:
-                        return ItemQuality.Unknown;
-                }
-            }
-
-            private static int ItemQualityIdLookup(ItemQuality iq)
-            {
-                switch (iq)
-                {
-                    case ItemQuality.Normal:
-                        return 1;
-                    case ItemQuality.Good:
-                        return 2;
-                    case ItemQuality.Outstanding:
-                        return 3;
-                    case ItemQuality.Excelent:
-                        return 4;
-                    case ItemQuality.Masterpeice:
-                        return 5;
-                    default:
-                        return 0;
-                }
-            }
-
-            public DateTime sell_price_min_date { get; set; }
-            public DateTime sell_price_max_date { get; set; }
-            public DateTime buy_price_min_date { get; set; }
-            public DateTime buy_price_max_date { get; set; }
-
-            [DataMember(Name = "sell_price_min_date")]
-            private string sell_price_min_date_s
-            {
-                get => sell_price_min_date.ToString("yyyy-MM-ddTHH:mm:ss");
-                set => sell_price_min_date = Convert.ToDateTime(value);
-            }
-
-            [DataMember(Name = "sell_price_max_date")]
-            private string sell_price_max_date_s
-            {
-                get => sell_price_max_date.ToString("yyyy-MM-ddTHH:mm:ss");
-                set => sell_price_max_date = Convert.ToDateTime(value);
-            }
-
-            [DataMember(Name = "buy_price_min_date")]
-            private string buy_price_min_date_s
-            {
-                get => buy_price_min_date.ToString("yyyy-MM-ddTHH:mm:ss");
-                set => buy_price_min_date = Convert.ToDateTime(value);
-            }
-
-            [DataMember(Name = "buy_price_max_date")]
-            private string buy_price_max_date_s
-            {
-                get => buy_price_max_date.ToString("yyyy-MM-ddTHH:mm:ss");
-                set => buy_price_max_date = Convert.ToDateTime(value);
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            string stringBuffer;
-
-            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("AlbionPriceComparer.ReferenceData.xml"))
-            {
-                using (StreamReader sr = new StreamReader(stream))
-                {
-                    stringBuffer = sr.ReadToEnd();
-                }
-            }
-
-            //DataSchemaLoader.Load();
-            DataSet ds = DataSchemaLoader.Read();
-            //DataSet items = DataSchemaLoader.CompileData();
-
-            WebRequest request;
-            Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
-
-            //MarketListing[] listings;
-            List<MarketListing> listings = new List<MarketListing>();
-            request = HttpWebRequest.Create(@"https://www.albion-online-data.com/api/v2/stats/prices/T4_RUNE?locations=Caerleon,Bridgewatch,Fort%20Sterling&qualities=2");
-            using (WebResponse response = request.GetResponse())
-            {
-                var ser = new DataContractJsonSerializer(typeof(MarketListing[]));
-                using (Stream sr = response.GetResponseStream())
-                {
-                    listings.AddRange((MarketListing[])ser.ReadObject(sr));
-                }
-            }
-
-
-            string marker = @"<td>Item Power</td><td>";
-            int cutStart = stringBuffer.IndexOf(marker) + marker.Length;
-            int cutEnd = stringBuffer.IndexOf(@"</td", cutStart);
-            stringBuffer = stringBuffer.Substring(cutStart, cutEnd - cutStart);
-            int baseItemPower = int.Parse(stringBuffer);
-
-
-            //MarketListing[] listings;
-            listings = new List<MarketListing>();
-            request = HttpWebRequest.Create(@"https://www.albion-online-data.com/api/v2/stats/prices/T4_MAIN_RAPIER_MORGANA?locations=Caerleon,Bridgewatch,Fort%20Sterling&qualities=2");
-            using (WebResponse response = request.GetResponse())
-            {
-                var ser = new DataContractJsonSerializer(typeof(MarketListing[]));
-                using (Stream sr = response.GetResponseStream())
-                {
-                    listings.AddRange((MarketListing[])ser.ReadObject(sr));
-                }
-            }
-        }
-
         public enum EnchantLevel
         {
             Unknown = -1, None = 0, Rune, Soul, Relic
         }
 
-        private EnchantPrices enchPrices = new EnchantPrices();
+        private readonly EnchantPrices enchPrices = new EnchantPrices();
 
         private class EnchantPrices
         {
-            private double[,] enchPrices = new double[5, 3];
-            private DateTime[,] enchPriceDates = new DateTime[5, 3];
+            private readonly double[,] enchPrices = new double[5, 3];
+            private readonly DateTime[,] enchPriceDates = new DateTime[5, 3];
 
             public double GetPrice(int teir, EnchantLevel lvl, out DateTime dt)
             {
@@ -349,8 +141,7 @@ namespace AlbionPriceComparer
         Thread worker;
         private void BtnCollateItemData_Click(object sender, RoutedEventArgs e)
         {
-            List<ItemData> items;
-            worker = new Thread(() => DataSchemaLoader.CompileData(txtOut, out items));
+            worker = new Thread(() => DataSchemaLoader.CompileData(txtOut));
             worker.Start();
         }
 
@@ -361,17 +152,25 @@ namespace AlbionPriceComparer
             worker.Resume();
         }
 
+        private GameItemDataSet cmbItemSelDS;
         private void BtnUpdateItemSelection_Click(object sender, RoutedEventArgs e)
         {
-            DataSet ds = new DataSet();
-            using (var stream = Application.GetResourceStream(new Uri("/ItemDataSchema.xml", UriKind.Relative)).Stream)
-                ds.ReadXmlSchema(stream);
-            using (var stream = new FileStream(System.AppDomain.CurrentDomain.BaseDirectory + "\\ItemData.xml", FileMode.Open))
-                ds.ReadXml(stream);
-            var dtItems = ds.Tables["Items"];
-            cmbItemSelection.DisplayMemberPath = "name";
-            cmbItemSelection.SelectedValuePath = "id";
+            if (cmbItemSelDS != null)
+                cmbItemSelDS.Dispose();
+            cmbItemSelDS = new GameItemDataSet();
+            //using (var stream = Application.GetResourceStream(new Uri("/GameItemSchema.xml", UriKind.Relative)).Stream)
+            //    ds.ReadXmlSchema(stream);
+            using (var stream = new FileStream(System.AppDomain.CurrentDomain.BaseDirectory + "\\GameItems.xml", FileMode.Open))
+                cmbItemSelDS.ReadXml(stream);
+            var dtItems = cmbItemSelDS.GameItems;
+            cmbItemSelection.DisplayMemberPath = "Name";
+            cmbItemSelection.SelectedValuePath = "Id";
             cmbItemSelection.ItemsSource = dtItems.DefaultView;
+        }
+        ~MainWindow()
+        {
+            if (cmbItemSelDS != null)
+                cmbItemSelDS.Dispose();
         }
 
         private void CmbItemSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)

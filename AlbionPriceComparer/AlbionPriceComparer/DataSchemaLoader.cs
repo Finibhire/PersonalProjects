@@ -12,230 +12,46 @@ using Newtonsoft.Json;
 using System.Windows.Controls;
 using System.Windows.Resources;
 using System.Windows;
+using AlbionPriceComparer.AOEndorsed;
 
 namespace AlbionPriceComparer
 {
     class DataSchemaLoader
     {
-        public static void Load()
+
+        public static void CompileData(TextBlock txt)
         {
-            DataSet ds = new DataSet("ReferenceData");
-            DataTable dt = new DataTable("BaseItemPower");
-            dt.Columns.Add("artefact_type", typeof(ArtefactType));
-            dt.Columns.Add("teir", typeof(int));
-            dt.Columns.Add("item_power", typeof(int));
+            BinItemJSON[] rawData;
 
-            DataRow dr = dt.NewRow();
-            dr["artefact_type"] = ArtefactType.Normal;
-            dr["teir"] = 4;
-            dr["item_power"] = 700;
-            dt.Rows.Add(dr);
-
-            dr = dt.NewRow();
-            dr["artefact_type"] = ArtefactType.Normal;
-            dr["teir"] = 5;
-            dr["item_power"] = 800;
-            dt.Rows.Add(dr);
-
-            ds.Tables.Add(dt);
-
-            dt = new DataTable("EnchantProgression");
-            dt.Columns.Add("artefact_type", typeof(ArtefactType));
-            dt.Columns.Add("teir", typeof(int));
-            dt.Columns.Add("enchant_rune", typeof(int));
-            dt.Columns.Add("enchant_soul", typeof(int));
-            dt.Columns.Add("enchant_relic", typeof(int));
-
-            dr = dt.NewRow();
-            dr["artefact_type"] = ArtefactType.Normal;
-            dr["teir"] = 4;
-            dr["enchant_rune"] = 100;
-            dr["enchant_soul"] = 100;
-            dr["enchant_relic"] = 80;
-            dt.Rows.Add(dr);
-
-            dr = dt.NewRow();
-            dr["artefact_type"] = ArtefactType.Normal;
-            dr["teir"] = 5;
-            dr["enchant_rune"] = 100;
-            dr["enchant_soul"] = 80;
-            dr["enchant_relic"] = 80;
-            dt.Rows.Add(dr);
-
-            ds.Tables.Add(dt);
-
-            ds.WriteXml("xmldoc.xml");
-            ds.WriteXmlSchema("xmlschema.xml");
-        }
-
-        public static DataSet Read()
-        {
-            DataSet ds = new DataSet();
-            ds.ReadXmlSchema("xmlschema.xml");
-            ds.ReadXml("xmldoc.xml");
-            return ds;
-        }
-
-
-        [DataContract]
-        public class Localization
-        {
-            [DataMember(Name = "EN-US")]
-            public string ENUS { get; set; }
-            [DataMember(Name = "DE-DE")]
-            public string DEDE { get; set; }
-            [DataMember(Name = "FR-FR")]
-            public string FRFR { get; set; }
-            [DataMember(Name = "RU-RU")]
-            public string RURU { get; set; }
-            [DataMember(Name = "PL-PL")]
-            public string PLPL { get; set; }
-            [DataMember(Name = "ES-ES")]
-            public string ESES { get; set; }
-            [DataMember(Name = "PT-BR")]
-            public string PTBR { get; set; }
-            [DataMember(Name = "ZH-CN")]
-            public string ZHCN { get; set; }
-            [DataMember(Name = "KO-KR")]
-            public string KOKR { get; set; }
-        }
-
-        [DataContract]
-        public class ItemJSONLookupRow
-        {
-            [DataMember]
-            public string LocalizationNameVariable { get; set; }
-            [DataMember]
-            public Localization LocalizedNames { get; set; }
-            [DataMember]
-            public Localization LocalizedDescriptions { get; set; }
-            [DataMember]
-            public string Index { get; set; }
-            [DataMember]
-            public string UniqueName { get; set; }
-        }
-
-        public enum ArtefactType
-        {
-            Unknown = -1, Normal, Rune, Soul, Relic
-        }
-
-        [DataContract]
-        public class ItemEnchantment
-        {
-            [DataMember(EmitDefaultValue = true)]
-            public int enchantmentLevel { get; set; }
-            [DataMember(EmitDefaultValue = true)]
-            public int itemPower { get; set; }
-        }
-
-        [DataContract]
-        public class ItemEnchantmentBase
-        {
-            [DataMember]
-            public ItemEnchantment[] enchantments { get; set; }
-        }
-
-        public enum SlotType
-        {
-            unknown = 0, armor = 1, bag, cape, head, mainhand, offhand, shoes
-        }
-
-        // TODO: add twohanded property
-        [DataContract]
-        public class ItemData
-        {
-            [DataMember]
-            public string itemType { get; set; }
-            [DataMember]
-            public string uniqueName { get; set; }
-            [DataMember]
-            public int itemPower { get; set; }
-            [DataMember]
-            public bool twoHanded { get; set; }
-
-            [DataMember]
-            public Localization localizedNames { get; set; }
-
-            [DataMember]
-            public ItemEnchantmentBase enchantments { get; set; }
-
-
-            public SlotType slotType { get; set; }
-
-            [DataMember(Name = "slotType")]
-            public string slotType_s
-            {
-                get
-                {
-                    return Enum.GetName(typeof(SlotType), slotType);
-                }
-                set
-                {
-                    foreach (SlotType slot in Enum.GetValues(typeof(SlotType)))
-                    {
-                        if (value.Equals(Enum.GetName(typeof(SlotType), slot), StringComparison.OrdinalIgnoreCase))
-                        {
-                            slotType = slot;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            public int teir { get; set; }
-
-            [DataMember(Name = "tier")]
-            private string tier_s
-            {
-                get
-                {
-                    return teir.ToString();
-                }
-                set
-                {
-                    teir = Convert.ToInt32(value);
-                }
-            }
-
-            public ItemData()
-            {
-                teir = 0;
-            }
-        }
-
-        public delegate void CompileDataDelegate(Label lbl, out List<ItemData> items);
-
-        public static void CompileData(TextBlock txt, out List<ItemData> items)
-        {
-            ItemJSONLookupRow[] rawData;
-
-            var ser = new DataContractJsonSerializer(typeof(ItemJSONLookupRow[]));
+            var ser = new DataContractJsonSerializer(typeof(BinItemJSON[]));
             using (var stream = Application.GetContentStream(new Uri("/binItems.json", UriKind.Relative)).Stream)
             {
-                rawData = (ItemJSONLookupRow[])ser.ReadObject(stream);
+                rawData = (BinItemJSON[])ser.ReadObject(stream);
             }
             var filteredList = from item in rawData
-                               where item.UniqueName.StartsWith("T4")
+                               where item.UniqueName.StartsWith("T4") 
+                               where item.UniqueName[item.UniqueName.Length - 2] != '@'
                                select item;
-            
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-            items = new List<ItemData>(filteredList.Count());
-            var seri = new DataContractSerializer(typeof(ItemData));
+
+            JsonSerializer serializer = new JsonSerializer
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            var items = new List<AOEItemData>(filteredList.Count());
+            var seri = new DataContractSerializer(typeof(AOEItemData));
             int k = 0;
-            foreach (ItemJSONLookupRow item in filteredList)
+            foreach (BinItemJSON item in filteredList)
             {
                 txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Downloading Item Data #" + k + ": " + item.UniqueName));
-                ItemData buffer;
-                var request = HttpWebRequest.Create(@"https://gameinfo.albiononline.com/api/gameinfo/items/" + item.UniqueName + @"/data");
+                AOEItemData buffer;
+                var request = HttpWebRequest.Create("https://gameinfo.albiononline.com/api/gameinfo/items/" + item.UniqueName + "/data");
                 try
                 {
                     using (WebResponse response = request.GetResponse())
                     {
                         using (var stream = new StreamReader(response.GetResponseStream()))
                         {
-                            buffer = (ItemData)serializer.Deserialize(stream, typeof(ItemData));
+                            buffer = (AOEItemData)serializer.Deserialize(stream, typeof(AOEItemData));
                         }
                     }
                     items.Add(buffer);
@@ -248,77 +64,86 @@ namespace AlbionPriceComparer
                 }
                 k++;
             }
-            txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Finished downloading" + k + " items #"));
+            txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Finished downloading " + k + "game items"));
 
             items = (from i in items
                      where i.itemType == "equipment" || i.itemType == "weapon"
                      select i).GroupBy(i => i.uniqueName + i.teir).Select(i => i.First()).ToList();
 
 
-            var ds = new DataSet();
-            using (var stream = Application.GetResourceStream(new Uri("/ReferenceDataSchema.xml", UriKind.Relative)).Stream)
-                ds.ReadXmlSchema(stream);
+            ReferenceDataSet ds = new ReferenceDataSet();
+            //using (var stream = Application.GetResourceStream(new Uri("/ReferenceDataSchema.xml", UriKind.Relative)).Stream)
+            //    ds.ReadXmlSchema(stream);
             using (var stream = Application.GetResourceStream(new Uri("/ReferenceData.xml", UriKind.Relative)).Stream)
                 ds.ReadXml(stream);
-
-            var dtBase = ds.Tables["BaseItemPower"];
-            var dtEnch = ds.Tables["BaseItemPower"].Copy();
+            
+            var dtBase = ds.BaseItemPowerTable;
+            var dtEnch = (ReferenceDataSet.BaseItemPowerTableDataTable)dtBase.Clone();
             dtEnch.Clear();
 
-            var une = dtBase.AsEnumerable().Where(r => (int)r["teir"] == 4).Join(
-                ds.Tables["EnchantProgression"].AsEnumerable().Where(ep => (int)ep["teir"] == 4),
-                r => (ArtefactType)r["artefact_type"],
-                ep => (ArtefactType)ep["artefact_type"],
-                (r, ep) => new { artefact_type = (ArtefactType)r["artefact_type"], item_power = (int)r["item_power"] + (int)ep["enchant_rune"] });
+            var une = dtBase
+                .AsEnumerable()
+                .Where(r => r.Teir == 4)
+                .Join(
+                    ds.EnchantProgressionTable.AsEnumerable().Where(ep => ep.Teir == 4),
+                    r => (ArtefactType)r.ArtefactType,
+                    ep => (ArtefactType)ep.ArtefactType,
+                    (r, ep) => new { ArtefactType = r.ArtefactType, ItemPower = r.ItemPower + ep.EnchantRune });
 
             foreach (var a in une)
             {
-                var r = dtEnch.NewRow();
-                r["teir"] = 4;
-                r["artefact_type"] = a.artefact_type;
-                r["item_power"] = a.item_power;
-                dtEnch.Rows.Add(r);
+                var r = dtEnch.NewBaseItemPower();
+                r.Teir = 4;
+                r.ArtefactType = a.ArtefactType;
+                r.ItemPower = a.ItemPower;
+                dtEnch.AddBaseItemPower(r);
             }
 
-            DataSet dsOut = new DataSet();
-            using (var stream = Application.GetResourceStream(new Uri("/ItemDataSchema.xml", UriKind.Relative)).Stream)
-                dsOut.ReadXmlSchema(stream);
-            var dtItems = dsOut.Tables["Items"];
+            GameItemDataSet dsOut = new GameItemDataSet();
+            //using (var stream = Application.GetResourceStream(new Uri("/ItemDataSchema.xml", UriKind.Relative)).Stream)
+            //    dsOut.ReadXmlSchema(stream);
+            var dtItems = dsOut.GameItems;
 
 
-            ArtefactType ArtefactTypeLookup(DataTable dt, int teir, int itemPower)
+            int ArtefactTypeLookup(ReferenceDataSet.BaseItemPowerTableDataTable dt, int teir, int itemPower)
             {
-                return (ArtefactType)dt.AsEnumerable()
-                    .Where(row => (int)row["teir"] == teir && (int)row["item_power"] == itemPower)
-                    .First()["artefact_type"];
+                return dt
+                    .AsEnumerable()
+                    .Where(row => row.Teir == teir && row.ItemPower == itemPower)
+                    .First()
+                    .ArtefactType;
             }
 
 
-            foreach (ItemData i in items)
+            foreach (AOEItemData i in items)
             {
-                var row = dtItems.NewRow();
-                row["id"] = i.uniqueName.Replace("T4_", "");
-                row["name"] = i.localizedNames.ENUS.Replace("Adept's ", "");
-                row["two_handed"] = i.twoHanded;
-                row["slot_type"] = i.slotType;
+                var row = dtItems.NewGameItem();
+                row.Id = i.uniqueName.Replace("T4_", "");
+                row.Name = i.localizedNames.ENUS.Replace("Adept's ", "");
+                row.TwoHanded = i.twoHanded;
+                row.SlotType = (int)i.slotType;
                 if (i.itemPower >= 500 || (i.itemPower < 500 && i.enchantments != null))
                 {
                     if (i.itemPower < 500)
                     {
                         int ip = i.itemPower;
                         ip = i.enchantments.enchantments.Where(x => x.enchantmentLevel == 1).First().itemPower;
-                        row["artefact_type"] = ArtefactTypeLookup(dtEnch, 4, ip);
+                        row.ArtefactType = ArtefactTypeLookup(dtEnch, 4, ip);
                     }
                     else
                     {
-                        row["artefact_type"] = ArtefactTypeLookup(dtBase, 4, i.itemPower);
+                        row.ArtefactType = ArtefactTypeLookup(dtBase, 4, i.itemPower);
                     }
                     dtItems.Rows.Add(row);
                 }
                 //else
                 //    throw new Exception("Error looking up artefact_type for: " + i.uniqueName);
             }
-            dsOut.WriteXml("ItemData.xml");
+
+            dsOut.WriteXml("GameItems.xml");
+
+            ds.Dispose();
+            dsOut.Dispose();
         }
 
         public static int EnchantRuneCount(SlotType slot, bool twoHanded)

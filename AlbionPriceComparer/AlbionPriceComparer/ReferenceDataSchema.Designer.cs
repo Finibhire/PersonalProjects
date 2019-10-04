@@ -20,19 +20,19 @@ namespace AlbionPriceComparer {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("ReferenceData")]
+    [global::System.Xml.Serialization.XmlRootAttribute("ReferenceDataSet")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class ReferenceData : global::System.Data.DataSet {
+    public partial class ReferenceDataSet : global::System.Data.DataSet {
         
-        private BaseItemPowerDataTable tableBaseItemPower;
+        private BaseItemPowerTableDataTable tableBaseItemPowerTable;
         
-        private EnchantProgressionDataTable tableEnchantProgression;
+        private EnchantProgressionTableDataTable tableEnchantProgressionTable;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public ReferenceData() {
+        public ReferenceDataSet() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -43,7 +43,7 @@ namespace AlbionPriceComparer {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        protected ReferenceData(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected ReferenceDataSet(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -56,11 +56,11 @@ namespace AlbionPriceComparer {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["BaseItemPower"] != null)) {
-                    base.Tables.Add(new BaseItemPowerDataTable(ds.Tables["BaseItemPower"]));
+                if ((ds.Tables["BaseItemPowerTable"] != null)) {
+                    base.Tables.Add(new BaseItemPowerTableDataTable(ds.Tables["BaseItemPowerTable"]));
                 }
-                if ((ds.Tables["EnchantProgression"] != null)) {
-                    base.Tables.Add(new EnchantProgressionDataTable(ds.Tables["EnchantProgression"]));
+                if ((ds.Tables["EnchantProgressionTable"] != null)) {
+                    base.Tables.Add(new EnchantProgressionTableDataTable(ds.Tables["EnchantProgressionTable"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -84,9 +84,9 @@ namespace AlbionPriceComparer {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public BaseItemPowerDataTable BaseItemPower {
+        public BaseItemPowerTableDataTable BaseItemPowerTable {
             get {
-                return this.tableBaseItemPower;
+                return this.tableBaseItemPowerTable;
             }
         }
         
@@ -94,9 +94,9 @@ namespace AlbionPriceComparer {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public EnchantProgressionDataTable EnchantProgression {
+        public EnchantProgressionTableDataTable EnchantProgressionTable {
             get {
-                return this.tableEnchantProgression;
+                return this.tableEnchantProgressionTable;
             }
         }
         
@@ -142,7 +142,7 @@ namespace AlbionPriceComparer {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            ReferenceData cln = ((ReferenceData)(base.Clone()));
+            ReferenceDataSet cln = ((ReferenceDataSet)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -167,11 +167,11 @@ namespace AlbionPriceComparer {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["BaseItemPower"] != null)) {
-                    base.Tables.Add(new BaseItemPowerDataTable(ds.Tables["BaseItemPower"]));
+                if ((ds.Tables["BaseItemPowerTable"] != null)) {
+                    base.Tables.Add(new BaseItemPowerTableDataTable(ds.Tables["BaseItemPowerTable"]));
                 }
-                if ((ds.Tables["EnchantProgression"] != null)) {
-                    base.Tables.Add(new EnchantProgressionDataTable(ds.Tables["EnchantProgression"]));
+                if ((ds.Tables["EnchantProgressionTable"] != null)) {
+                    base.Tables.Add(new EnchantProgressionTableDataTable(ds.Tables["EnchantProgressionTable"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -206,16 +206,16 @@ namespace AlbionPriceComparer {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tableBaseItemPower = ((BaseItemPowerDataTable)(base.Tables["BaseItemPower"]));
+            this.tableBaseItemPowerTable = ((BaseItemPowerTableDataTable)(base.Tables["BaseItemPowerTable"]));
             if ((initTable == true)) {
-                if ((this.tableBaseItemPower != null)) {
-                    this.tableBaseItemPower.InitVars();
+                if ((this.tableBaseItemPowerTable != null)) {
+                    this.tableBaseItemPowerTable.InitVars();
                 }
             }
-            this.tableEnchantProgression = ((EnchantProgressionDataTable)(base.Tables["EnchantProgression"]));
+            this.tableEnchantProgressionTable = ((EnchantProgressionTableDataTable)(base.Tables["EnchantProgressionTable"]));
             if ((initTable == true)) {
-                if ((this.tableEnchantProgression != null)) {
-                    this.tableEnchantProgression.InitVars();
+                if ((this.tableEnchantProgressionTable != null)) {
+                    this.tableEnchantProgressionTable.InitVars();
                 }
             }
         }
@@ -223,25 +223,25 @@ namespace AlbionPriceComparer {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitClass() {
-            this.DataSetName = "ReferenceData";
+            this.DataSetName = "ReferenceDataSet";
             this.Prefix = "";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableBaseItemPower = new BaseItemPowerDataTable();
-            base.Tables.Add(this.tableBaseItemPower);
-            this.tableEnchantProgression = new EnchantProgressionDataTable();
-            base.Tables.Add(this.tableEnchantProgression);
+            this.tableBaseItemPowerTable = new BaseItemPowerTableDataTable();
+            base.Tables.Add(this.tableBaseItemPowerTable);
+            this.tableEnchantProgressionTable = new EnchantProgressionTableDataTable();
+            base.Tables.Add(this.tableEnchantProgressionTable);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private bool ShouldSerializeBaseItemPower() {
+        private bool ShouldSerializeBaseItemPowerTable() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private bool ShouldSerializeEnchantProgression() {
+        private bool ShouldSerializeEnchantProgressionTable() {
             return false;
         }
         
@@ -256,7 +256,7 @@ namespace AlbionPriceComparer {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            ReferenceData ds = new ReferenceData();
+            ReferenceDataSet ds = new ReferenceDataSet();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -301,28 +301,28 @@ namespace AlbionPriceComparer {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public delegate void BaseItemPowerRowChangeEventHandler(object sender, BaseItemPowerRowChangeEvent e);
+        public delegate void BaseItemPowerChangeEventHandler(object sender, BaseItemPowerChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public delegate void EnchantProgressionRowChangeEventHandler(object sender, EnchantProgressionRowChangeEvent e);
+        public delegate void EnchantProgressionChangeEventHandler(object sender, EnchantProgressionChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class BaseItemPowerDataTable : global::System.Data.TypedTableBase<BaseItemPowerRow> {
+        public partial class BaseItemPowerTableDataTable : global::System.Data.TypedTableBase<BaseItemPower> {
             
-            private global::System.Data.DataColumn columnartefact_type;
+            private global::System.Data.DataColumn columnArtefactType;
             
-            private global::System.Data.DataColumn columnteir;
+            private global::System.Data.DataColumn columnTeir;
             
-            private global::System.Data.DataColumn columnitem_power;
+            private global::System.Data.DataColumn columnItemPower;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public BaseItemPowerDataTable() {
-                this.TableName = "BaseItemPower";
+            public BaseItemPowerTableDataTable() {
+                this.TableName = "BaseItemPowerTable";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -330,7 +330,7 @@ namespace AlbionPriceComparer {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal BaseItemPowerDataTable(global::System.Data.DataTable table) {
+            internal BaseItemPowerTableDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -347,32 +347,32 @@ namespace AlbionPriceComparer {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected BaseItemPowerDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected BaseItemPowerTableDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn artefact_typeColumn {
+            public global::System.Data.DataColumn ArtefactTypeColumn {
                 get {
-                    return this.columnartefact_type;
+                    return this.columnArtefactType;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn teirColumn {
+            public global::System.Data.DataColumn TeirColumn {
                 get {
-                    return this.columnteir;
+                    return this.columnTeir;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn item_powerColumn {
+            public global::System.Data.DataColumn ItemPowerColumn {
                 get {
-                    return this.columnitem_power;
+                    return this.columnItemPower;
                 }
             }
             
@@ -387,47 +387,47 @@ namespace AlbionPriceComparer {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public BaseItemPowerRow this[int index] {
+            public BaseItemPower this[int index] {
                 get {
-                    return ((BaseItemPowerRow)(this.Rows[index]));
+                    return ((BaseItemPower)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event BaseItemPowerRowChangeEventHandler BaseItemPowerRowChanging;
+            public event BaseItemPowerChangeEventHandler BaseItemPowerChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event BaseItemPowerRowChangeEventHandler BaseItemPowerRowChanged;
+            public event BaseItemPowerChangeEventHandler BaseItemPowerChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event BaseItemPowerRowChangeEventHandler BaseItemPowerRowDeleting;
+            public event BaseItemPowerChangeEventHandler BaseItemPowerDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event BaseItemPowerRowChangeEventHandler BaseItemPowerRowDeleted;
+            public event BaseItemPowerChangeEventHandler BaseItemPowerDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void AddBaseItemPowerRow(BaseItemPowerRow row) {
+            public void AddBaseItemPower(BaseItemPower row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public BaseItemPowerRow AddBaseItemPowerRow(int artefact_type, int teir, int item_power) {
-                BaseItemPowerRow rowBaseItemPowerRow = ((BaseItemPowerRow)(this.NewRow()));
+            public BaseItemPower AddBaseItemPower(int ArtefactType, int Teir, int ItemPower) {
+                BaseItemPower rowBaseItemPower = ((BaseItemPower)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        artefact_type,
-                        teir,
-                        item_power};
-                rowBaseItemPowerRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowBaseItemPowerRow);
-                return rowBaseItemPowerRow;
+                        ArtefactType,
+                        Teir,
+                        ItemPower};
+                rowBaseItemPower.ItemArray = columnValuesArray;
+                this.Rows.Add(rowBaseItemPower);
+                return rowBaseItemPower;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                BaseItemPowerDataTable cln = ((BaseItemPowerDataTable)(base.Clone()));
+                BaseItemPowerTableDataTable cln = ((BaseItemPowerTableDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -435,55 +435,57 @@ namespace AlbionPriceComparer {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new BaseItemPowerDataTable();
+                return new BaseItemPowerTableDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             internal void InitVars() {
-                this.columnartefact_type = base.Columns["artefact_type"];
-                this.columnteir = base.Columns["teir"];
-                this.columnitem_power = base.Columns["item_power"];
+                this.columnArtefactType = base.Columns["ArtefactType"];
+                this.columnTeir = base.Columns["Teir"];
+                this.columnItemPower = base.Columns["ItemPower"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             private void InitClass() {
-                this.columnartefact_type = new global::System.Data.DataColumn("artefact_type", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnartefact_type);
-                this.columnteir = new global::System.Data.DataColumn("teir", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnteir);
-                this.columnitem_power = new global::System.Data.DataColumn("item_power", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnitem_power);
-                this.columnartefact_type.AllowDBNull = false;
-                this.columnteir.AllowDBNull = false;
-                this.columnitem_power.AllowDBNull = false;
+                this.columnArtefactType = new global::System.Data.DataColumn("ArtefactType", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnArtefactType);
+                this.columnTeir = new global::System.Data.DataColumn("Teir", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTeir);
+                this.columnItemPower = new global::System.Data.DataColumn("ItemPower", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnItemPower);
+                this.columnArtefactType.AllowDBNull = false;
+                this.columnTeir.AllowDBNull = false;
+                this.columnItemPower.AllowDBNull = false;
+                this.ExtendedProperties.Add("typedName", "BaseItemPower");
+                this.ExtendedProperties.Add("typedPlural", "BaseItemPowerTable");
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public BaseItemPowerRow NewBaseItemPowerRow() {
-                return ((BaseItemPowerRow)(this.NewRow()));
+            public BaseItemPower NewBaseItemPower() {
+                return ((BaseItemPower)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new BaseItemPowerRow(builder);
+                return new BaseItemPower(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(BaseItemPowerRow);
+                return typeof(BaseItemPower);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.BaseItemPowerRowChanged != null)) {
-                    this.BaseItemPowerRowChanged(this, new BaseItemPowerRowChangeEvent(((BaseItemPowerRow)(e.Row)), e.Action));
+                if ((this.BaseItemPowerChanged != null)) {
+                    this.BaseItemPowerChanged(this, new BaseItemPowerChangeEvent(((BaseItemPower)(e.Row)), e.Action));
                 }
             }
             
@@ -491,8 +493,8 @@ namespace AlbionPriceComparer {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.BaseItemPowerRowChanging != null)) {
-                    this.BaseItemPowerRowChanging(this, new BaseItemPowerRowChangeEvent(((BaseItemPowerRow)(e.Row)), e.Action));
+                if ((this.BaseItemPowerChanging != null)) {
+                    this.BaseItemPowerChanging(this, new BaseItemPowerChangeEvent(((BaseItemPower)(e.Row)), e.Action));
                 }
             }
             
@@ -500,8 +502,8 @@ namespace AlbionPriceComparer {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.BaseItemPowerRowDeleted != null)) {
-                    this.BaseItemPowerRowDeleted(this, new BaseItemPowerRowChangeEvent(((BaseItemPowerRow)(e.Row)), e.Action));
+                if ((this.BaseItemPowerDeleted != null)) {
+                    this.BaseItemPowerDeleted(this, new BaseItemPowerChangeEvent(((BaseItemPower)(e.Row)), e.Action));
                 }
             }
             
@@ -509,14 +511,14 @@ namespace AlbionPriceComparer {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.BaseItemPowerRowDeleting != null)) {
-                    this.BaseItemPowerRowDeleting(this, new BaseItemPowerRowChangeEvent(((BaseItemPowerRow)(e.Row)), e.Action));
+                if ((this.BaseItemPowerDeleting != null)) {
+                    this.BaseItemPowerDeleting(this, new BaseItemPowerChangeEvent(((BaseItemPower)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void RemoveBaseItemPowerRow(BaseItemPowerRow row) {
+            public void RemoveBaseItemPower(BaseItemPower row) {
                 this.Rows.Remove(row);
             }
             
@@ -525,7 +527,7 @@ namespace AlbionPriceComparer {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                ReferenceData ds = new ReferenceData();
+                ReferenceDataSet ds = new ReferenceDataSet();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -543,7 +545,7 @@ namespace AlbionPriceComparer {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "BaseItemPowerDataTable";
+                attribute2.FixedValue = "BaseItemPowerTableDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -589,22 +591,22 @@ namespace AlbionPriceComparer {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class EnchantProgressionDataTable : global::System.Data.TypedTableBase<EnchantProgressionRow> {
+        public partial class EnchantProgressionTableDataTable : global::System.Data.TypedTableBase<EnchantProgression> {
             
-            private global::System.Data.DataColumn columnartefact_type;
+            private global::System.Data.DataColumn columnArtefactType;
             
-            private global::System.Data.DataColumn columnteir;
+            private global::System.Data.DataColumn columnTeir;
             
-            private global::System.Data.DataColumn columnenchant_rune;
+            private global::System.Data.DataColumn columnEnchantRune;
             
-            private global::System.Data.DataColumn columnenchant_soul;
+            private global::System.Data.DataColumn columnEnchantSoul;
             
-            private global::System.Data.DataColumn columnenchant_relic;
+            private global::System.Data.DataColumn columnEnchantRelic;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public EnchantProgressionDataTable() {
-                this.TableName = "EnchantProgression";
+            public EnchantProgressionTableDataTable() {
+                this.TableName = "EnchantProgressionTable";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -612,7 +614,7 @@ namespace AlbionPriceComparer {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal EnchantProgressionDataTable(global::System.Data.DataTable table) {
+            internal EnchantProgressionTableDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -629,48 +631,48 @@ namespace AlbionPriceComparer {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected EnchantProgressionDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected EnchantProgressionTableDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn artefact_typeColumn {
+            public global::System.Data.DataColumn ArtefactTypeColumn {
                 get {
-                    return this.columnartefact_type;
+                    return this.columnArtefactType;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn teirColumn {
+            public global::System.Data.DataColumn TeirColumn {
                 get {
-                    return this.columnteir;
+                    return this.columnTeir;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn enchant_runeColumn {
+            public global::System.Data.DataColumn EnchantRuneColumn {
                 get {
-                    return this.columnenchant_rune;
+                    return this.columnEnchantRune;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn enchant_soulColumn {
+            public global::System.Data.DataColumn EnchantSoulColumn {
                 get {
-                    return this.columnenchant_soul;
+                    return this.columnEnchantSoul;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn enchant_relicColumn {
+            public global::System.Data.DataColumn EnchantRelicColumn {
                 get {
-                    return this.columnenchant_relic;
+                    return this.columnEnchantRelic;
                 }
             }
             
@@ -685,49 +687,49 @@ namespace AlbionPriceComparer {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public EnchantProgressionRow this[int index] {
+            public EnchantProgression this[int index] {
                 get {
-                    return ((EnchantProgressionRow)(this.Rows[index]));
+                    return ((EnchantProgression)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event EnchantProgressionRowChangeEventHandler EnchantProgressionRowChanging;
+            public event EnchantProgressionChangeEventHandler EnchantProgressionChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event EnchantProgressionRowChangeEventHandler EnchantProgressionRowChanged;
+            public event EnchantProgressionChangeEventHandler EnchantProgressionChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event EnchantProgressionRowChangeEventHandler EnchantProgressionRowDeleting;
+            public event EnchantProgressionChangeEventHandler EnchantProgressionDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event EnchantProgressionRowChangeEventHandler EnchantProgressionRowDeleted;
+            public event EnchantProgressionChangeEventHandler EnchantProgressionDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void AddEnchantProgressionRow(EnchantProgressionRow row) {
+            public void AddEnchantProgression(EnchantProgression row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public EnchantProgressionRow AddEnchantProgressionRow(int artefact_type, int teir, int enchant_rune, int enchant_soul, int enchant_relic) {
-                EnchantProgressionRow rowEnchantProgressionRow = ((EnchantProgressionRow)(this.NewRow()));
+            public EnchantProgression AddEnchantProgression(int ArtefactType, int Teir, int EnchantRune, int EnchantSoul, int EnchantRelic) {
+                EnchantProgression rowEnchantProgression = ((EnchantProgression)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        artefact_type,
-                        teir,
-                        enchant_rune,
-                        enchant_soul,
-                        enchant_relic};
-                rowEnchantProgressionRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowEnchantProgressionRow);
-                return rowEnchantProgressionRow;
+                        ArtefactType,
+                        Teir,
+                        EnchantRune,
+                        EnchantSoul,
+                        EnchantRelic};
+                rowEnchantProgression.ItemArray = columnValuesArray;
+                this.Rows.Add(rowEnchantProgression);
+                return rowEnchantProgression;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                EnchantProgressionDataTable cln = ((EnchantProgressionDataTable)(base.Clone()));
+                EnchantProgressionTableDataTable cln = ((EnchantProgressionTableDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -735,63 +737,70 @@ namespace AlbionPriceComparer {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new EnchantProgressionDataTable();
+                return new EnchantProgressionTableDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             internal void InitVars() {
-                this.columnartefact_type = base.Columns["artefact_type"];
-                this.columnteir = base.Columns["teir"];
-                this.columnenchant_rune = base.Columns["enchant_rune"];
-                this.columnenchant_soul = base.Columns["enchant_soul"];
-                this.columnenchant_relic = base.Columns["enchant_relic"];
+                this.columnArtefactType = base.Columns["ArtefactType"];
+                this.columnTeir = base.Columns["Teir"];
+                this.columnEnchantRune = base.Columns["EnchantRune"];
+                this.columnEnchantSoul = base.Columns["EnchantSoul"];
+                this.columnEnchantRelic = base.Columns["EnchantRelic"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             private void InitClass() {
-                this.columnartefact_type = new global::System.Data.DataColumn("artefact_type", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnartefact_type);
-                this.columnteir = new global::System.Data.DataColumn("teir", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnteir);
-                this.columnenchant_rune = new global::System.Data.DataColumn("enchant_rune", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnenchant_rune);
-                this.columnenchant_soul = new global::System.Data.DataColumn("enchant_soul", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnenchant_soul);
-                this.columnenchant_relic = new global::System.Data.DataColumn("enchant_relic", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnenchant_relic);
-                this.columnartefact_type.AllowDBNull = false;
-                this.columnteir.AllowDBNull = false;
-                this.columnenchant_rune.AllowDBNull = false;
-                this.columnenchant_soul.AllowDBNull = false;
-                this.columnenchant_relic.AllowDBNull = false;
+                this.columnArtefactType = new global::System.Data.DataColumn("ArtefactType", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columnArtefactType.ExtendedProperties.Add("typedName", "ArtefactType");
+                base.Columns.Add(this.columnArtefactType);
+                this.columnTeir = new global::System.Data.DataColumn("Teir", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columnTeir.ExtendedProperties.Add("typedName", "Teir");
+                base.Columns.Add(this.columnTeir);
+                this.columnEnchantRune = new global::System.Data.DataColumn("EnchantRune", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columnEnchantRune.ExtendedProperties.Add("typedName", "EnchantRune");
+                base.Columns.Add(this.columnEnchantRune);
+                this.columnEnchantSoul = new global::System.Data.DataColumn("EnchantSoul", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columnEnchantSoul.ExtendedProperties.Add("typedName", "EnchantSoul");
+                base.Columns.Add(this.columnEnchantSoul);
+                this.columnEnchantRelic = new global::System.Data.DataColumn("EnchantRelic", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columnEnchantRelic.ExtendedProperties.Add("typedName", "EnchantRelic");
+                base.Columns.Add(this.columnEnchantRelic);
+                this.columnArtefactType.AllowDBNull = false;
+                this.columnTeir.AllowDBNull = false;
+                this.columnEnchantRune.AllowDBNull = false;
+                this.columnEnchantSoul.AllowDBNull = false;
+                this.columnEnchantRelic.AllowDBNull = false;
+                this.ExtendedProperties.Add("typedName", "EnchantProgression");
+                this.ExtendedProperties.Add("typedPlural", "EnchantProgressionTable");
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public EnchantProgressionRow NewEnchantProgressionRow() {
-                return ((EnchantProgressionRow)(this.NewRow()));
+            public EnchantProgression NewEnchantProgression() {
+                return ((EnchantProgression)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new EnchantProgressionRow(builder);
+                return new EnchantProgression(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(EnchantProgressionRow);
+                return typeof(EnchantProgression);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.EnchantProgressionRowChanged != null)) {
-                    this.EnchantProgressionRowChanged(this, new EnchantProgressionRowChangeEvent(((EnchantProgressionRow)(e.Row)), e.Action));
+                if ((this.EnchantProgressionChanged != null)) {
+                    this.EnchantProgressionChanged(this, new EnchantProgressionChangeEvent(((EnchantProgression)(e.Row)), e.Action));
                 }
             }
             
@@ -799,8 +808,8 @@ namespace AlbionPriceComparer {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.EnchantProgressionRowChanging != null)) {
-                    this.EnchantProgressionRowChanging(this, new EnchantProgressionRowChangeEvent(((EnchantProgressionRow)(e.Row)), e.Action));
+                if ((this.EnchantProgressionChanging != null)) {
+                    this.EnchantProgressionChanging(this, new EnchantProgressionChangeEvent(((EnchantProgression)(e.Row)), e.Action));
                 }
             }
             
@@ -808,8 +817,8 @@ namespace AlbionPriceComparer {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.EnchantProgressionRowDeleted != null)) {
-                    this.EnchantProgressionRowDeleted(this, new EnchantProgressionRowChangeEvent(((EnchantProgressionRow)(e.Row)), e.Action));
+                if ((this.EnchantProgressionDeleted != null)) {
+                    this.EnchantProgressionDeleted(this, new EnchantProgressionChangeEvent(((EnchantProgression)(e.Row)), e.Action));
                 }
             }
             
@@ -817,14 +826,14 @@ namespace AlbionPriceComparer {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.EnchantProgressionRowDeleting != null)) {
-                    this.EnchantProgressionRowDeleting(this, new EnchantProgressionRowChangeEvent(((EnchantProgressionRow)(e.Row)), e.Action));
+                if ((this.EnchantProgressionDeleting != null)) {
+                    this.EnchantProgressionDeleting(this, new EnchantProgressionChangeEvent(((EnchantProgression)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void RemoveEnchantProgressionRow(EnchantProgressionRow row) {
+            public void RemoveEnchantProgression(EnchantProgression row) {
                 this.Rows.Remove(row);
             }
             
@@ -833,7 +842,7 @@ namespace AlbionPriceComparer {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                ReferenceData ds = new ReferenceData();
+                ReferenceDataSet ds = new ReferenceDataSet();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -851,7 +860,7 @@ namespace AlbionPriceComparer {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "EnchantProgressionDataTable";
+                attribute2.FixedValue = "EnchantProgressionTableDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -895,47 +904,47 @@ namespace AlbionPriceComparer {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class BaseItemPowerRow : global::System.Data.DataRow {
+        public partial class BaseItemPower : global::System.Data.DataRow {
             
-            private BaseItemPowerDataTable tableBaseItemPower;
+            private BaseItemPowerTableDataTable tableBaseItemPowerTable;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal BaseItemPowerRow(global::System.Data.DataRowBuilder rb) : 
+            internal BaseItemPower(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableBaseItemPower = ((BaseItemPowerDataTable)(this.Table));
+                this.tableBaseItemPowerTable = ((BaseItemPowerTableDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int artefact_type {
+            public int ArtefactType {
                 get {
-                    return ((int)(this[this.tableBaseItemPower.artefact_typeColumn]));
+                    return ((int)(this[this.tableBaseItemPowerTable.ArtefactTypeColumn]));
                 }
                 set {
-                    this[this.tableBaseItemPower.artefact_typeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int teir {
-                get {
-                    return ((int)(this[this.tableBaseItemPower.teirColumn]));
-                }
-                set {
-                    this[this.tableBaseItemPower.teirColumn] = value;
+                    this[this.tableBaseItemPowerTable.ArtefactTypeColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int item_power {
+            public int Teir {
                 get {
-                    return ((int)(this[this.tableBaseItemPower.item_powerColumn]));
+                    return ((int)(this[this.tableBaseItemPowerTable.TeirColumn]));
                 }
                 set {
-                    this[this.tableBaseItemPower.item_powerColumn] = value;
+                    this[this.tableBaseItemPowerTable.TeirColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int ItemPower {
+                get {
+                    return ((int)(this[this.tableBaseItemPowerTable.ItemPowerColumn]));
+                }
+                set {
+                    this[this.tableBaseItemPowerTable.ItemPowerColumn] = value;
                 }
             }
         }
@@ -943,69 +952,69 @@ namespace AlbionPriceComparer {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class EnchantProgressionRow : global::System.Data.DataRow {
+        public partial class EnchantProgression : global::System.Data.DataRow {
             
-            private EnchantProgressionDataTable tableEnchantProgression;
+            private EnchantProgressionTableDataTable tableEnchantProgressionTable;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal EnchantProgressionRow(global::System.Data.DataRowBuilder rb) : 
+            internal EnchantProgression(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableEnchantProgression = ((EnchantProgressionDataTable)(this.Table));
+                this.tableEnchantProgressionTable = ((EnchantProgressionTableDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int artefact_type {
+            public int ArtefactType {
                 get {
-                    return ((int)(this[this.tableEnchantProgression.artefact_typeColumn]));
+                    return ((int)(this[this.tableEnchantProgressionTable.ArtefactTypeColumn]));
                 }
                 set {
-                    this[this.tableEnchantProgression.artefact_typeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int teir {
-                get {
-                    return ((int)(this[this.tableEnchantProgression.teirColumn]));
-                }
-                set {
-                    this[this.tableEnchantProgression.teirColumn] = value;
+                    this[this.tableEnchantProgressionTable.ArtefactTypeColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int enchant_rune {
+            public int Teir {
                 get {
-                    return ((int)(this[this.tableEnchantProgression.enchant_runeColumn]));
+                    return ((int)(this[this.tableEnchantProgressionTable.TeirColumn]));
                 }
                 set {
-                    this[this.tableEnchantProgression.enchant_runeColumn] = value;
+                    this[this.tableEnchantProgressionTable.TeirColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int enchant_soul {
+            public int EnchantRune {
                 get {
-                    return ((int)(this[this.tableEnchantProgression.enchant_soulColumn]));
+                    return ((int)(this[this.tableEnchantProgressionTable.EnchantRuneColumn]));
                 }
                 set {
-                    this[this.tableEnchantProgression.enchant_soulColumn] = value;
+                    this[this.tableEnchantProgressionTable.EnchantRuneColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int enchant_relic {
+            public int EnchantSoul {
                 get {
-                    return ((int)(this[this.tableEnchantProgression.enchant_relicColumn]));
+                    return ((int)(this[this.tableEnchantProgressionTable.EnchantSoulColumn]));
                 }
                 set {
-                    this[this.tableEnchantProgression.enchant_relicColumn] = value;
+                    this[this.tableEnchantProgressionTable.EnchantSoulColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int EnchantRelic {
+                get {
+                    return ((int)(this[this.tableEnchantProgressionTable.EnchantRelicColumn]));
+                }
+                set {
+                    this[this.tableEnchantProgressionTable.EnchantRelicColumn] = value;
                 }
             }
         }
@@ -1014,22 +1023,22 @@ namespace AlbionPriceComparer {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public class BaseItemPowerRowChangeEvent : global::System.EventArgs {
+        public class BaseItemPowerChangeEvent : global::System.EventArgs {
             
-            private BaseItemPowerRow eventRow;
+            private BaseItemPower eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public BaseItemPowerRowChangeEvent(BaseItemPowerRow row, global::System.Data.DataRowAction action) {
+            public BaseItemPowerChangeEvent(BaseItemPower row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public BaseItemPowerRow Row {
+            public BaseItemPower Row {
                 get {
                     return this.eventRow;
                 }
@@ -1048,22 +1057,22 @@ namespace AlbionPriceComparer {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public class EnchantProgressionRowChangeEvent : global::System.EventArgs {
+        public class EnchantProgressionChangeEvent : global::System.EventArgs {
             
-            private EnchantProgressionRow eventRow;
+            private EnchantProgression eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public EnchantProgressionRowChangeEvent(EnchantProgressionRow row, global::System.Data.DataRowAction action) {
+            public EnchantProgressionChangeEvent(EnchantProgression row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public EnchantProgressionRow Row {
+            public EnchantProgression Row {
                 get {
                     return this.eventRow;
                 }

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<xs:schema id="GameItemSchema" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:codegen="urn:schemas-microsoft-com:xml-msprop" >
+  <xs:element name="GameItemDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+        <xs:element name="GameItems" minOccurs="1" maxOccurs="unbounded" codegen:typedName="GameItem" codegen:typedPlural="GameItems">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" codegen:typedName="Id" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="Name" codegen:typedName="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="ArtefactType" codegen:typedName="ArtefactType" type="xs:int" minOccurs="1" maxOccurs="1" />
+              <xs:element name="SlotType" codegen:typedName="SlotType" type="xs:int" minOccurs="1" maxOccurs="1" />
+              <xs:element name="TwoHanded" codegen:typedName="TwoHanded" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

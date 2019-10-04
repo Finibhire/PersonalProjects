@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GameItemDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:element name="GameItemDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GameItems" msprop:typedName="GameItem" msprop:typedPlural="GameItems" maxOccurs="79228162514264337593543950335">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msprop:typedName="Id" type="xs:string" />
+              <xs:element name="Name" msprop:typedName="Name" type="xs:string" />
+              <xs:element name="ArtefactType" msprop:typedName="ArtefactType" type="xs:int" />
+              <xs:element name="SlotType" msprop:typedName="SlotType" type="xs:int" />
+              <xs:element name="TwoHanded" msprop:typedName="TwoHanded" type="xs:boolean" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
