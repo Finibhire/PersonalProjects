@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Resources;
 using System.Windows;
 using AlbionPriceComparer.AOEndorsed;
+using static AlbionPriceComparer.GameItemDataSet;
 
 namespace AlbionPriceComparer
 {
@@ -64,7 +65,7 @@ namespace AlbionPriceComparer
                 }
                 k++;
             }
-            txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Finished downloading " + k + "game items"));
+            txt.Dispatcher.BeginInvoke(new Action(() => txt.Text = "Finished downloading " + k + " game items"));
 
             items = (from i in items
                      where i.itemType == "equipment" || i.itemType == "weapon"
@@ -167,46 +168,46 @@ namespace AlbionPriceComparer
             }
         }
 
-        private readonly DataSet refData;
-        private readonly DataTable baseItemPower;
-        private readonly DataTable enchantProgression;
+        private readonly ReferenceDataSet refData;
+        private readonly ReferenceDataSet.BaseItemPowerTableDataTable baseItemPower;
+        private readonly ReferenceDataSet.EnchantProgressionTableDataTable enchantProgression;
 
         public DataSchemaLoader()
         {
-            refData = new DataSet();
-            using (var stream = Application.GetResourceStream(new Uri("/ReferenceDataSchema.xml", UriKind.Relative)).Stream)
-                refData.ReadXmlSchema(stream);
+            refData = new ReferenceDataSet();
+            //using (var stream = Application.GetResourceStream(new Uri("/ReferenceDataSchema.xml", UriKind.Relative)).Stream)
+            //    refData.ReadXmlSchema(stream);
             using (var stream = Application.GetResourceStream(new Uri("/ReferenceData.xml", UriKind.Relative)).Stream)
                 refData.ReadXml(stream);
-            baseItemPower = refData.Tables["BaseItemPower"];
-            enchantProgression = refData.Tables["EnchantProgression"];
+            baseItemPower = refData.BaseItemPowerTable;
+            enchantProgression = refData.EnchantProgressionTable;
         }
 
-        public int ItemPowerLookup(ArtefactType artType, int teir, ArtefactType enchLevel)
+        public int ItemPowerLookup(ArtefactType artType, int teir, EnchantLevel enchLevel)
         {
-            var results = baseItemPower.AsEnumerable().Where(r => (ArtefactType)r["artefact_type"] == artType && (int)r["teir"] == teir);
-            if (results.Count() <= 0)
+            var baseLookup = baseItemPower.AsEnumerable().Where(r => (ArtefactType)r.ArtefactType == artType && r.Teir == teir);
+            if (baseLookup.Count() <= 0)
                 throw new Exception("Unable to find base Item Power");
-            if (results.Count() > 1)
+            if (baseLookup.Count() > 1)
                 throw new Exception("Too many results!");
 
-            int ip = (int)results.First()["item_power"];
-            results = enchantProgression.AsEnumerable().Where(r => (ArtefactType)r["artefact_type"] == artType && (int)r["teir"] == teir);
-            if (results.Count() <= 0)
+            int ip = baseLookup.First().ItemPower;
+            var epLookup = enchantProgression.AsEnumerable().Where(r => (ArtefactType)r.ArtefactType == artType && r.Teir == teir);
+            if (epLookup.Count() <= 0)
                 throw new Exception("Unable to find base Item Power");
-            if (results.Count() > 1)
+            if (epLookup.Count() > 1)
                 throw new Exception("Too many results!");
 
-            DataRow dr = results.First();
-            if (enchLevel >= ArtefactType.Rune)
+            var epRow = epLookup.First();
+            if (enchLevel >= EnchantLevel.Rune)
             {
-                ip += (int)dr["enchant_rune"];
-                if (enchLevel >= ArtefactType.Soul)
+                ip += epRow.EnchantRune;
+                if (enchLevel >= EnchantLevel.Soul)
                 {
-                    ip += (int)dr["enchant_soul"];
-                    if (enchLevel >= ArtefactType.Relic)
+                    ip += epRow.EnchantSoul;
+                    if (enchLevel >= EnchantLevel.Relic)
                     {
-                        ip += (int)dr["enchant_relic"];
+                        ip += epRow.EnchantRelic;
                     }
                 }
             }

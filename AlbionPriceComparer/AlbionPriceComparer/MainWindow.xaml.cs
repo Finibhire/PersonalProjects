@@ -32,7 +32,7 @@ namespace AlbionPriceComparer
     public enum City
     {
         Unknown = 0,
-        Caleron = 1,
+        Caerleon = 1,
         FortSterling = 2,
         Bridgewatch = 3,
         Lymhurst = 4,
@@ -66,11 +66,6 @@ namespace AlbionPriceComparer
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        public enum EnchantLevel
-        {
-            Unknown = -1, None = 0, Rune, Soul, Relic
         }
 
         private readonly EnchantPrices enchPrices = new EnchantPrices();
@@ -108,7 +103,7 @@ namespace AlbionPriceComparer
             {
                 for (int j = 0; j < teirs.Length; j++)
                 {
-                    WebRequest request = HttpWebRequest.Create(@"https://www.albion-online-data.com/api/v2/stats/prices/" + teirNames[j] + enchNames[i] + @"?locations=Caerleon,Fort%20Sterling&qualities=2");
+                    WebRequest request = HttpWebRequest.Create("https://www.albion-online-data.com/api/v2/stats/prices/" + teirNames[j] + enchNames[i] + "?locations=Caerleon,Fort%20Sterling");
                     using (WebResponse response = request.GetResponse())
                     {
                         var ser = new DataContractJsonSerializer(typeof(MarketListing[]));
@@ -176,7 +171,7 @@ namespace AlbionPriceComparer
         private void CmbItemSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cmbItemSelection.SelectedIndex >= 0)
-                txtOut.Text = "Selected: " + ((DataRowView)cmbItemSelection.SelectedItem)["id"];
+                txtOut.Text = "Selected: " + ((GameItem)((DataRowView)cmbItemSelection.SelectedItem).Row).Id;
         }
 
         //TODO: make this run in another thread so the screen doesn't lock up as it does the HTTP Web Requests.
@@ -195,7 +190,7 @@ namespace AlbionPriceComparer
             sNormal.Append("https://www.albion-online-data.com/api/v2/stats/prices/T");
             int replaceIndex = sNormal.Length;
             sNormal.Append("4_");
-            sNormal.Append(((DataRowView)cmbItemSelection.SelectedItem)["id"]);
+            sNormal.Append(((GameItem)((DataRowView)cmbItemSelection.SelectedItem).Row).Id);
             sEnchant.Append(sNormal.ToString());
             sEnchant.Append("@1");
             int replaceIndexEnchant = sEnchant.Length - 1;
@@ -210,9 +205,14 @@ namespace AlbionPriceComparer
 
 
             var listings = new List<MarketListing>();
+            var dsl = new DataSchemaLoader();
+            var lookupItem = (GameItem)((DataRowView)cmbItemSelection.SelectedItem).Row;
+
+            BtnEnchantPriceLookup_Click(null, null);
 
             void AppendMarketListings(StringBuilder url)
             {
+                MarketListing[] mls;
                 for (char teir = '4'; teir <= '8'; teir++)
                 {
                     url[replaceIndex] = teir;
@@ -225,34 +225,70 @@ namespace AlbionPriceComparer
                         var ser = new DataContractJsonSerializer(typeof(MarketListing[]));
                         using (Stream sr = response.GetResponseStream())
                         {
-                            listings.AddRange((MarketListing[])ser.ReadObject(sr));
+                            mls = (MarketListing[])ser.ReadObject(sr);
                         }
                     }
+                    var mlsFiltered = mls.Where(r => r.sell_price_min > 0 && r.sell_price_min_date != DateTime.Parse("0001-01-01T00:00:00") && r.quality != GameItemQuality.Unknown && r.city != City.Unknown);
+                    listings.AddRange(mlsFiltered);
                     txtOut.Text = "Finished Loading URL:  " + sUrl;
                 }
             }
 
-            var dsl = new DataSchemaLoader();
-            var lookupItem = (DataRowView)cmbItemSelection.SelectedItem;
+            MarketListing SetEnchant(MarketListing ml, EnchantLevel newEl)
+            {
+                ml.RuneEnchantCost = 0;
+                ml.SoulEnchantCost = 0;
+                ml.RelicEnchantCost = 0;
+                ml.FinalItemPower = dsl.ItemPowerLookup((ArtefactType)lookupItem.ArtefactType, ml.ListingTeir, newEl) + (int)ml.quality;
+
+                if (newEl >= EnchantLevel.Rune && ml.ListingEnchantLevel < EnchantLevel.Rune)
+                {
+                    ml.RuneEnchantCost = (int)(EnchantRuneCount((SlotType)lookupItem.SlotType, lookupItem.TwoHanded) * enchPrices.GetPrice(ml.ListingTeir, EnchantLevel.Rune, out _));
+                }
+                if (newEl >= EnchantLevel.Soul && ml.ListingEnchantLevel < EnchantLevel.Soul)
+                {
+                    ml.SoulEnchantCost = (int)(EnchantRuneCount((SlotType)lookupItem.SlotType, lookupItem.TwoHanded) * enchPrices.GetPrice(ml.ListingTeir, EnchantLevel.Soul, out _));
+                }
+                if (newEl >= EnchantLevel.Relic && ml.ListingEnchantLevel < EnchantLevel.Relic)
+                {
+                    ml.RelicEnchantCost = (int)(EnchantRuneCount((SlotType)lookupItem.SlotType, lookupItem.TwoHanded) * enchPrices.GetPrice(ml.ListingTeir, EnchantLevel.Relic, out _));
+                }
+                return ml;
+            }
 
             AppendMarketListings(sNormal);
             for (int i = listings.Count - 1; i >= 0; i--)
             {
-                listings[i].FinalItemPower = dsl.ItemPowerLookup((ArtefactType)lookupItem["artefact_type"], listings[i].Teir, ArtefactType.Normal) + (int)listings[i].quality;
-                MarketListing ml = listings[i].DeepCopy();
-                var sb = new StringBuilder(ml.item_id);
-                sb[1] = (char)((int)sb[1] + 1);
-                ml.item_id = sb.ToString();
+                listings[i].FinalItemPower = dsl.ItemPowerLookup((ArtefactType)lookupItem.ArtefactType, listings[i].ListingTeir, EnchantLevel.Normal) + (int)listings[i].quality;
+                listings.Add(SetEnchant(listings[i].DeepCopy(), EnchantLevel.Rune));
+                listings.Add(SetEnchant(listings[i].DeepCopy(), EnchantLevel.Soul));
+                listings.Add(SetEnchant(listings[i].DeepCopy(), EnchantLevel.Relic));
             }
-            for (char i = '1'; i <= '3'; i++)
+            char[] enchChar = { '1', '2', '3' };
+            EnchantLevel[][] addEnchants = new EnchantLevel[][] 
+            { 
+                new EnchantLevel[] { EnchantLevel.Soul, EnchantLevel.Relic },
+                new EnchantLevel[] { EnchantLevel.Relic },
+                new EnchantLevel[] { } 
+            };
+            for (int i = 0; i < enchChar.Length; i++)
             {
-                sEnchant[replaceIndexEnchant] = i;
+                int listingsStart = listings.Count;
+                sEnchant[replaceIndexEnchant] = enchChar[i];
                 AppendMarketListings(sEnchant);
+                int listingsEnd = listings.Count;
+
+                for (int j = listingsStart; j < listingsEnd; j++)
+                {
+                    listings[j].FinalItemPower = dsl.ItemPowerLookup((ArtefactType)lookupItem.ArtefactType, listings[j].ListingTeir, listings[j].ListingEnchantLevel) + (int)listings[j].quality;
+                    for (int k = 0; k < addEnchants[i].Length; k++)
+                        listings.Add(SetEnchant(listings[j].DeepCopy(), addEnchants[i][k]));
+                }
             }
 
-            BtnEnchantPriceLookup_Click(null, null);
+            var y = listings.OrderBy(x => x.FinalCostPerItemPower).ToArray();
 
-
+            dgMarketResults.ItemsSource = y;
         }
     }
 }

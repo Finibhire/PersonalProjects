@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AlbionPriceComparer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Albion Price Comparer" Height="450" Width="887.712">
+    <Grid Margin="0,0,0,1">
         <Button x:Name="btnEnchantPriceLookup" Content="Enchant Price Lookup" HorizontalAlignment="Left" Margin="379,10,0,0" VerticalAlignment="Top" Width="140" Click="BtnEnchantPriceLookup_Click"/>
         <Button x:Name="btnCollateItemData" Content="Collate Item Data" HorizontalAlignment="Left" Margin="571,10,0,0" VerticalAlignment="Top" Width="139" Click="BtnCollateItemData_Click"/>
-        <Label Content="Status:" HorizontalAlignment="Left" Margin="10,383,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Left" Margin="458,178,0,0" VerticalAlignment="Top" Width="75" Click="BtnPause_Click"/>
-        <TextBlock x:Name="txtOut" HorizontalAlignment="Left" Margin="60,388,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+        <Label Content="Status:" HorizontalAlignment="Left" Margin="10,0,0,10" Height="26" VerticalAlignment="Bottom"/>
+        <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Left" Margin="273,10,0,0" VerticalAlignment="Top" Width="75" Click="BtnPause_Click"/>
+        <TextBlock x:Name="txtOut" HorizontalAlignment="Left" Margin="60,0,0,15" TextWrapping="Wrap" Text="TextBlock" Height="16" VerticalAlignment="Bottom"/>
         <CheckBox x:Name="chkArmor" Content="Armor" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
         <CheckBox x:Name="chkBag" Content="Bag" HorizontalAlignment="Left" Margin="100,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
         <CheckBox x:Name="chkCape" Content="Cape" HorizontalAlignment="Left" Margin="200,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
@@ -21,6 +21,21 @@
         <ComboBox x:Name="cmbItemSelection" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" Width="237" SelectionChanged="CmbItemSelection_SelectionChanged"/>
         <Button x:Name="btnUpdateItemSelection" Content="Update Item Selection" HorizontalAlignment="Left" Margin="591,65,0,0" VerticalAlignment="Top" Width="142" Click="BtnUpdateItemSelection_Click"/>
         <Button x:Name="btnAnalyzeMarket" Content="Analyze Market" HorizontalAlignment="Left" Margin="260,88,0,0" VerticalAlignment="Top" Width="118" Click="BtnAnalyzeMarket_Click" Height="22"/>
+        <DataGrid x:Name="dgMarketResults" Margin="10,125,10,41" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding FinalCostPerItemPower}" Header="Cost/IP"/>
+                <DataGridTextColumn Binding="{Binding FinalCost}" Header="Final Cost"/>
+                <DataGridTextColumn Binding="{Binding FinalItemPower}" Header="Final Item Power"/>
+                <DataGridTextColumn Binding="{Binding city}" Header="City"/>
+                <DataGridTextColumn Binding="{Binding sell_price_min}" Header="Market Cost"/>
+                <DataGridTextColumn Binding="{Binding ListingTeirEnchant}" Header="Market Teir"/>
+                <DataGridTextColumn Binding="{Binding quality}" Header="Quality"/>
+                <DataGridTextColumn Binding="{Binding RuneEnchantCost}" Header="Rune Cost"/>
+                <DataGridTextColumn Binding="{Binding SoulEnchantCost}" Header="Soul Cost"/>
+                <DataGridTextColumn Binding="{Binding RelicEnchantCost}" Header="Relic Cost"/>
+                <DataGridTextColumn Binding="{Binding SellPriceAge}" Header="Listing Acquisition Age"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </Window>

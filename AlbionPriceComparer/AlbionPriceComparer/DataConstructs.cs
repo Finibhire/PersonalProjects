@@ -46,18 +46,67 @@ namespace AlbionPriceComparer
         public int SoulEnchantCost { get; set; }
         public int RelicEnchantCost { get; set; }
         public int FinalItemPower { get; set; }
-        public int Teir
+        public int FinalCost
+        {
+            get => sell_price_min + RuneEnchantCost + SoulEnchantCost + RelicEnchantCost;
+        }
+
+        public double FinalCostPerItemPower
         {
             get
             {
-                return Convert.ToInt32(item_id[1]) - Convert.ToInt32('0');
+                return Math.Round((double)FinalCost / (double)FinalItemPower, 2);
+            }
+        }
+        public int ListingTeir { get; set; }
+        public string ListingTeirEnchant
+        {
+            get => ListingTeir + "." + ((int)ListingEnchantLevel).ToString();
+        }
+        public string Id { get; set; }
+        public EnchantLevel ListingEnchantLevel { get; private set; }
+        public EnchantLevel FinalEnchantLevel
+        {
+            get
+            {
+                if (RelicEnchantCost > 0 || ListingEnchantLevel >= EnchantLevel.Relic)
+                    return EnchantLevel.Relic;
+                if (SoulEnchantCost > 0 || ListingEnchantLevel >= EnchantLevel.Soul)
+                    return EnchantLevel.Soul;
+                if (RuneEnchantCost > 0 || ListingEnchantLevel >= EnchantLevel.Rune)
+                    return EnchantLevel.Rune;
+                return EnchantLevel.Normal;
             }
         }
 
         [DataMember]
-        public string item_id { get; set; }
+        private string item_id
+        {
+            get
+            {
+                return "T" + ListingTeir + "_" + Id + (ListingEnchantLevel == EnchantLevel.Normal ? "" : "@" + (int)ListingEnchantLevel);
+            }
+            set
+            {
+                ListingTeir = value[1] - '0';
+                if (value[value.Length - 2] != '@')
+                {
+                    ListingEnchantLevel = EnchantLevel.Normal;
+                    Id = value.Substring(3, value.Length - 3);
+                }
+                else
+                {
+                    ListingEnchantLevel = (EnchantLevel)(value[value.Length - 1] - '0');
+                    Id = value.Substring(3, value.Length - 5);
+                }
+            }
+        }
         [DataMember]
         public int sell_price_min { get; set; }
+        public string SellPriceAge
+        {
+            get => Math.Round((DateTime.UtcNow - sell_price_min_date).TotalHours, 1) + " hours";
+        }
         [DataMember]
         public int sell_price_max { get; set; }
         [DataMember]
@@ -182,9 +231,14 @@ namespace AlbionPriceComparer
         public string UniqueName { get; set; }
     }
 
+    public enum EnchantLevel
+    {
+        Unknown = -1, Normal = 0, Rune, Soul, Relic
+    }
+
     public enum ArtefactType
     {
-        Unknown = -1, Normal, Rune, Soul, Relic
+        Unknown = -1, Normal = 0, Rune, Soul, Relic
     }
 
     public enum SlotType
