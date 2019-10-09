@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -10,10 +8,8 @@ using System.IO;
 using System.Net;
 using Newtonsoft.Json;
 using System.Windows.Controls;
-using System.Windows.Resources;
 using System.Windows;
 using AlbionPriceComparer.AOEndorsed;
-using static AlbionPriceComparer.GameItemDataSet;
 
 namespace AlbionPriceComparer
 {
@@ -61,7 +57,7 @@ namespace AlbionPriceComparer
                 {
                     //break;
                     if (!(ex.Status == WebExceptionStatus.ProtocolError && ex.Message.Contains("(404)")))
-                        throw ex;
+                        throw;
                 }
                 k++;
             }
