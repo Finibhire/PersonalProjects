@@ -7,21 +7,22 @@
         mc:Ignorable="d"
         Title="Albion Price Comparer" Height="450" Width="887.712">
     <Grid Margin="0,0,0,1">
-        <Button x:Name="btnEnchantPriceLookup" Content="Enchant Price Lookup" HorizontalAlignment="Left" Margin="379,10,0,0" VerticalAlignment="Top" Width="140" Click="BtnEnchantPriceLookup_Click"/>
-        <Button x:Name="btnCollateItemData" Content="Collate Item Data" HorizontalAlignment="Left" Margin="571,10,0,0" VerticalAlignment="Top" Width="139" Click="BtnCollateItemData_Click"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Right" Height="110" Margin="0,39,11,0" VerticalAlignment="Top" Width="289"/>
+
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Right" Height="110" Margin="0,39,305,0" VerticalAlignment="Top" Width="289"/>
+        <Button x:Name="btnCollateItemData" Content="Download General Item Data" HorizontalAlignment="Right" Margin="0,10,11,0" VerticalAlignment="Top" Width="176" Click="BtnCollateItemData_Click"/>
         <Label Content="Status:" HorizontalAlignment="Left" Margin="10,0,0,10" Height="26" VerticalAlignment="Bottom"/>
-        <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Left" Margin="273,10,0,0" VerticalAlignment="Top" Width="75" Click="BtnPause_Click"/>
         <TextBlock x:Name="txtOut" HorizontalAlignment="Left" Margin="60,0,0,15" TextWrapping="Wrap" Text="TextBlock" Height="16" VerticalAlignment="Bottom"/>
-        <CheckBox x:Name="chkArmor" Content="Armor" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <CheckBox x:Name="chkBag" Content="Bag" HorizontalAlignment="Left" Margin="100,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <CheckBox x:Name="chkCape" Content="Cape" HorizontalAlignment="Left" Margin="200,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <CheckBox x:Name="chkMainhand" Content="Main Hand" HorizontalAlignment="Left" Margin="300,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <CheckBox x:Name="chkOffhand" Content="Off Hand" HorizontalAlignment="Left" Margin="399,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <CheckBox x:Name="chkShoes" Content="Shoes" HorizontalAlignment="Left" Margin="500,68,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <ComboBox x:Name="cmbItemSelection" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" Width="237" SelectionChanged="CmbItemSelection_SelectionChanged"/>
-        <Button x:Name="btnUpdateItemSelection" Content="Update Item Selection" HorizontalAlignment="Left" Margin="591,65,0,0" VerticalAlignment="Top" Width="142" Click="BtnUpdateItemSelection_Click"/>
-        <Button x:Name="btnAnalyzeMarket" Content="Analyze Market" HorizontalAlignment="Left" Margin="260,88,0,0" VerticalAlignment="Top" Width="118" Click="BtnAnalyzeMarket_Click" Height="22"/>
-        <DataGrid x:Name="dgMarketResults" Margin="10,125,10,41" AutoGenerateColumns="False">
+        <CheckBox x:Name="chkArmor" Content="Armor" HorizontalAlignment="Right" Margin="0,47,529,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkBag" Content="Bag" HorizontalAlignment="Right" Margin="0,47,431,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkCape" Content="Cape" HorizontalAlignment="Right" Margin="0,47,326,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkMainhand" Content="Main Hand" HorizontalAlignment="Right" Margin="0,67,504,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkOffhand" Content="Off Hand" HorizontalAlignment="Right" Margin="0,67,403,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkShoes" Content="Shoes" HorizontalAlignment="Right" Margin="0,67,321,0" VerticalAlignment="Top" IsChecked="True"/>
+        <ComboBox x:Name="cmbItemSelection" HorizontalAlignment="Right" Margin="0,87,321,0" VerticalAlignment="Top" Width="261" SelectionChanged="CmbItemSelection_SelectionChanged"/>
+        <Button x:Name="btnUpdateItemSelection" Content="Update Item Selection" HorizontalAlignment="Right" Margin="0,114,321,0" VerticalAlignment="Top" Width="142" Click="BtnUpdateItemSelection_Click" Height="22"/>
+        <Button x:Name="btnAnalyzeMarket" Content="Analyze Market" HorizontalAlignment="Right" Margin="0,114,165,0" VerticalAlignment="Top" Width="123" Click="BtnAnalyzeMarket_Click" Height="22"/>
+        <DataGrid x:Name="dgMarketResults" Margin="10,154,10,41" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding FinalCostPerItemPower}" Header="Cost/IP"/>
                 <DataGridTextColumn Binding="{Binding FinalCost}" Header="Final Cost"/>
@@ -36,6 +37,14 @@
                 <DataGridTextColumn Binding="{Binding SellPriceAge}" Header="Listing Acquisition Age"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Button x:Name="btnRemoveBadOptions" Content="Remove Bad Options" HorizontalAlignment="Right" Margin="0,114,22,0" VerticalAlignment="Top" Width="138" Height="22" Click="BtnRemoveBadOptions_Click"/>
+        <CheckBox x:Name="chkCaerleon" Content="Caerleon" HorizontalAlignment="Right" Margin="0,47,119,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkFortSterling" Content="Fort Sterling" HorizontalAlignment="Right" Margin="0,47,22,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkBridgewatch" Content="Bridgewatch" HorizontalAlignment="Right" Margin="0,47,202,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkLymhurst" Content="Lymhurst" HorizontalAlignment="Right" Margin="0,67,220,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkThetford" Content="Thetford" HorizontalAlignment="Right" Margin="0,67,42,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkMartlock" Content="Martlock" HorizontalAlignment="Right" Margin="0,67,119,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Button x:Name="btnItemSort" Content="Sort" HorizontalAlignment="Right" Margin="0,114,468,0" VerticalAlignment="Top" Width="114" Height="22" Click="BtnItemSort_Click"/>
 
     </Grid>
 </Window>

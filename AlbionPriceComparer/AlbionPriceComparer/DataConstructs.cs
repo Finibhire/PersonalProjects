@@ -8,6 +8,33 @@ using AlbionPriceComparer.AOEndorsed;
 
 namespace AlbionPriceComparer
 {
+    public enum City
+    {
+        Unknown = 0,
+        Caerleon = 1,
+        FortSterling = 2,
+        Bridgewatch = 3,
+        Lymhurst = 4,
+        Thetford = 5,
+        Martlock = 6
+    }
+
+    public static class CityMethods
+    {
+        public static string DisplayName(this City city)
+        {
+            switch (city)
+            {
+                case City.Unknown:
+                    return "";
+                case City.FortSterling:
+                    return "Fort Sterling";
+                default:
+                    return Enum.GetName(typeof(City), city);
+            }
+        }
+    }
+
     public enum GameItemQuality
     {
         Unknown = -1,

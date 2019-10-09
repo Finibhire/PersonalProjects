@@ -158,6 +158,7 @@ namespace AlbionPriceComparer
                 case SlotType.head:
                 case SlotType.offhand:
                 case SlotType.shoes:
+                case SlotType.cape:
                     return 24;
                 case SlotType.mainhand:
                     if (twoHanded)

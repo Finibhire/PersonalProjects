@@ -29,32 +29,6 @@ using static AlbionPriceComparer.GameItemDataSet;
 
 namespace AlbionPriceComparer
 {
-    public enum City
-    {
-        Unknown = 0,
-        Caerleon = 1,
-        FortSterling = 2,
-        Bridgewatch = 3,
-        Lymhurst = 4,
-        Thetford = 5,
-        Martlock = 6
-    }
-
-    public static class CityMethods
-    {
-        public static string DisplayName(this City city)
-        {
-            switch (city)
-            {
-                case City.Unknown:
-                    return "";
-                case City.FortSterling:
-                    return "Fort Sterling";
-                default:
-                    return Enum.GetName(typeof(City), city);
-            }
-        }
-    }
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -91,19 +65,22 @@ namespace AlbionPriceComparer
             }
         }
 
-        private void BtnEnchantPriceLookup_Click(object sender, RoutedEventArgs e)
+        private void EnchantPriceLookup()
         {
             string[] enchNames = { "RUNE", "SOUL", "RELIC" };
             EnchantLevel[] enchLvl = { EnchantLevel.Rune, EnchantLevel.Soul, EnchantLevel.Relic };
             string[] teirNames = { "T4_", "T5_", "T6_", "T7_", "T8_" };
             int[] teirs = { 4, 5, 6, 7, 8 };
 
+            StringBuilder loc = URLEncodeLocations();
+            if (loc == null)
+                return;
 
             for (int i = 0; i < enchLvl.Length; i++)
             {
                 for (int j = 0; j < teirs.Length; j++)
                 {
-                    WebRequest request = HttpWebRequest.Create("https://www.albion-online-data.com/api/v2/stats/prices/" + teirNames[j] + enchNames[i] + "?locations=Caerleon,Fort%20Sterling");
+                    WebRequest request = HttpWebRequest.Create("https://www.albion-online-data.com/api/v2/stats/prices/" + teirNames[j] + enchNames[i] + loc);
                     using (WebResponse response = request.GetResponse())
                     {
                         var ser = new DataContractJsonSerializer(typeof(MarketListing[]));
@@ -140,12 +117,6 @@ namespace AlbionPriceComparer
             worker.Start();
         }
 
-        private void BtnPause_Click(object sender, RoutedEventArgs e)
-        {
-            worker.Suspend();
-            string content = txtOut.Text;
-            worker.Resume();
-        }
 
         private GameItemDataSet cmbItemSelDS;
         private void BtnUpdateItemSelection_Click(object sender, RoutedEventArgs e)
@@ -157,7 +128,15 @@ namespace AlbionPriceComparer
             //    ds.ReadXmlSchema(stream);
             using (var stream = new FileStream(System.AppDomain.CurrentDomain.BaseDirectory + "\\GameItems.xml", FileMode.Open))
                 cmbItemSelDS.ReadXml(stream);
-            var dtItems = cmbItemSelDS.GameItems;
+            var x = cmbItemSelDS.GameItems.Where(r =>
+                ((bool)chkArmor.IsChecked && r.SlotType == (int)SlotType.armor) ||
+                ((bool)chkBag.IsChecked && r.SlotType == (int)SlotType.bag) ||
+                ((bool)chkCape.IsChecked && r.SlotType == (int)SlotType.cape) ||
+                ((bool)chkMainhand.IsChecked && r.SlotType == (int)SlotType.mainhand) ||
+                ((bool)chkOffhand.IsChecked && r.SlotType == (int)SlotType.offhand) ||
+                ((bool)chkShoes.IsChecked && r.SlotType == (int)SlotType.shoes)).CopyToDataTable();
+            var dtItems = new GameItemsDataTable();
+            dtItems.Load(x.CreateDataReader());
             cmbItemSelection.DisplayMemberPath = "Name";
             cmbItemSelection.SelectedValuePath = "Id";
             cmbItemSelection.ItemsSource = dtItems.DefaultView;
@@ -174,6 +153,26 @@ namespace AlbionPriceComparer
                 txtOut.Text = "Selected: " + ((GameItem)((DataRowView)cmbItemSelection.SelectedItem).Row).Id;
         }
 
+
+        private StringBuilder URLEncodeLocations()
+        {
+            StringBuilder loc = new StringBuilder();
+            loc.Append("?locations=");
+            City[] cit = { City.Bridgewatch, City.Caerleon, City.FortSterling, City.Lymhurst, City.Martlock, City.Thetford };
+            CheckBox[] chk = { chkBridgewatch, chkCaerleon, chkFortSterling, chkLymhurst, chkMartlock, chkThetford };
+            int idx;
+            for (idx = 0; idx < cit.Length; idx++)
+                if ((bool)chk[idx].IsChecked)
+                    loc.Append(HttpUtility.UrlEncode(cit[idx].DisplayName())).Append(",");
+            loc.Length -= 1;
+            if (idx == 0)
+            {
+                txtOut.Text = "No Cities Selected!";
+                return null;
+            }
+            return loc;
+        }
+
         //TODO: make this run in another thread so the screen doesn't lock up as it does the HTTP Web Requests.
         private void BtnAnalyzeMarket_Click(object sender, RoutedEventArgs e)
         {
@@ -185,7 +184,7 @@ namespace AlbionPriceComparer
 
             StringBuilder sNormal = new StringBuilder();
             StringBuilder sEnchant = new StringBuilder();
-            StringBuilder sEnd = new StringBuilder();
+            StringBuilder sEnd;
 
             sNormal.Append("https://www.albion-online-data.com/api/v2/stats/prices/T");
             int replaceIndex = sNormal.Length;
@@ -194,11 +193,11 @@ namespace AlbionPriceComparer
             sEnchant.Append(sNormal.ToString());
             sEnchant.Append("@1");
             int replaceIndexEnchant = sEnchant.Length - 1;
-            sEnd.Append("?locations=");
-            foreach (City c in Enum.GetValues(typeof(City)))
-                if (c != City.Unknown)
-                    sEnd.Append(HttpUtility.UrlEncode(c.DisplayName())).Append(",");
-            sEnd.Length -= 1;
+
+            sEnd = URLEncodeLocations();
+            if (sEnd == null)
+                return;
+
             string sTemp = sEnd.ToString();
             sNormal.Append(sTemp);
             sEnchant.Append(sTemp);
@@ -208,7 +207,7 @@ namespace AlbionPriceComparer
             var dsl = new DataSchemaLoader();
             var lookupItem = (GameItem)((DataRowView)cmbItemSelection.SelectedItem).Row;
 
-            BtnEnchantPriceLookup_Click(null, null);
+            EnchantPriceLookup();
 
             void AppendMarketListings(StringBuilder url)
             {
@@ -286,9 +285,42 @@ namespace AlbionPriceComparer
                 }
             }
 
-            var y = listings.OrderBy(x => x.FinalCostPerItemPower).ToArray();
+            dgMarketResults.ItemsSource = listings.OrderBy(x => x.FinalCostPerItemPower).ToList();
+        }
 
-            dgMarketResults.ItemsSource = y;
+        private void BtnRemoveBadOptions_Click(object sender, RoutedEventArgs e)
+        {
+            var listings = (List<MarketListing>)dgMarketResults.ItemsSource;
+
+            if (listings.Count() < 2)
+                return;
+
+            int previousIP = listings[0].FinalItemPower;
+            int i = 1;
+            while (i < listings.Count)
+            {
+                var listing = listings[i];
+                if (listing.FinalItemPower <= previousIP)
+                {
+                    listings.RemoveAt(i);
+                }
+                else
+                {
+                    previousIP = listing.FinalItemPower;
+                    i++;
+                }
+            }
+
+            dgMarketResults.ItemsSource = listings.OrderBy(x => x.FinalCostPerItemPower).ToList();
+        }
+
+        private void BtnItemSort_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbItemSelection.ItemsSource == null || cmbItemSelection.Items.Count <= 0)
+                return;
+
+            var items = (DataView)cmbItemSelection.ItemsSource;
+            items.Sort = "Name ASC";
         }
     }
 }
